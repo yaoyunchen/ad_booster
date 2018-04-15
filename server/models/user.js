@@ -2,12 +2,58 @@ const mongoose = require('mongoose');
 const bycrypt = require('bcrypt');
 
 const UserSchema = new mongoose.Schema({
+  accountStatus: {
+    type: String,
+    required: true
+  }
+  accountType: {
+    type: String,
+    required: true
+  },
   email: {
     type: String,
-    index: { unique: true }
+    index: { unique: true },
+    lowercase: true,
+    trim: true
   },
-  password: String,
-  name: String
+  password: {
+    type: String,
+    required: true
+  },
+  salt: {
+    type: String,
+    required: true
+  },
+  vtoken: {
+    type: String,
+    required: true
+  },
+  fname: String,
+  lname: String,
+  mname: String,
+  username: String,
+  pphoto: String,
+  phone: String,
+  address: String,
+  city: String,
+  region: String,
+  province: String,
+  country: String,
+  accessToken: String,
+  promocode: String,
+  devices: []
+  emailConfirmed: {
+    type: Boolean,
+    required: true
+  },
+  lastActive: {
+    type: Date,
+    required: true
+  },
+  dateCreated: {
+    type: Date,
+    required: true
+  }
 });
 
 

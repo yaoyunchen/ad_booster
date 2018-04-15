@@ -27,8 +27,10 @@
   to { transform: rotate(360deg); }
 }
 
-.test {
-  &__what {
-    color: pink;
+#menu {
+  div {
+    &:focus {
+      outline: none;
+    }
   }
 }

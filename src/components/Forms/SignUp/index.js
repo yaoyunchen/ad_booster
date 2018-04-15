@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import Card, { CardContent } from 'material-ui/Card';
+import Card, { CardHeader, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl, FormHelperText } from 'material-ui/Form';
+import Typography from 'material-ui/Typography';
 
 class SignUpForm extends React.Component {
   constructor(props) {
@@ -30,12 +31,12 @@ class SignUpForm extends React.Component {
     } = this.props;
 
     return (
-      <Card className="container">
+      <Card className="container" raised>
+        <CardHeader title="Sign Up "/>
+
         <CardContent>
           <form action="/" onSubmit={onSubmit}>
-            <h2 className="card-heading">Sign Up</h2>
-
-            {errors.summary && <p className="error-message">{errors.summary}</p>}
+            {errors.summary && <Typography color="error">{errors.summary}</Typography>}
 
             <div className="field-line">
               <FormControl
@@ -101,9 +102,9 @@ class SignUpForm extends React.Component {
               </Button>
             </div>
 
-            <p>
+            <Typography>
               Already have an account? <Link to={'/login'}>Log in</Link>.
-          </p>
+            </Typography>
           </form>
         </CardContent>
       </Card>

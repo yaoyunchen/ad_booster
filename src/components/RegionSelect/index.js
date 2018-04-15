@@ -101,37 +101,39 @@ class RegionSelect extends React.Component {
         disableEscapeKeyDown
         aria-labelledby="dialog-title"
       >
-        <DialogTitle id="dialog-title">Province Select</DialogTitle>
+        <div style={{ padding: '32px' }}>
+          <DialogTitle id="dialog-title">Province Select</DialogTitle>
 
-        <DialogContent>
-          <DialogContentText>
-            Please select your province to continue.
-          </DialogContentText>
+          <DialogContent>
+            <DialogContentText>
+              Please select your province to continue.
+            </DialogContentText>
+
+            <br />
+
+            <Select
+              value={province || ''}
+              onChange={this.handleProvinceChange}
+              fullWidth
+            >
+              {provinceSelectItems}
+            </Select>
+          </DialogContent>
 
           <br />
 
-          <Select
-            value={province || 'BC'}
-            onChange={this.handleProvinceChange}
-            fullWidth
-          >
-            {provinceSelectItems}
-          </Select>
-        </DialogContent>
-
-        <br />
-
-        <DialogActions>
-          <Button
-            label="Cancel"
-            color="primary"
-            variant="raised"
-            disabled={!province ? true : false}
-            onClick={() => onCancel()}
-          >
-            Cancel
-          </Button>
-        </DialogActions>
+          <DialogActions>
+            <Button
+              label="Cancel"
+              color="secondary"
+              variant="raised"
+              disabled={!province ? true : false}
+              onClick={() => onCancel()}
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </div>
       </Dialog>
     );
   }

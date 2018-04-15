@@ -1,9 +1,11 @@
-/* eslint-disable no-undef */
 
 const mongoose = require('mongoose');
 const bycrypt = require('bcrypt');
 
-const AdPostSchema = new mongoose.Schema({
+const Schema = mongoose.Schema;
+const ObjectId = Schema.ObjectId;
+
+const AdPostSchema = new Schema({
   postType: {
     type: String,
     required: true

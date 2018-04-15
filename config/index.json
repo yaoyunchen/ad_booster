@@ -1,0 +1,4 @@
+{
+  "dbUrl": "mongodb://localhost/test",
+  "jwtSecret": "secret"
+}

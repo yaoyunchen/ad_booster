@@ -1,0 +1,30 @@
+{
+  "extends": "react-app",
+  "plugins": [
+    "import"
+  ],
+  "rules": {
+    "jsx-quotes": 1,
+    "max-statements": [
+      "warn",
+      20,
+      {
+        "ignoreTopLevelFunctions": true
+      }
+    ],
+    "import/no-unresolved": 2,
+    "import/extensions": 2,
+    "no-console": 1,
+    "no-debugger": 1,
+    "no-undef": 1,
+    "no-unused-vars": 1,
+    "no-var": 1,
+    "object-curly-spacing": ["warn", "always"],
+    "object-shorthand": 1,
+    "react/no-unused-state": 1,
+    "semi": [
+      1,
+      "always"
+    ]
+  }
+}

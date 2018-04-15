@@ -105,7 +105,7 @@ class ListView extends React.Component {
           <ListEle />
         </div>
       </div>
-    )
+    );
   }
 }
 

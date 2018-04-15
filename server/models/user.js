@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 const mongoose = require('mongoose');
 const bycrypt = require('bcrypt');
 
@@ -5,7 +7,7 @@ const UserSchema = new mongoose.Schema({
   accountStatus: {
     type: String,
     required: true
-  }
+  },
   accountType: {
     type: String,
     required: true
@@ -41,7 +43,7 @@ const UserSchema = new mongoose.Schema({
   country: String,
   accessToken: String,
   promocode: String,
-  devices: []
+  devices: [],
   emailConfirmed: {
     type: Boolean,
     required: true
@@ -55,7 +57,6 @@ const UserSchema = new mongoose.Schema({
     required: true
   }
 });
-
 
 // Compare passed password with value in database
 UserSchema.methods.comparePassword = function(password, cb) {

@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 const mongoose = require('mongoose');
 const bycrypt = require('bcrypt');
 
@@ -92,4 +94,4 @@ AdPostSchema.pre('save', function(next) {
   });
 });
 
-module.exports = mongoose.model('User', AdPostSchema);
+module.exports = mongoose.model('AdPost', AdPostSchema);

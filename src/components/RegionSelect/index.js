@@ -8,8 +8,6 @@ import Button from 'material-ui/Button';
 import Select from 'material-ui/Select';
 import { MenuItem } from 'material-ui/Menu';
 
-import debugLog from '../../utils/debug';
-
 const provinceArray = [
   {
     name: 'Alberta',
@@ -70,9 +68,7 @@ class RegionSelect extends React.Component {
     const province = e.target.value;
     if (!province) return;
 
-    debugLog('Selected province:', province);
     localStorage.setItem('province', province);
-
     this.props.onChange(province);
   }
 
@@ -97,8 +93,8 @@ class RegionSelect extends React.Component {
     return (
       <Dialog
         open={open}
-        disableBackdropClick
-        disableEscapeKeyDown
+        disableBackdropClick={province !== '' ? false : true}
+        disableEscapeKeyDown={province !== '' ? false : true}
         aria-labelledby="dialog-title"
       >
         <div style={{ padding: '32px' }}>

@@ -1,11 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import SignUpForm from '../../components/Forms/SignUp';
 
 class SignUpPage extends React.Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
 
     this.state = {
       errors: {},
@@ -39,7 +38,7 @@ class SignUpPage extends React.Component {
         this.setState({ errors: {} });
 
         localStorage.setItem('successMessage', xhr.response.message);
-        this.context.router.history.replace('/login');
+        this.props.history.replace('/login');
       } else {
         // failure
 
@@ -71,9 +70,5 @@ class SignUpPage extends React.Component {
     );
   }
 }
-
-SignUpPage.contextTypes = {
-  router: PropTypes.object.isRequired
-};
 
 export default SignUpPage;

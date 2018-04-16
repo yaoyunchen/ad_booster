@@ -38,11 +38,7 @@ const AdPostSchema = new Schema({
     required: true
   },
   pin: Number,
-  expireDated: {
-    type: Date,
-    required: true
-  },
-  expiredDate: {
+  expiryDated: {
     type: Date,
     required: true
   },
@@ -68,32 +64,8 @@ const AdPostSchema = new Schema({
     required: true
   },
   province: String,
-  country: String
-});
-
-
-// Compare passed password with value in database
-AdPostSchema.methods.comparePassword = function(password, cb) {
-  bycrypt.compare(password, this.password, cb);
-};
-
-
-// Pre-save hook
-AdPostSchema.pre('save', function(next) {
-  const user = this;
-
-  if (!user.isModified('password')) return next();
-
-  return bycrypt.genSalt((saltErr, salt) => {
-    if (saltErr) return next(saltErr);
-
-    return bycrypt.hash(user.password, salt, (hashErr, hash) => {
-      // Replace password string with hash value
-      user.password = hash;
-
-      return next();
-    });
-  });
+  country: String,
+  photo: [String]
 });
 
 module.exports = mongoose.model('AdPost', AdPostSchema);

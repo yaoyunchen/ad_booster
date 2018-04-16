@@ -63,6 +63,10 @@ class App extends React.Component {
     this.setState({ province, showRegion: false });
   }
 
+  getChildContext() {
+    return { province: this.state.province };
+  }
+
   closeRegionSelect = () => {
     this.setState({ showRegion: false });
   }
@@ -177,7 +181,7 @@ class App extends React.Component {
     );
 
     return (
-      <Grid container>
+      <Grid container style={{ maxWidth: 1200, margin: '0 auto' }}>
         <AppBar
           position="static"
           color="default"
@@ -239,6 +243,10 @@ App.propTypes = {
 
 App.contextTypes = {
   router: PropTypes.object.isRequired
+};
+
+App.childContextTypes = {
+  province: PropTypes.string
 };
 
 export default withStyles(styles)(App);

@@ -1,13 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Auth from '../../modules/Auth';
 import LoginForm from '../../components/Forms/Login';
 
 class LoginPage extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-
+  constructor(props) {
+    super(props);
     const storedMessage = localStorage.getItem('successMessage');
     let successMessage = '';
 
@@ -47,7 +45,7 @@ class LoginPage extends React.Component {
         this.setState({ errors: {} });
 
         Auth.authenticateUser(xhr.response.token);
-        this.context.router.history.replace('/');
+        this.props.history.replace('/');
       } else {
         // failure
 
@@ -82,9 +80,5 @@ class LoginPage extends React.Component {
     );
   }
 }
-
-LoginPage.contextTypes = {
-  router: PropTypes.object.isRequired
-};
 
 export default LoginPage;

@@ -1,4 +1,4 @@
 {
-  "dbUrl": "mongodb://localhost/test",
+  "dbUrl": "mongodb://user:pwd@localhost:27017/ad_booster",
   "jwtSecret": "secret"
 }

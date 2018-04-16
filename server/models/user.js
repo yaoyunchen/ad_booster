@@ -6,11 +6,11 @@ const bycrypt = require('bcrypt');
 const UserSchema = new mongoose.Schema({
   accountStatus: {
     type: String,
-    required: true
+    // required: true
   },
   accountType: {
     type: String,
-    required: true
+    // required: true
   },
   email: {
     type: String,
@@ -20,15 +20,15 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true
+    // required: true
   },
   salt: {
     type: String,
-    required: true
+    // required: true
   },
   vtoken: {
     type: String,
-    required: true
+    // required: true
   },
   fname: String,
   lname: String,
@@ -46,15 +46,15 @@ const UserSchema = new mongoose.Schema({
   devices: [],
   emailConfirmed: {
     type: Boolean,
-    required: true
+    // required: true
   },
   lastActive: {
     type: Date,
-    required: true
+    // required: true
   },
   dateCreated: {
     type: Date,
-    required: true
+    // required: true
   }
 });
 

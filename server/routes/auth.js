@@ -4,10 +4,27 @@ const passport = require('passport');
 
 const router = new express.Router();
 
+/* eslint-disable max-statements */
+/* TODO: Refactor this */
 const validateSignUpForm = (payload) => {
   const errors = {};
   let isFormValid = true;
   let message = '';
+
+  if (typeof payload.firstname !== 'string' || payload.firstname.trim().length === 0) {
+    isFormValid = false;
+    errors.firstname = 'Please provide your name.';
+  }
+
+  if (!payload || typeof payload.lastname !== 'string' || payload.lastname.trim().length === 0) {
+    isFormValid = false;
+    errors.lastname = 'Please provide your last name.';
+  }
+
+  if (!payload || typeof payload.username !== 'string' || payload.username.trim().length < 6) {
+    isFormValid = false;
+    errors.username = 'Username must have at least 8 characters.';
+  }
 
   if (!payload || typeof payload.email !== 'string' || !validator.isEmail(payload.email)) {
     isFormValid = false;
@@ -17,11 +34,6 @@ const validateSignUpForm = (payload) => {
   if (!payload || typeof payload.password !== 'string' || payload.password.trim().length < 8) {
     isFormValid = false;
     errors.password = 'Password must have at least 8 characters.';
-  }
-
-  if (!payload || typeof payload.name !== 'string' || payload.name.trim().length === 0) {
-    isFormValid = false;
-    errors.name = 'Please provide your name.';
   }
 
   if (!isFormValid) {
@@ -35,14 +47,15 @@ const validateSignUpForm = (payload) => {
   };
 };
 
+
 const validateLoginForm = (payload) => {
   const errors = {};
   let isFormValid = true;
   let message = '';
 
-  if (!payload || typeof payload.email !== 'string' || payload.email.trim().length === 0) {
+  if (!payload || typeof payload.username !== 'string' || payload.username.trim().length === 0) {
     isFormValid = false;
-    errors.email = 'Please provide your email address.';
+    errors.username = 'Please provide your username.';
   }
 
   if (!payload || typeof payload.password !== 'string' || payload.password.trim().length === 0) {
@@ -50,9 +63,7 @@ const validateLoginForm = (payload) => {
     errors.password = 'Please provide your password.';
   }
 
-  if (!isFormValid) {
-    message = 'Check the form for errors.';
-  }
+  if (!isFormValid) message = 'Check the form for errors.';
 
   return {
     success: isFormValid,
@@ -73,6 +84,7 @@ router.post('/signup', (req, res, next) => {
 
   return passport.authenticate('local-signup', (err) => {
     if (err) {
+      console.log('SIGNUP FAILED:', err);
       // 11000 error code is for duplicate email error
       // 409 HTTP status is for conflict error
       if (err.code === 11000) {
@@ -110,6 +122,8 @@ router.post('/login', (req, res, next) => {
 
   return passport.authenticate('local-login', (err, token, userData) => {
     if (err) {
+      console.log('LOGIN FAILED: ', err);
+
       if (err.name === 'IncorrectCredentialsError') {
         return res.status(400).json({
           success: false,

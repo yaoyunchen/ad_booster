@@ -5,22 +5,25 @@ const PassportLocalStrategy = require('passport-local').Strategy;
 const config = require('../../config');
 
 module.exports = new PassportLocalStrategy({
-  usernameField: 'email',
+  usernameField: 'username',
   passwordField: 'password',
   session: false,
   passReqToCallback: true
-}, (req, email, password, done) => {
+}, (req, username, password, done) => {
   const userData = {
-    email: email.trim(),
+    username: username.trim(),
     password: password.trim()
   };
 
-  const IncorrectCredentialsError = new Error('Incorrect email or password');
+  const IncorrectCredentialsError = new Error('Incorrect username or password');
   IncorrectCredentialsError.name = 'IncorrectCredentialsError';
 
-  // Find a user by email address
-  return User.findOne({ email: userData.email }, (err, user) => {
-    if (err) return done(err);
+  // Find a user by username
+  return User.findOne({ username: userData.username }, (err, user) => {
+    if (err) {
+      console.log('LOGIN ERROR FINDING USER:', err);
+      return done(err);
+    };
 
     if (!user) {
       console.log('User not found in database'); // eslint-disable-line no-console
@@ -29,14 +32,17 @@ module.exports = new PassportLocalStrategy({
 
     // Check if hashed user's password is equal to value in database
     return user.comparePassword(userData.password, (passErr, isMatch) => {
-      if (err) return done(err);
+      if (passErr) {
+        console.log('LOGIN PASSWORD ERROR:', passErr);
+        return done(passErr);
+      };
 
       if (!isMatch) {
         console.log('Password does not match.'); // eslint-disable-line no-console
         return done(IncorrectCredentialsError);
       }
 
-      const data = { name: user.name };
+      const data = { username: user.username };
       const payload = { sub: user._id };
       const token = jwt.sign(payload, config.jwtSecret);
 

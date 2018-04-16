@@ -10,7 +10,9 @@ class SignUpPage extends React.Component {
       errors: {},
       user: {
         email: '',
-        name: '',
+        firstname: '',
+        lastname: '',
+        username: '',
         password: ''
       }
     };
@@ -18,12 +20,16 @@ class SignUpPage extends React.Component {
 
   processForm = (e) => {
     e.preventDefault();
+    const { user } = this.state;
 
     // create a string for an HTTP body message
-    const name = encodeURIComponent(this.state.user.name);
-    const email = encodeURIComponent(this.state.user.email);
-    const password = encodeURIComponent(this.state.user.password);
-    const formData = `name=${name}&email=${email}&password=${password}`;
+    const firstname = encodeURIComponent(user.firstname);
+    const lastname = encodeURIComponent(user.lastname);
+    const username = encodeURIComponent(user.username);
+    const email = encodeURIComponent(user.email);
+    const password = encodeURIComponent(user.password);
+
+    const formData = `firstname=${firstname}&lastname=${lastname}&username=${username}&email=${email}&password=${password}`;
 
     // create an AJAX request
     const xhr = new XMLHttpRequest();

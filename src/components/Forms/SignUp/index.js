@@ -12,10 +12,13 @@ class SignUpForm extends React.Component {
   constructor(props) {
     super(props);
 
+    const { user } = props;
     this.state = {
-      name: props.user.name,
-      email: props.user.email,
-      password: props.user.password
+      firstname: user.firstname,
+      lastname: user.lastname,
+      username: user.username,
+      email: user.email,
+      password: user.password
     };
   }
 
@@ -40,19 +43,66 @@ class SignUpForm extends React.Component {
 
             <div className="field-line">
               <FormControl
-                error={errors.name ? true : false}
-                aria-describedby="name-error-text"
+                error={errors.firstname ? true : false}
+                aria-describedby="firstname-error-text"
+                style={{ minWidth: 240 }}
               >
-                <InputLabel htmlFor="name">Name</InputLabel>
+                <InputLabel htmlFor="firstname">
+                  First Name
+                </InputLabel>
 
                 <Input
-                  id="name"
-                  value={this.state.name}
-                  onChange={this.handleChange('name')}
+                  id="firstname"
+                  value={this.state.firstname}
+                  onChange={this.handleChange('firstname')}
                 />
 
-                <FormHelperText id="name-error-text">
-                  {errors.name}
+                <FormHelperText id="firstname-error-text">
+                  {errors.firstname}
+                </FormHelperText>
+              </FormControl>
+            </div>
+
+            <div className="field-line">
+              <FormControl
+                error={errors.lastname ? true : false}
+                aria-describedby="lastname-error-text"
+                style={{ minWidth: 240 }}
+              >
+                <InputLabel htmlFor="lastname">
+                  Last Name
+                </InputLabel>
+
+                <Input
+                  id="lastname"
+                  value={this.state.lastname}
+                  onChange={this.handleChange('lastname')}
+                />
+
+                <FormHelperText id="lastname-error-text">
+                  {errors.lastname}
+                </FormHelperText>
+              </FormControl>
+            </div>
+
+            <div className="field-line">
+              <FormControl
+                error={errors.username ? true : false}
+                aria-describedby="username-error-text"
+                style={{ minWidth: 240 }}
+              >
+                <InputLabel htmlFor="username">
+                  User Name
+                </InputLabel>
+
+                <Input
+                  id="username"
+                  value={this.state.username}
+                  onChange={this.handleChange('username')}
+                />
+
+                <FormHelperText id="username-error-text">
+                  {errors.username}
                 </FormHelperText>
               </FormControl>
             </div>
@@ -61,8 +111,11 @@ class SignUpForm extends React.Component {
               <FormControl
                 error={errors.email ? true : false}
                 aria-describedby="email-error-text"
+                style={{ minWidth: 240 }}
               >
-                <InputLabel htmlFor="email">Email</InputLabel>
+                <InputLabel htmlFor="email">
+                  Email
+                </InputLabel>
 
                 <Input
                   id="email"
@@ -80,8 +133,11 @@ class SignUpForm extends React.Component {
               <FormControl
                 error={errors.password ? true : false}
                 aria-describedby="password-error-text"
+                style={{ minWidth: 240 }}
               >
-                <InputLabel htmlFor="password">Password</InputLabel>
+                <InputLabel htmlFor="password">
+                  Password
+                </InputLabel>
 
                 <Input
                   id="password"

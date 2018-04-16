@@ -13,7 +13,7 @@ class LoginForm extends React.Component {
     super(props);
 
     this.state = {
-      email: props.user.email,
+      username: props.user.username,
       password: props.user.password
     };
   }
@@ -36,26 +36,27 @@ class LoginForm extends React.Component {
 
         <CardContent>
           <form action="/" onSubmit={onSubmit}>
-
-            {successMessage && <Typography color="primary">{successMessage}</Typography>}
+            {successMessage && <Typography>{successMessage}</Typography>}
 
             {errors.summary && <Typography color="error">{errors.summary}</Typography>}
 
             <div className="field-line">
               <FormControl
-                error={errors.email ? true : false}
-                aria-describedby="email-error-text"
+                error={errors.username ? true : false}
+                aria-describedby="username-error-text"
               >
-                <InputLabel htmlFor="email">Email</InputLabel>
+                <InputLabel htmlFor="username">
+                  Username
+                </InputLabel>
 
                 <Input
-                  id="email"
-                  value={this.state.email}
-                  onChange={this.handleChange('email')}
+                  id="username"
+                  value={this.state.username}
+                  onChange={this.handleChange('username')}
                 />
 
-                <FormHelperText id="email-error-text">
-                  {errors.email}
+                <FormHelperText id="username-error-text">
+                  {errors.username}
                 </FormHelperText>
               </FormControl>
             </div>

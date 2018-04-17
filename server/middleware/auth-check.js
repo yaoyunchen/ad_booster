@@ -18,7 +18,6 @@ module.exports = (req, res, next) => {
 
     return User.findById(userId, (userErr, user) => {
       if (userErr || !user) return res.status(401).end();
-
       return next();
     });
   });

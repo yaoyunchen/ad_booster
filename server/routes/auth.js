@@ -21,9 +21,10 @@ const validateSignUpForm = (payload) => {
     errors.lastname = 'Please provide your last name.';
   }
 
-  if (!payload || typeof payload.username !== 'string' || payload.username.trim().length < 6) {
+  // TODO: Change the username length in prod.
+  if (!payload || typeof payload.username !== 'string' || payload.username.trim().length < 3) {
     isFormValid = false;
-    errors.username = 'Username must have at least 8 characters.';
+    errors.username = 'Username must have at least 3 characters.';
   }
 
   if (!payload || typeof payload.email !== 'string' || !validator.isEmail(payload.email)) {
@@ -31,9 +32,10 @@ const validateSignUpForm = (payload) => {
     errors.email = 'Please provide a correct email address.';
   }
 
-  if (!payload || typeof payload.password !== 'string' || payload.password.trim().length < 8) {
+  // TODO: Change the value back up in production.
+  if (!payload || typeof payload.password !== 'string' || payload.password.trim().length < 3) {
     isFormValid = false;
-    errors.password = 'Password must have at least 8 characters.';
+    errors.password = 'Password must have at least 3 characters.';
   }
 
   if (!isFormValid) {
@@ -46,7 +48,6 @@ const validateSignUpForm = (payload) => {
     errors
   };
 };
-
 
 const validateLoginForm = (payload) => {
   const errors = {};

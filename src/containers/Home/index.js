@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import Grid from 'material-ui/Grid';
 import Hidden from 'material-ui/Hidden';
-
 import Typography from 'material-ui/Typography';
 
 import ListView from '../../components/Views/List';
@@ -24,7 +23,7 @@ const HomePage = (props, context) => {
       <Grid item xs={12} sm={3} style={{ padding: 16 }}>
         <Hidden xsDown>
           <div style={{ margin: '16px 0' }}>
-            <Typography variant="title" gutterbottom="true">
+            <Typography variant="headline" gutterbottom="true">
               Something here
             </Typography>
           </div>

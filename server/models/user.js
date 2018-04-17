@@ -47,7 +47,7 @@ const UserSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  pphoto: String,
+  photo: String,
   phone: String,
   address: String,
   city: String,

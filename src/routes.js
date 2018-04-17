@@ -9,7 +9,7 @@ import App from './App';
 import HomePage from './containers/Home';
 import LoginPage from './containers/Login';
 import SignUpPage from './containers/SignUp';
-import DashboardPage from './containers/Dashboard';
+import UserDashboardPage from './containers/User/Dashboard';
 
 import Auth from './modules/Auth';
 
@@ -32,7 +32,7 @@ const Routes = () => (
         <Route path="/login" component={LoginPage} />
         <Route path="/logout" component={LogoutPage} />
         <Route path="/signup" component={SignUpPage} />
-        <Route path="/dashboard" component={DashboardPage} />
+        <Route path="/user" component={UserDashboardPage} />
       </Switch>
     </App>
   </Router>

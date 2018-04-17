@@ -38,7 +38,6 @@ passport.use('local-signup', localSignupStrategy);
 const localLoginStrategy = require('./server/passport/local-login');
 passport.use('local-login', localLoginStrategy);
 
-
 // Authentication middleware
 const authCheckMiddleware = require('./server/middleware/auth-check');
 app.use('/api', authCheckMiddleware);
@@ -55,6 +54,8 @@ app.use('/auth', authRoutes);
 const apiRoutes = require('./server/routes/api');
 app.use('/api', apiRoutes);
 
+const userRoutes = require('./server/routes/user');
+app.use('/user', userRoutes);
 
 //Start the server
 const port = process.env.PORT || 8080;

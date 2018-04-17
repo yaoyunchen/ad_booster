@@ -39,12 +39,14 @@ class App extends React.Component {
     this.state = {
       showRegion: !province ? true : false,
       province,
-      menu: null
+      menu: null,
+      admin: false
     };
   }
 
   componentDidMount() {
     this.checkRegionRequired();
+    this.checkIfUserAdmin();
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -58,6 +60,27 @@ class App extends React.Component {
       this.setState({ showRegion: true });
     }
   }
+
+  checkIfUserAdmin = () => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('get', '/user/isAdmin');
+
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.setRequestHeader('Authorization', `bearer ${Auth.getToken()}`);
+
+    xhr.responseType = 'json';
+
+    xhr.addEventListener('load', () => {
+      if (xhr.status === 200) {
+        this.setState({
+          admin: xhr.response.data
+        });
+      };
+    });
+
+    xhr.send();
+  }
+
 
   onRegionChangeClick = (province) => {
     this.setState({ province, showRegion: false });
@@ -103,7 +126,7 @@ class App extends React.Component {
     const menuAuthenticatedActions = (
       <div>
         <MenuItem onClick={() => this.handleMenuClose()}>
-          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/user">Dashboard</Link>
         </MenuItem>
 
         <MenuItem onClick={() => this.handleMenuClose()}>
@@ -143,7 +166,7 @@ class App extends React.Component {
     const authenticatedActions = (
       <span>
         <Button>
-          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/user">Dashboard</Link>
         </Button>
 
         <Button>
@@ -222,6 +245,21 @@ class App extends React.Component {
             </Hidden>
           </Toolbar>
         </AppBar>
+
+        {
+          this.state.admin ? (
+            <AppBar position="static">
+              <Toolbar>
+                <Typography
+                  variant="subheading"
+                  color="inherit"
+                >
+                  You are logged in as an admin. You can use the <Link to="/">Admin Panel</Link>.
+            </Typography>
+              </Toolbar>
+            </AppBar>
+          ) : ''
+        }
 
         <RegionSelect
           open={this.state.showRegion}

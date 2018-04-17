@@ -46,7 +46,16 @@ class App extends React.Component {
 
   componentDidMount() {
     this.checkRegionRequired();
-    this.checkIfUserAdmin();
+
+    Auth.isUserAuthenticated() && this.checkIfUserAdmin();
+  }
+
+  componentWillUpdate() {
+    if (Auth.isUserAuthenticated() && !this.state.admin) {
+      this.checkIfUserAdmin();
+    } else if (!Auth.isUserAuthenticated() && this.state.admin) {
+      this.setState({ admin: false });
+    }
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -75,6 +84,7 @@ class App extends React.Component {
         this.setState({
           admin: xhr.response.data
         });
+        return;
       };
     });
 
@@ -126,7 +136,7 @@ class App extends React.Component {
     const menuAuthenticatedActions = (
       <div>
         <MenuItem onClick={() => this.handleMenuClose()}>
-          <Link to="/user">Dashboard</Link>
+          <Link to="/user">Account</Link>
         </MenuItem>
 
         <MenuItem onClick={() => this.handleMenuClose()}>
@@ -166,7 +176,7 @@ class App extends React.Component {
     const authenticatedActions = (
       <span>
         <Button>
-          <Link to="/user">Dashboard</Link>
+          <Link to="/user">Account</Link>
         </Button>
 
         <Button>
@@ -254,7 +264,7 @@ class App extends React.Component {
                   variant="subheading"
                   color="inherit"
                 >
-                  You are logged in as an admin. You can use the <Link to="/">Admin Panel</Link>.
+                  You are logged in as an admin. You can use the <Link to="/admin">Admin Panel</Link>.
             </Typography>
               </Toolbar>
             </AppBar>

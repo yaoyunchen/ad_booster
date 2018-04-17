@@ -5,13 +5,14 @@ import {
   Switch
 } from "react-router-dom";
 
+import Auth from './modules/Auth';
+
 import App from './App';
 import HomePage from './containers/Home';
 import LoginPage from './containers/Login';
 import SignUpPage from './containers/SignUp';
 import UserDashboardPage from './containers/User/Dashboard';
-
-import Auth from './modules/Auth';
+import AdminDashboardPage from './containers/Admin/Dashboard';
 
 class LogoutPage extends React.Component {
   componentWillMount() {
@@ -33,6 +34,7 @@ const Routes = () => (
         <Route path="/logout" component={LogoutPage} />
         <Route path="/signup" component={SignUpPage} />
         <Route path="/user" component={UserDashboardPage} />
+        <Route path="/admin" component={AdminDashboardPage} />
       </Switch>
     </App>
   </Router>

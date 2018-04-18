@@ -46,14 +46,14 @@ class UserProfileForm extends React.Component {
 }
 
 UserProfileForm.propTypes = {
-  adPost: PropTypes.object,
+  user: PropTypes.object,
   errors: PropTypes.object,
   onChange: PropTypes.func,
   onSubmit: PropTypes.func
 };
 
 UserProfileForm.defaultProps = {
-  adPost: {},
+  user: {},
   errors: {},
   onChange: () => { },
   onSubmit: () => { }

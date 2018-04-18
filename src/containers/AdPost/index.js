@@ -50,7 +50,7 @@ class AdPostPage extends React.Component {
         this.setState({ errors: {} });
 
         localStorage.setItem('successMessage', xhr.response.message);
-        this.props.history.replace('/login');
+        this.props.history.replace('/user');
       } else {
         // failure
 

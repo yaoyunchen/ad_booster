@@ -1,5 +1,9 @@
 import React from 'react';
 
+import Card, { CardContent } from 'material-ui/Card';
+import Grid from 'material-ui/Grid';
+import Typography from 'material-ui/Typography';
+
 import Auth from '../../modules/Auth';
 import LoginForm from '../../components/Forms/Login';
 
@@ -47,7 +51,7 @@ class LoginPage extends React.Component {
         this.setState({ errors: {} });
 
         Auth.authenticateUser(xhr.response.token);
-        this.props.history.replace('/');
+        this.props.history.replace('/user');
       } else {
         // failure
 
@@ -72,13 +76,25 @@ class LoginPage extends React.Component {
 
   render() {
     return (
-      <LoginForm
-        onSubmit={this.processForm}
-        onChange={this.changeUser}
-        errors={this.state.errors}
-        successMessage={this.state.successMessage}
-        user={this.state.user}
-      />
+      <Grid container justify="center">
+        <Grid item xs={12} sm={8} md={6} lg={4}>
+          <Card raised style={{ margin: '36px 24px' }}>
+            <CardContent>
+              <Typography variant="display1" align="center" color="primary" style={{ margin: '16px 0' }}>
+                Log In
+              </Typography>
+
+              <LoginForm
+                onSubmit={this.processForm}
+                onChange={this.changeUser}
+                errors={this.state.errors}
+                successMessage={this.state.successMessage}
+                user={this.state.user}
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     );
   }
 }

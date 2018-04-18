@@ -13,6 +13,8 @@ import LoginPage from './containers/Login';
 import SignUpPage from './containers/SignUp';
 import UserDashboardPage from './containers/User/Dashboard';
 import AdminDashboardPage from './containers/Admin/Dashboard';
+import AdPostPage from './containers/AdPost';
+import ProfilePage from './containers/User/Profile';
 
 class LogoutPage extends React.Component {
   componentWillMount() {
@@ -33,6 +35,8 @@ const Routes = () => (
         <Route path="/login" component={LoginPage} />
         <Route path="/logout" component={LogoutPage} />
         <Route path="/signup" component={SignUpPage} />
+        <Route path="/user/:id/posts/new" component={AdPostPage} />
+        <Route path="/user/:id/edit" component={ProfilePage} />
         <Route path="/user" component={UserDashboardPage} />
         <Route path="/admin" component={AdminDashboardPage} />
       </Switch>

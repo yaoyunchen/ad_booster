@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import Card, { CardHeader, CardContent } from 'material-ui/Card';
 import Button from 'material-ui/Button';
+import Grid from 'material-ui/Grid';
 import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 import Typography from 'material-ui/Typography';
@@ -34,136 +34,135 @@ class SignUpForm extends React.Component {
     } = this.props;
 
     return (
-      <Card className="container" raised>
-        <CardHeader title="Sign Up "/>
-
-        <CardContent>
-          <form action="/" onSubmit={onSubmit}>
+      <form action="/" onSubmit={onSubmit}>
+        <Grid container justify="center">
+          <Grid item xs={12}>
             {errors.summary && <Typography color="error">{errors.summary}</Typography>}
+          </Grid>
 
-            <div className="field-line">
-              <FormControl
-                error={errors.firstname ? true : false}
-                aria-describedby="firstname-error-text"
-                style={{ minWidth: 240 }}
-              >
-                <InputLabel htmlFor="firstname">
-                  First Name
-                </InputLabel>
+          <Grid item xs={12}>
+            <FormControl
+              error={errors.firstname ? true : false}
+              aria-describedby="firstname-error-text"
+              style={{ width: '100%' }}
+            >
+              <InputLabel htmlFor="firstname">First Name</InputLabel>
 
-                <Input
-                  id="firstname"
-                  value={this.state.firstname}
-                  onChange={this.handleChange('firstname')}
-                />
+              <Input
+                id="firstname"
+                value={this.state.firstname}
+                onChange={this.handleChange('firstname')}
+              />
 
-                <FormHelperText id="firstname-error-text">
-                  {errors.firstname}
-                </FormHelperText>
-              </FormControl>
-            </div>
+              <FormHelperText id="firstname-error-text">
+                {errors.firstname}
+              </FormHelperText>
+            </FormControl>
+          </Grid>
 
-            <div className="field-line">
-              <FormControl
-                error={errors.lastname ? true : false}
-                aria-describedby="lastname-error-text"
-                style={{ minWidth: 240 }}
-              >
-                <InputLabel htmlFor="lastname">
-                  Last Name
-                </InputLabel>
+          <Grid item xs={12}>
+            <FormControl
+              error={errors.lastname ? true : false}
+              aria-describedby="lastname-error-text"
+              style={{ width: '100%' }}
+            >
+              <InputLabel htmlFor="lastname">Last Name</InputLabel>
 
-                <Input
-                  id="lastname"
-                  value={this.state.lastname}
-                  onChange={this.handleChange('lastname')}
-                />
+              <Input
+                id="lastname"
+                value={this.state.lastname}
+                onChange={this.handleChange('lastname')}
+              />
 
-                <FormHelperText id="lastname-error-text">
-                  {errors.lastname}
-                </FormHelperText>
-              </FormControl>
-            </div>
+              <FormHelperText id="lastname-error-text">
+                {errors.lastname}
+              </FormHelperText>
+            </FormControl>
+          </Grid>
 
-            <div className="field-line">
-              <FormControl
-                error={errors.username ? true : false}
-                aria-describedby="username-error-text"
-                style={{ minWidth: 240 }}
-              >
-                <InputLabel htmlFor="username">
-                  User Name
-                </InputLabel>
+          <Grid item xs={12}>
+            <FormControl
+              error={errors.username ? true : false}
+              aria-describedby="username-error-text"
+              style={{ width: '100%' }}
+            >
+              <InputLabel htmlFor="username">
+                User Name
+              </InputLabel>
 
-                <Input
-                  id="username"
-                  value={this.state.username}
-                  onChange={this.handleChange('username')}
-                />
+              <Input
+                id="username"
+                value={this.state.username}
+                onChange={this.handleChange('username')}
+              />
 
-                <FormHelperText id="username-error-text">
-                  {errors.username}
-                </FormHelperText>
-              </FormControl>
-            </div>
+              <FormHelperText id="username-error-text">
+                {errors.username}
+              </FormHelperText>
+            </FormControl>
+          </Grid>
 
-            <div className="field-line">
-              <FormControl
-                error={errors.email ? true : false}
-                aria-describedby="email-error-text"
-                style={{ minWidth: 240 }}
-              >
-                <InputLabel htmlFor="email">
-                  Email
-                </InputLabel>
+          <Grid item xs={12}>
+            <FormControl
+              error={errors.email ? true : false}
+              aria-describedby="email-error-text"
+              style={{ width: '100%' }}
+            >
+              <InputLabel htmlFor="email">
+                Email
+              </InputLabel>
 
-                <Input
-                  id="email"
-                  value={this.state.email}
-                  onChange={this.handleChange('email')}
-                />
+              <Input
+                id="email"
+                value={this.state.email}
+                onChange={this.handleChange('email')}
+              />
 
-                <FormHelperText id="email-error-text">
-                  {errors.email}
-                </FormHelperText>
-              </FormControl>
-            </div>
+              <FormHelperText id="email-error-text">
+                {errors.email}
+              </FormHelperText>
+            </FormControl>
+          </Grid>
 
-            <div className="field-line">
-              <FormControl
-                error={errors.password ? true : false}
-                aria-describedby="password-error-text"
-                style={{ minWidth: 240 }}
-              >
-                <InputLabel htmlFor="password">
-                  Password
-                </InputLabel>
+          <Grid item xs={12}>
+            <FormControl
+              error={errors.password ? true : false}
+              aria-describedby="password-error-text"
+              style={{ width: '100%' }}
+            >
+              <InputLabel htmlFor="password">
+                Password
+            </InputLabel>
 
-                <Input
-                  id="password"
-                  type="password"
-                  value={this.state.password}
-                  onChange={this.handleChange('password')}
-                />
+              <Input
+                id="password"
+                type="password"
+                value={this.state.password}
+                onChange={this.handleChange('password')}
+              />
 
-                <FormHelperText id="password-error-text">
-                  {errors.password}
-                </FormHelperText>
-              </FormControl>
-            </div>
+              <FormHelperText id="password-error-text">
+                {errors.password}
+              </FormHelperText>
+            </FormControl>
+          </Grid>
 
-            <div className="button-line">
-              <Button variant="raised" type="submit" color="primary">
-                Create New Account
-              </Button>
-            </div>
+          <Grid item xs={12}>
+            <Button
+              variant="raised" type="submit" color="primary"
+              style={{ display: 'block', margin: 'auto' }}
+            >
+              Create New Account
+            </Button>
+          </Grid>
 
-            <Typography>
+          <Grid item xs={12} style={{ marginTop: 24 }}>
+            <Typography align="center">
               Already have an account? <Link to={'/login'}>Log in</Link>.
             </Typography>
-          </form>
-        </CardContent>
-      </Card>
+          </Grid>
+        </Grid>
+      </form>
     );
   }
 }

@@ -136,7 +136,7 @@ class App extends React.Component {
     const menuAuthenticatedActions = (
       <div>
         <MenuItem onClick={() => this.handleMenuClose()}>
-          <Link to="/user">Account</Link>
+          <Link to="/user">Dashboard</Link>
         </MenuItem>
 
         <MenuItem onClick={() => this.handleMenuClose()}>
@@ -176,7 +176,7 @@ class App extends React.Component {
     const authenticatedActions = (
       <span>
         <Button>
-          <Link to="/user">Account</Link>
+          <Link to="/user">Dashboard</Link>
         </Button>
 
         <Button>
@@ -223,10 +223,10 @@ class App extends React.Component {
           <Toolbar>
             <Typography
               variant="title"
-              color="inherit"
+              color="primary"
               className={classes.flex}
             >
-              <Link to="/">Ad Boost App</Link>
+              <Link to="/" style={{ color: 'inherit' }}>Ad Boost App</Link>
             </Typography>
 
             <Hidden smUp>

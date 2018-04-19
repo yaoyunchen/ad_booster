@@ -5,63 +5,64 @@ const bycrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
-const AdPostSchema = new Schema({
+const AdPostSchema = new mongoose.Schema({
   postType: {
     type: String,
-    required: true
+    // required: true
   },
   priority: {
     type: Number,
-    required: true
+    // required: true
   },
   title: {
     type: String,
-    required: true
+    // required: true
   },
   subtitle: String,
   desc: String,
   body: String,
   status: {
     type: String,
-    required: true
+    // required: true
   },
   createdBy: {
     type: ObjectId,
-    required: true
+    // required: true
   },
   dateCreated: {
     type: Date,
-    required: true
+    default: Date.now,
+    // required: true
   },
   lastEdited: {
     type: Date,
-    required: true
+    default: Date.now,
+    // required: true
   },
-  pin: Number,
   expiryDated: {
     type: Date,
-    required: true
+    // required: true
   },
   notifiy: {
     type: Boolean,
-    required: true,
+    // required: true,
     default: false
   },
   visits: {
     type: Number,
-    required: true,
+    // required: true,
     default: 0
   },
   replies: {
     type: Number,
-    required: true,
+    // required: true,
     default: 0
   },
   address: String,
   city: String,
   region: {
     type: String,
-    required: true
+    // required: true
   },
   province: String,
   country: String,

@@ -35,7 +35,6 @@ const UserSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  middlename: String,
   lastname: {
     type: String,
     required: true,
@@ -63,10 +62,12 @@ const UserSchema = new mongoose.Schema({
   },
   lastActive: {
     type: Date,
+    default: Date.now,
     // required: true
   },
   dateCreated: {
     type: Date,
+    default: Date.now,
     // required: true
   }
 });

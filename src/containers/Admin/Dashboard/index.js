@@ -2,6 +2,7 @@ import React from 'react';
 
 import Auth from '../../../modules/Auth';
 
+import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 
@@ -9,7 +10,7 @@ class AdminDashboardPage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { admin: null }
+    this.state = { admin: null };
   }
 
   componentWillMount() {
@@ -50,10 +51,16 @@ class AdminDashboardPage extends React.Component {
 
   render() {
     return (
-      <Grid container justify="center" style={{ margin: '32px 16px' }}>
-        <Typography variant="headline" gutterbottom="true">
-          Admin Dashboard
-        </Typography>
+      <Grid container justify="center">
+        <Grid item xs={12}>
+          <Card raised style={{ margin: '36px 24px' }}>
+            <CardContent>
+              <Typography variant="display1" align="center" color="primary" style={{ margin: '16px 0' }}>
+                Admin Dashboard
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
     );
   }

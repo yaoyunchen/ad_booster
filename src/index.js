@@ -12,7 +12,7 @@ import './index.css';
 
 const theme = createMuiTheme({
   palette: {
-    type: 'dark'
+    type: 'light'
   },
 });
 

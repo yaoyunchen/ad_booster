@@ -35,8 +35,8 @@ const Routes = () => (
         <Route path="/login" component={LoginPage} />
         <Route path="/logout" component={LogoutPage} />
         <Route path="/signup" component={SignUpPage} />
-        <Route path="/user/:id/posts/new" component={AdPostPage} />
-        <Route path="/user/:id/edit" component={ProfilePage} />
+        <Route path="/posts/new" component={AdPostPage} />
+        <Route path="/user/edit" component={ProfilePage} />
         <Route path="/user" component={UserDashboardPage} />
         <Route path="/admin" component={AdminDashboardPage} />
       </Switch>

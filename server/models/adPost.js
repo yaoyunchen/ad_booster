@@ -1,10 +1,11 @@
 
 const mongoose = require('mongoose');
+const bycrypt = require('bcrypt');
 
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
-const AdPostSchema = new Schema({
+const AdPostSchema = new mongoose.Schema({
   postType: {
     type: String,
     required: true
@@ -15,11 +16,21 @@ const AdPostSchema = new Schema({
   },
   title: {
     type: String,
+    default: "",
     required: true
   },
-  subtitle: String,
-  desc: String,
-  body: String,
+  subtitle: {
+    type: String,
+    default: ""
+  },
+  desc: {
+    type: String,
+    default: ""
+  },
+  body: {
+    type: String,
+    default: ""
+  },
   status: {
     type: String,
     required: true
@@ -30,13 +41,14 @@ const AdPostSchema = new Schema({
   },
   dateCreated: {
     type: Date,
+    default: Date.now,
     required: true
   },
   lastEdited: {
     type: Date,
+    default: Date.now,
     required: true
   },
-  pin: Number,
   expiryDated: {
     type: Date,
     required: true
@@ -56,15 +68,30 @@ const AdPostSchema = new Schema({
     required: true,
     default: 0
   },
-  address: String,
-  city: String,
+  address: {
+    type: String,
+    default: ""
+  },
+  city: {
+    type: String,
+    default: ""
+  },
   region: {
     type: String,
     required: true
   },
-  province: String,
-  country: String,
-  photo: [String]
+  province: {
+    type: String,
+    default: ""
+  },
+  country: {
+    type: String,
+    default: ""
+  },
+  photo: {
+    type: [String],
+    default: []
+  }
 });
 
 module.exports = mongoose.model('AdPost', AdPostSchema);

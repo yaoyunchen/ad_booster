@@ -22,17 +22,20 @@ const UserSchema = new mongoose.Schema({
     type: String,
     // required: true
   },
-  salt: {
-    type: String,
-    // required: true
-  },
   vtoken: {
     type: String,
     // required: true
   },
-  firstname: String,
-  middlename: String,
-  lastname: String,
+  firstname: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  lastname: {
+    type: String,
+    required: true,
+    trim: true
+  },
   username: {
     type: String,
     index: { unique: true },
@@ -55,10 +58,12 @@ const UserSchema = new mongoose.Schema({
   },
   lastActive: {
     type: Date,
+    default: Date.now,
     // required: true
   },
   dateCreated: {
     type: Date,
+    default: Date.now,
     // required: true
   }
 });

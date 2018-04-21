@@ -56,6 +56,12 @@ app.use('/api', apiRoutes);
 const userRoutes = require('./server/routes/user');
 app.use('/user', userRoutes);
 
+const adPostRoutes = require('./server/routes/adPost');
+app.use('/adPost', adPostRoutes);
+
+const pricingRoutes = require('./server/routes/pricing');
+app.use('/pricing', pricingRoutes);
+
 //Start the server
 const port = process.env.PORT || 8080;
 app.listen(port, () => {

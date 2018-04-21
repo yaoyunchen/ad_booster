@@ -11,16 +11,6 @@ const validateSignUpForm = (payload) => {
   let isFormValid = true;
   let message = '';
 
-  if (typeof payload.firstname !== 'string' || payload.firstname.trim().length === 0) {
-    isFormValid = false;
-    errors.firstname = 'Please provide your name.';
-  }
-
-  if (!payload || typeof payload.lastname !== 'string' || payload.lastname.trim().length === 0) {
-    isFormValid = false;
-    errors.lastname = 'Please provide your last name.';
-  }
-
   // TODO: Change the username length in prod.
   if (!payload || typeof payload.username !== 'string' || payload.username.trim().length < 3) {
     isFormValid = false;

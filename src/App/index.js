@@ -14,10 +14,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 
+import AxiosHelper from '../helpers/axiosHelper';
 import Auth from '../modules/Auth';
 import debugLog from '../utils/debug';
 
-import RegionSelect from '../components/RegionSelect';
+import RegionSelectDialog from '../components/Dialogs/RegionSelect';
+import DisclaimerDialog from '../components/Dialogs/Disclaimer';
 
 import './App.scss';
 
@@ -35,26 +37,34 @@ class App extends React.Component {
     super(props, context);
 
     const province = localStorage.getItem('province');
+    const disclaimer = sessionStorage.getItem('disclaimer');
 
     this.state = {
-      showRegion: !province ? true : false,
+      showRegion: !province && disclaimer === 'true' ? true : false,
       province,
-      menu: null,
-      admin: false
+      disclaimer: disclaimer === 'true' ? true : false,
+      admin: null,
+      user: Auth.getToken(),
+      menu: null
     };
   }
 
   componentDidMount() {
     this.checkRegionRequired();
-
     Auth.isUserAuthenticated() && this.checkIfUserAdmin();
   }
 
   componentWillUpdate() {
-    if (Auth.isUserAuthenticated() && !this.state.admin) {
+    const { user, admin } = this.state;
+    if (!Auth.isUserAuthenticated()) {
+      console.log('fucking user is not authenticated');
+      this.removeUserInfo();
+      return;
+    }
+
+    console.log('Fucker is authenticated');
+    if (Auth.isUserAuthenticated && (user !== Auth.getToken() || user === null || admin === null)) {
       this.checkIfUserAdmin();
-    } else if (!Auth.isUserAuthenticated() && this.state.admin) {
-      this.setState({ admin: false });
     }
   }
 
@@ -70,46 +80,45 @@ class App extends React.Component {
     }
   }
 
-  checkIfUserAdmin = () => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', '/user/isAdmin');
-
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.setRequestHeader('Authorization', `bearer ${Auth.getToken()}`);
-
-    xhr.responseType = 'json';
-
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
-        this.setState({
-          admin: xhr.response.data
-        });
-        return;
-      };
-    });
-
-    xhr.send();
+  getChildContext() {
+    return { province: this.state.province };
   }
 
+  removeUserInfo = () => {
+    const { user, admin } = this.state;
+
+    if (user || admin) this.setState({ user: null, admin: null });
+  }
 
   onRegionChangeClick = (province) => {
     this.setState({ province, showRegion: false });
   }
 
-  getChildContext() {
-    return { province: this.state.province };
+  onDisclaimerAgreeClick = () => {
+    sessionStorage.setItem('disclaimer', true);
+    this.setState({ disclaimer: true }, () => {
+      this.checkRegionRequired();
+    });
   }
 
-  closeRegionSelect = () => {
-    this.setState({ showRegion: false });
-  }
+  onDisclaimerDisagreeClick = () => this.context.router.history.goBack()
 
-  openRegionSelect = () => {
-    this.setState({ showRegion: true });
+  closeRegionSelect = () => this.setState({ showRegion: false })
+
+  openRegionSelect = () => this.setState({ showRegion: true })
+
+  checkIfUserAdmin = async () => {
+    const response = await AxiosHelper.get('/user/isAdmin', { 'Authorization': `bearer ${Auth.getToken()}` });
+
+    if (response && response.data) {
+      this.setState({ admin: response.data, user: Auth.getToken() });
+    } else {
+      this.setState({ admin: false, user: Auth.getToken() });
+    }
   }
 
   checkRegionRequired = () => {
-    if (this.state.province) return;
+    if (!this.state.disclaimer || this.state.province) return;
 
     try {
       const { router: { route } } = this.context;
@@ -122,15 +131,13 @@ class App extends React.Component {
     }
   }
 
-  handleMenuClick = e => {
-    this.setState({ menu: e.currentTarget });
-  }
+  handleMenuClick = e => this.setState({ menu: e.currentTarget })
 
-  handleMenuClose = () => {
-    this.setState({ menu: null });
-  }
+  handleMenuClose = () => this.setState({ menu: null })
 
   render() {
+    console.log('RENDER', this.state.user);
+
     const { children, classes } = this.props;
 
     const menuAuthenticatedActions = (
@@ -255,7 +262,6 @@ class App extends React.Component {
             </Hidden>
           </Toolbar>
         </AppBar>
-
         {
           this.state.admin ? (
             <AppBar position="static">
@@ -271,11 +277,18 @@ class App extends React.Component {
           ) : ''
         }
 
-        <RegionSelect
+        <RegionSelectDialog
           open={this.state.showRegion}
           province={this.state.province}
-          onChange={this.onRegionChangeClick}
+          onClick={this.onRegionChangeClick}
           onCancel={this.closeRegionSelect}
+        />
+
+        <DisclaimerDialog
+          open={!this.state.disclaimer}
+          disclaimer={this.state.disclaimer}
+          onClick={this.onDisclaimerAgreeClick}
+          onCancel={this.onDisclaimerDisagreeClick}
         />
 
         {children}

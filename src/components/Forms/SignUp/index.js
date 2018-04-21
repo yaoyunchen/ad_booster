@@ -14,8 +14,6 @@ class SignUpForm extends React.Component {
 
     const { user } = props;
     this.state = {
-      firstname: user.firstname,
-      lastname: user.lastname,
       username: user.username,
       email: user.email,
       password: user.password
@@ -38,46 +36,6 @@ class SignUpForm extends React.Component {
         <Grid container justify="center">
           <Grid item xs={12}>
             {errors.summary && <Typography color="error">{errors.summary}</Typography>}
-          </Grid>
-
-          <Grid item xs={12}>
-            <FormControl
-              error={errors.firstname ? true : false}
-              aria-describedby="firstname-error-text"
-              style={{ width: '100%' }}
-            >
-              <InputLabel htmlFor="firstname">First Name</InputLabel>
-
-              <Input
-                id="firstname"
-                value={this.state.firstname}
-                onChange={this.handleChange('firstname')}
-              />
-
-              <FormHelperText id="firstname-error-text">
-                {errors.firstname}
-              </FormHelperText>
-            </FormControl>
-          </Grid>
-
-          <Grid item xs={12}>
-            <FormControl
-              error={errors.lastname ? true : false}
-              aria-describedby="lastname-error-text"
-              style={{ width: '100%' }}
-            >
-              <InputLabel htmlFor="lastname">Last Name</InputLabel>
-
-              <Input
-                id="lastname"
-                value={this.state.lastname}
-                onChange={this.handleChange('lastname')}
-              />
-
-              <FormHelperText id="lastname-error-text">
-                {errors.lastname}
-              </FormHelperText>
-            </FormControl>
           </Grid>
 
           <Grid item xs={12}>

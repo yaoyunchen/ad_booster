@@ -1,44 +1,25 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Auth from '../../../modules/Auth';
 
 import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
-import GridList, { GridListTile } from 'material-ui/GridList';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
 
 import debugLog from '../../../utils/debug';
-
 import User from '../../../modules/User';
 
 import PageTitle from '../../../components/PageTitle';
-
-const styles = theme => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    overflow: 'hidden',
-    height: '100%'
-  },
-  gridList: {
-    width: '100%',
-    height: 200,
-  },
-  subheader: {
-    width: '100%',
-  },
-});
+import { AdminAdPostList, AdminUserList } from '../../../components/Lists/Admin';
 
 const mockUsers = [
   {
     id: '5ad44fa6f1b086c9f3dd5468',
     firstname: 'Test',
     middlename: '',
-    lastname: 'Tester',
+    lastname: 'Testerasdsadasdasdassadsasadsad',
     accountType: 'user',
+    emailConfirmed: false,
+    points: 0,
     photo: '/assets/images/user/5ad44fa6f1b086c9f3dd5468.png',
     createdAt: '04/19/2018 12:15pm'
   },
@@ -48,6 +29,8 @@ const mockUsers = [
     middlename: '',
     lastname: 'Yao',
     accountType: 'user',
+    points: 450,
+    emailConfirmed: true,
     photo: '/assets/images/user/5ad452326f292bcabe0f295a.png',
     createdAt: '04/07/2018 12:40pm'
   },
@@ -56,19 +39,78 @@ const mockUsers = [
     firstname: 'Admin',
     middlename: '',
     accountType: 'admin',
+    points: 1000,
     lastname: 'Instrator',
+    emailConfirmed: true,
     photo: '/assets/images/user/5ad5869670fe191996e5852c.png',
     createdAt: '04/01/2018 1:20am'
   }
 ];
 
-const mockAdPosts = [];
+const mockAdPosts = [
+  {
+    id: '1',
+    title: 'This is the Title',
+    subtitle: 'This is the subtitle',
+    createdAt: '04/20/2017 12:50am',
+    visits: 0,
+    replies: 0,
+    region: 'Greater Vancouver',
+    province: 'BC',
+    expired: false,
+    user: {
+      firstname: 'Test',
+      lastname: 'Tester'
+    },
+    photos: [
+      '/assets/images/adPost/1.png'
+    ]
+  },
+  {
+    id: '2',
+    title: 'Title 2',
+    subtitle: 'Subtitle 2',
+    createdAt: '04/20/2017 12:00am',
+    visits: 5,
+    replies: 0,
+    region: 'Greater Vancouver',
+    province: 'BC',
+    expired: false,
+    user: {
+      firstname: 'Test',
+      lastname: 'Tester'
+    },
+    photos: [
+      '/assets/images/adPost/1.png'
+    ]
+  },
+  {
+    id: '3',
+    title: 'Title 3',
+    subtitle: 'Subtitle 3',
+    createdAt: '04/10/2017 1:23pm',
+    visits: 29,
+    replies: 4,
+    region: 'Richmond',
+    province: 'BC',
+    expired: true,
+    user: {
+      firstname: 'Andy',
+      lastname: 'Yao'
+    },
+    photos: [
+      '/assets/images/adPost/1.png'
+    ]
+  }
+];
 
 class AdminDashboardPage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { usersLoading: true, adPostsLoading: true };
+    this.state = {
+      loading: false
+    };
   }
 
   componentWillMount() {
@@ -90,137 +132,55 @@ class AdminDashboardPage extends React.Component {
   }
 
   startLoading = () => {
-    this.setState({ loading: true });
-    debugLog('Page loading: ', this.state.loading);
+    this.setState({ loading: true }, () => {
+      debugLog('Page loading: ', this.state.loading);
+    });
   }
 
   endLoading = () => {
-    this.setState({ loading: false });
-    debugLog('Page loading: ', this.state.loading);
+    this.setState({ loading: false }, () => {
+      debugLog('Page loading: ', this.state.loading);
+    });
   }
 
-  stopUserLoading = () => {
-    this.setState({ usersLoading: false });
+  handleDialogOpen = (e, data) => {
+    e.preventDefault();
+    this.setState({ dialogOpen: true, dialogData: data });
   }
 
-  getUserList = () => {
-    const { classes } = this.props;
-
-    return (
-      <div className={classes.root}>
-        <GridList
-          cellHeight={100} cols={1}
-          className={classes.gridList}
-        >
-          {mockUsers.map(user => {
-            let userName = user.firstname;
-            if (user.middlename) userName += ` ${user.middlename}`;
-            userName += ` ${user.lastname}`;
-
-            return (
-              <GridListTile key={user.id} style={{ border: '1px solid red' }}>
-                <Grid container>
-                  <Grid item xs={3} style={{ border: '1px solid blue' }}>
-                    <div
-                      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}
-                    >
-                      <img
-                        alt={userName}
-                        src={`${process.env.PUBLIC_URL}${user.photo}`}
-                        style={{ width: 60, height: 'auto', borderRadius: '10%' }}
-                      />
-                    </div>
-                  </Grid>
-
-                  <Grid item xs={9} style={{ border: '1px solid blue' }}>
-                    <Typography style={{ height: 75 }}>
-                      <b>Name:</b> {userName}
-                      <b>Points: </b>
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </GridListTile>
-            );
-          })}
-        </GridList>
-      </div>
-    );
-  }
-
-  stopAdPostLoading = () => {
-    this.setState({ adPostsLoading: false });
-  }
-
-  getAdPostList = () => {
-    const { classes } = this.props;
-
-    return (
-      <div className={classes.root}>
-        <GridList
-          cellHeight={100} cols={1}
-          className={classes.gridList}
-        >
-          {mockUsers.map(item => {
-            return (
-              <GridListTile key={item.id}>
-                <Typography style={{ height: 75 }}>
-                  {`${item.firstname} ${item.lastname}`}
-                </Typography>
-              </GridListTile>
-            );
-          })}
-        </GridList>
-      </div>
-    );
+  handleDialogClose = () => {
+    this.setState({ dialogOpen: false });
   }
 
   render() {
-    return (
-      <Grid container justify="center" style={{ border: '1px solid lightgrey' }}>
+    return [
+      <Grid container justify="center" key="body">
         <Grid item xs={12}>
           <Card raised style={{ margin: '36px 24px' }}>
             <CardContent>
               <PageTitle title="Admin Dashboard" />
 
-              <Grid container>
-                <Grid item xs={12} md={6} style={{ border: '1px solid black' }}>
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <div style={{ height: 60, border: '1px solid black' }}>
-                        Filter / Search bar here
-                      </div>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      {this.getUserList()}
-                    </Grid>
-                  </Grid>
+              <Grid container spacing={16}>
+                <Grid item xs={12} md={6}>
+                  <AdminUserList
+                    users={mockUsers}
+                    onManageClick={this.handleDialogOpen}
+                  />
                 </Grid>
 
-                <Grid item xs={12} md={6} style={{ border: '1px solid black' }}>
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <div style={{ height: 60, border: '1px solid black' }}>
-                        Filter / Search bar here
-                      </div>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      {this.getAdPostList()}
-                    </Grid>
-                  </Grid>
+                <Grid item xs={12} md={6}>
+                  <AdminAdPostList
+                    adPosts={mockAdPosts}
+                    onManageClick={this.handleDialogOpen}
+                  />
                 </Grid>
               </Grid>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
-    );
+    ];
   }
 }
 
-AdminDashboardPage.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(AdminDashboardPage);
+export default AdminDashboardPage;

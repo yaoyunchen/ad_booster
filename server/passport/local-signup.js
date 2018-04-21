@@ -8,8 +8,6 @@ module.exports = new PassportLocalStrategy({
   passReqToCallback: true
 }, (req, email, password, done) => {
   const userData = {
-    firstname: req.body.firstname.trim(),
-    lastname: req.body.lastname.trim(),
     username: req.body.username.trim(),
     email: email.trim(),
     password: password.trim()
@@ -18,11 +16,7 @@ module.exports = new PassportLocalStrategy({
   const newUser = new User(userData);
 
   newUser.save((err) => {
-    if (err) {
-      console.log('NEW USE SAVE FAILED:', err);
-      return done(err)
-    };
-
+    if (err) return done(err);
     return done(null);
   });
 });

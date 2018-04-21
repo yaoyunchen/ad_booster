@@ -265,5 +265,5 @@ module.exports = {
   // cumbersome.
   performance: {
     hints: false,
-  },
+  }
 };

@@ -8,17 +8,21 @@ import Typography from 'material-ui/Typography';
 
 import ListView from '../../components/Views/List';
 
+import PageTitle from './../../components/PageTitle';
+
 const HomePage = (props, context) => {
   return (
     <Grid container justify="center">
       <Grid item xs={12}>
         <Card raised style={{ margin: '36px 24px' }}>
           <CardContent>
-            <Typography variant="display1" align="center" color="primary" style={{ margin: '16px 0' }}>
-              Ad Boost App
-            </Typography>
+            <PageTitle title="Ad Boost App" />
 
             <Grid container>
+              <Hidden smUp>
+                More pinned ads
+              </Hidden>
+
               <Grid item xs={12} sm={9} style={{ padding: 16 }}>
                 <ListView province={context.province} />
               </Grid>
@@ -27,7 +31,7 @@ const HomePage = (props, context) => {
                 <Hidden xsDown>
                   <div style={{ margin: '16px 0' }}>
                     <Typography variant="headline" gutterbottom="true">
-                      Something here
+                      Pinned Ads
                     </Typography>
                   </div>
                 </Hidden>

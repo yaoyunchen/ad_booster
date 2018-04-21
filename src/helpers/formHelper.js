@@ -7,7 +7,7 @@ import Radio, { RadioGroup } from 'material-ui/Radio';
 import TextField from 'material-ui/TextField';
 import Select from 'material-ui/Select';
 
-export const buildTextInput = (input, props) => {
+const buildTextInput = (input, props) => {
   const { data, errors, onChange } = props;
   const {
     field, title, type, adornment, shrink
@@ -46,7 +46,7 @@ export const buildTextInput = (input, props) => {
   );
 };
 
-export const buildTextAreaInput = (input, props) => {
+const buildTextAreaInput = (input, props) => {
   const { data, errors, onChange } = props;
   const { field, title } = input;
 
@@ -72,7 +72,7 @@ export const buildTextAreaInput = (input, props) => {
   );
 };
 
-export const buildRadioGroup = (input, props) => {
+const buildRadioGroup = (input, props) => {
   const { data, errors, onChange } = props;
   const { field, title, options } = input;
 
@@ -112,7 +112,7 @@ export const buildRadioGroup = (input, props) => {
   );
 };
 
-export const buildSelect = (input, props) => {
+const buildSelect = (input, props) => {
   const { data, errors, onChange } = props;
   const { field, title, options, shrink } = input;
 
@@ -152,4 +152,11 @@ export const buildSelect = (input, props) => {
       </FormHelperText>
     </FormControl>
   );
+};
+
+export {
+  buildRadioGroup,
+  buildSelect,
+  buildTextInput,
+  buildTextAreaInput
 };

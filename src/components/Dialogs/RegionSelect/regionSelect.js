@@ -63,13 +63,13 @@ const provinceArray = [
   }
 ];
 
-class RegionSelect extends React.Component {
+class RegionSelectDialog extends React.Component {
   handleProvinceChange = (e) => {
     const province = e.target.value;
     if (!province) return;
 
     localStorage.setItem('province', province);
-    this.props.onChange(province);
+    this.props.onClick(province);
   }
 
 
@@ -109,7 +109,7 @@ class RegionSelect extends React.Component {
 
             <Select
               value={province || ''}
-              onChange={this.handleProvinceChange}
+              onClick={this.handleProvinceChange}
               fullWidth
             >
               {provinceSelectItems}
@@ -135,18 +135,18 @@ class RegionSelect extends React.Component {
   }
 }
 
-RegionSelect.propTypes = {
+RegionSelectDialog.propTypes = {
   open: PropTypes.bool,
   province: PropTypes.string,
-  onChange: PropTypes.func,
+  onClick: PropTypes.func,
   onCancel: PropTypes.func
 };
 
-RegionSelect.defaultProps = {
+RegionSelectDialog.defaultProps = {
   open: false,
   province: '',
-  onSelect: () => { },
+  onClick: () => {},
   onCancel: () => { }
 };
 
-export default RegionSelect;
+export default RegionSelectDialog;

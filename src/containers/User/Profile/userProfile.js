@@ -7,6 +7,8 @@ import Typography from 'material-ui/Typography';
 import UserProfileForm from '../../../components/Forms/UserProfile';
 import Auth from '../../../modules/Auth';
 
+import User from '../../../modules/User';
+
 class UserProfilePage extends React.Component {
   constructor(props) {
     super(props);
@@ -22,10 +24,15 @@ class UserProfilePage extends React.Component {
   }
 
   componentDidMount() {
-    this.loadUser();
+    const { location } = this.props;
+    // if (location.state && location.state.id) {
+    //   this.loadUser();
+    // }
+
+    this.loadCurrentUser();
   }
 
-  loadUser = () => {
+  loadCurrentUser = () => {
     const xhr = new XMLHttpRequest();
     xhr.open('get', '/user');
 

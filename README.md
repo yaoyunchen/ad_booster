@@ -3,17 +3,62 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## TODO:
 ### Higher priority
-- Image uploads
-- Image gallery
 - Rich Text Editor support
-- Edit own user profile
-- Admin dashboard
+- Search
+- Content
 
 ### Lower priority
-- Search
 - Grid / List view
 - View own/other user profiles
 - Analytics
-- Email validations
 - Phone validations
 - Add loading spinner
+- Favorite
+- Categories
+- Email validations
+- Timeout to region and disclaimer
+
+
+
+
+Login - Done
+
+Logout - Done
+
+Signup - Done
+
+Region Select - Done
+
+Disclaimer - Done
+
+Homepage
+- list all ads by expiry date
+- filter / search
+- side / top pinned ads
+
+User Dashboard
+- See all of own ads
+- Edit all of own ads
+- Boost ads
+- Pin ads
+    - Disable ads
+    - Repost ads
+- Press button email admin to refill points
+
+Update User Profile Page
+    - deactivate account
+
+Create Ad Page
+- create but cannot post without points
+
+Edit Ad Page
+
+Admin Dashboard
+- See all users
+- Edit all users
+- See all ads
+- Edit all ads
+
+Ad page
+- View information about ad
+  - report ads

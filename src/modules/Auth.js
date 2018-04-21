@@ -1,5 +1,8 @@
+import debugLog from '../utils/debug';
+
 class Auth {
   static authenticateUser(token) {
+    debugLog('SETTING AUTH TOKEN');
     localStorage.setItem('token', token);
   }
 
@@ -8,6 +11,7 @@ class Auth {
   }
 
   static deauthenticateUser() {
+    debugLog('REMOVE AUTH TOKEN');
     localStorage.removeItem('token');
   }
 

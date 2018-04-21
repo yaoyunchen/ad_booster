@@ -6,8 +6,8 @@ import Auth from '../../../modules/Auth';
 import Button from 'material-ui/Button';
 import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
-import List, { ListItem, ListItemIcon } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
+// import List, { ListItem, ListItemIcon } from 'material-ui/List';
+// import Divider from 'material-ui/Divider';
 import Typography from 'material-ui/Typography';
 
 import PageTitle from '../../../components/PageTitle';
@@ -45,13 +45,15 @@ class UserDashboardPage extends React.Component {
   }
 
   startLoading = () => {
-    this.setState({ loading: true });
-    debugLog('Loading: ', this.state.loading);
+    this.setState({ loading: true }, () => {
+      debugLog('Loading: ', this.state.loading);
+    });
   };
 
   endLoading = () => {
-    this.setState({ loading: false });
-    debugLog('Loading: ', this.state.loading);
+    this.setState({ loading: false }, () => {
+      debugLog('Loading: ', this.state.loading)
+    });
   };
 
   render() {

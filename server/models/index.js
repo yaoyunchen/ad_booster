@@ -12,5 +12,6 @@ module.exports.connect = (uri) => {
   // Load models
   require('./user');
   require('./adPost');
-  require('./adPostIndex');
+  require('./collectionIndex');
+  require('./pricing');
 };

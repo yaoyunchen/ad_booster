@@ -49,57 +49,140 @@ class UserController {
   }
 
   getUsers(req, res) {
-    return User.find( { account_status: 'active'}, (userErr, user) => {
-      if (userErr || !user) return res.status(401).end();
-
-      return res.status(200).json({ data: user });
+    User.find()
+    .then(user => {
+      return res.status(200).json({
+        status : 1,
+        data : user
+      });
+    }).catch(err => {
+      const ret = Object.assign(err, {status : 0});
+      return res.status(401).json(ret);
     });
   }
 
   getPoints(req, res) {
-    return User.findById(userId, (userErr, user) => {
-      if (userErr || !user) return res.status(401).end();
+    const userId = req.params.userId;
 
-      return res.status(200).json({ data: user.points});
+    User.findById(userId)
+    .then(user => {
+      if(!user) {
+        return res.status(404).json({ data: {
+          status : 0,
+          msg : "Ad Post not found with id: " + userId
+      }})};
+
+      return res.status(200).json({
+        status : 1,
+        data : user.points
+      });
+    }).catch(err => {
+        const ret = Object.assign(err, {status : 0});
+        return res.status(401).json(ret);
     });
   }
 
   post(req, res) {
     //User data
-    const userData = {};
-    (req.body.firstname) ? userData.firstname = req.body.firstname.trim() : '';
-    (req.body.lname) ? userData.lname = req.body.lname.trim() : '';
-    (req.body.username) ? userData.username = req.body.username.trim() : '';
-    (req.body.email) ? userData.email = req.body.email.trim() : '';
-    (req.body.password) ? userData.password = req.body.password.trim() : '';
+    let userData = {};
+    (req.body.accountStatus) ? userData['accountStatus'] = req.body.accountStatus : '';
+    (req.body.accountType) ? userData['accountType'] = req.body.accountType : '';
+    (req.body.email) ? userData['email'] = req.body.email : '';
+    (req.body.password) ? userData['password'] = req.body.password : '';
+    (req.body.vtoken) ? userData['vtoken'] = req.body.vtoken : '';
+    (req.body.firstname) ? userData['firstname'] = req.body.firstname : '';
+    (req.body.lastname) ? userData['lastname'] = req.body.lastname : '';
+    (req.body.username) ? userData['username'] = req.body.username : '';
+    (req.body.photo) ? userData['photo'] = req.body.photo : '';
+    (req.body.phone) ? userData['phone'] = req.body.phone : '';
+    (req.body.address) ? userData['address'] = req.body.address : '';
+    (req.body.city) ? userData['city'] = req.body.city : '';
+    (req.body.region) ? userData['region'] = req.body.region : '';
+    (req.body.province) ? userData['province'] = req.body.province : '';
+    (req.body.country) ? userData['country'] = req.body.country : '';
+    (req.body.accessToken) ? userData['accessToken'] = req.body.accessToken : '';
+    (req.body.promocode) ? userData['promocode'] = req.body.promocode : '';
+    (req.body.devices) ? userData['devices'] = req.body.devices : '';
+    (req.body.emailConfirmed) ? userData['emailConfirmed'] = req.body.emailConfirmed : '';
+    (req.body.lastActive) ? userData['lastActive'] = req.body.lastActive : '';
+    (req.body.dateCreated) ? userData['dateCreated'] = req.body.dateCreated : '';
 
-    userData.dateCreated = new Date();
-    userData.username = 'default username';
+    const token = jwt.sign({ id: user._id }, config.secret, {
+      expiresIn: 86400
+    });
 
-    //new user
-    const newUser = new User({userData});
-
-    newUser.save()
-     .then(data => {
-       return res.status(200).end();
-     }).catch(err => {
-       return res.status(401).end();
+    User.create(adPostData)
+    .then(user => {
+        return res.status(200).json({ data: {
+          status : 1,
+          msg : 'Ad post created successfully'
+        }});
+    }).catch(err => {
+        const ret = Object.assign(err, {status : 0});
+        return res.status(401).json(ret);
     });
   }
 
   put(req, res) {
-    return User.findByIdAndUpdate(userId, req.params, (userErr, user) => {
-      if (userErr || !user) return res.status(401).end();
+    let userData = {};
+    (req.body.accountStatus) ? userData['accountStatus'] = req.body.accountStatus : '';
+    (req.body.accountType) ? userData['accountType'] = req.body.accountType : '';
+    (req.body.email) ? userData['email'] = req.body.email : '';
+    (req.body.password) ? userData['password'] = req.body.password : '';
+    (req.body.vtoken) ? userData['vtoken'] = req.body.vtoken : '';
+    (req.body.firstname) ? userData['firstname'] = req.body.firstname : '';
+    (req.body.lastname) ? userData['lastname'] = req.body.lastname : '';
+    (req.body.username) ? userData['username'] = req.body.username : '';
+    (req.body.photo) ? userData['photo'] = req.body.photo : '';
+    (req.body.phone) ? userData['phone'] = req.body.phone : '';
+    (req.body.address) ? userData['address'] = req.body.address : '';
+    (req.body.city) ? userData['city'] = req.body.city : '';
+    (req.body.region) ? userData['region'] = req.body.region : '';
+    (req.body.province) ? userData['province'] = req.body.province : '';
+    (req.body.country) ? userData['country'] = req.body.country : '';
+    (req.body.accessToken) ? userData['accessToken'] = req.body.accessToken : '';
+    (req.body.promocode) ? userData['promocode'] = req.body.promocode : '';
+    (req.body.devices) ? userData['devices'] = req.body.devices : '';
+    (req.body.emailConfirmed) ? userData['emailConfirmed'] = req.body.emailConfirmed : '';
+    (req.body.lastActive) ? userData['lastActive'] = req.body.lastActive : '';
+    (req.body.dateCreated) ? userData['dateCreated'] = req.body.dateCreated : '';
 
-      return res.status(200).json({ data: user.points});
+    User.findByIdAndUpdate(userId, adPostData)
+    .then(user => {
+      if(!user) {
+        return res.status(404).json({ data: {
+          status : 0,
+          msg : "Ad Post not found with id: " + userId
+      }})};
+
+      return res.status(200).json({ data: {
+        status : 1,
+        msg : 'Ad post updated successfully'
+      }});
+    }).catch(err => {
+        const ret = Object.assign(err, {status : 0});
+        return res.status(401).json(ret);
     });
   }
 
   delete(req, res) {
-    return User.findByIdAndRemove(userId, req.params, (userErr, user) => {
-      if (userErr || !user) return res.status(401).end();
+    const userId = req.params.userId;
 
-      return res.status(200).json();
+    User.findByIdAndRemove(userId)
+    .then(user => {
+      if(!user) {
+        return res.status(404).json({ data: {
+          status : 0,
+          msg : "Ad Post not found with id: " + userId
+      }})};
+
+      return res.status(200).json({
+        status : 1,
+        msg : 'Ad post deleted successfully'
+      });
+    }).catch(err => {
+      const ret = Object.assign(err, {status : 0});
+      return res.status(401).json(ret);
     });
   }
 
@@ -111,30 +194,3 @@ class UserController {
 }
 
 module.exports = new UserController();
-
-
-
-/*
-accountStatus
-accountType
-email
-password
-salt
-vtoken
-firstname
-lastname
-username
-photo
-phone
-address
-city
-region
-province
-country
-accessToken
-promocode
-devices
-emailConfirmed
-lastActive
-dateCreated
-*/

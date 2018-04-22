@@ -18,6 +18,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Email validations
 - Timeout to region and disclaimer
 
+- add character limits to titles, subtitles
 
 
 

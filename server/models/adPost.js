@@ -8,16 +8,16 @@ const ObjectId = Schema.ObjectId;
 const AdPostSchema = new mongoose.Schema({
   postType: {
     type: String,
-    required: true
+    // required: true
   },
   priority: {
     type: Number,
-    required: true
+    // required: true
   },
   title: {
     type: String,
     default: "",
-    required: true
+    // required: true
   },
   subtitle: {
     type: String,
@@ -33,39 +33,39 @@ const AdPostSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    required: true
+    // required: true
   },
   createdBy: {
     type: ObjectId,
-    required: true
+    // required: true
   },
   dateCreated: {
     type: Date,
     default: Date.now,
-    required: true
+    // required: true
   },
   lastEdited: {
     type: Date,
     default: Date.now,
-    required: true
+    // required: true
   },
   expiryDated: {
     type: Date,
-    required: true
+    // required: true
   },
   notifiy: {
     type: Boolean,
-    required: true,
+    // required: true,
     default: false
   },
   visits: {
     type: Number,
-    required: true,
+    // required: true,
     default: 0
   },
   replies: {
     type: Number,
-    required: true,
+    // required: true,
     default: 0
   },
   address: {
@@ -78,7 +78,7 @@ const AdPostSchema = new mongoose.Schema({
   },
   region: {
     type: String,
-    required: true
+    // required: true
   },
   province: {
     type: String,

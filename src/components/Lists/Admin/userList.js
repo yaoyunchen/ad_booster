@@ -135,17 +135,17 @@ const AdminUserList = ({
                         </Grid>
 
                         <Grid item xs={12} sm={4} style={{ marginTop: 16 }}>
-                          <Button
-                            variant="raised" color="primary"
-                            // onClick={e => onManageClick(e, user)}
+                          <Link
+                            to={{ pathname: '/user/edit', state: { id: user.id } }}
+                            style={{ color: 'inherit' }}
                           >
-                            <Link
-                              to={{ pathname: '/user/edit', state: { id: user.id } }}
-                              style={{ color: 'inherit' }}
+                            <Button
+                              variant="raised" color="primary"
+                              // onClick={e => onManageClick(e, user)}
                             >
                               Manage
-                            </Link>
-                          </Button>
+                            </Button>
+                          </Link>
                         </Grid>
                       </Grid>
                     </Grid>

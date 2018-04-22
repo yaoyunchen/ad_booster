@@ -6,12 +6,12 @@ const router = new express.Router();
 
 //get all ad posts
 router.get('/', AdPostController.get);
+//get ad post by id
+router.get('/:adPostId', AdPostController.getAdPost);
 //get all ad posts by user
 router.get('/userAdPosts/:userId', AdPostController.getUserAdPosts);
 //get all ad posts by status
 router.get('/status/:adPostId', AdPostController.getStatus);
-//get ad post by id
-router.get('/adPost/:adPostId', AdPostController.getAdPost);
 //create ad post
 router.post('/', AdPostController.post);
 //update ad post by id

@@ -4,10 +4,10 @@ import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 
-import Auth from '../../modules/Auth';
-import AdPostForm from '../../components/Forms/AdPost';
+import Auth from '../../../modules/Auth';
+import AdPostForm from '../../../components/Forms/AdPost';
 
-import User from '../../modules/User';
+import User from '../../../modules/User';
 
 class AdPostPage extends React.Component {
   constructor(props) {

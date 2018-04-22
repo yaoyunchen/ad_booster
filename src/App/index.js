@@ -57,12 +57,10 @@ class App extends React.Component {
   componentWillUpdate() {
     const { user, admin } = this.state;
     if (!Auth.isUserAuthenticated()) {
-      console.log('fucking user is not authenticated');
       this.removeUserInfo();
       return;
     }
 
-    console.log('Fucker is authenticated');
     if (Auth.isUserAuthenticated && (user !== Auth.getToken() || user === null || admin === null)) {
       this.checkIfUserAdmin();
     }
@@ -136,31 +134,37 @@ class App extends React.Component {
   handleMenuClose = () => this.setState({ menu: null })
 
   render() {
-    console.log('RENDER', this.state.user);
-
     const { children, classes } = this.props;
 
     const menuAuthenticatedActions = (
       <div>
-        <MenuItem onClick={() => this.handleMenuClose()}>
-          <Link to="/user">Dashboard</Link>
-        </MenuItem>
+        <Link to="/user">
+          <MenuItem onClick={() => this.handleMenuClose()}>
+            Dashboard
+          </MenuItem>
+        </Link>
 
-        <MenuItem onClick={() => this.handleMenuClose()}>
-          <Link to="/logout">Log out</Link>
-        </MenuItem>
+        <Link to="/logout">
+          <MenuItem onClick={() => this.handleMenuClose()}>
+            Log out
+          </MenuItem>
+        </Link>
       </div>
     );
 
     const menuUnauthenticatedActions = (
       <div>
-        <MenuItem onClick={() => this.handleMenuClose()}>
-          <Link to="/login">Log in</Link>
-        </MenuItem>
+        <Link to="/login">
+          <MenuItem onClick={() => this.handleMenuClose()}>
+            Log in
+          </MenuItem>
+        </Link>
 
-        <MenuItem onClick={() => this.handleMenuClose()}>
-          <Link to="/signup">Sign up</Link>
-        </MenuItem>
+        <Link to="/signup">
+          <MenuItem onClick={() => this.handleMenuClose()}>
+            Sign up
+          </MenuItem>
+        </Link>
       </div>
     );
 
@@ -182,25 +186,29 @@ class App extends React.Component {
 
     const authenticatedActions = (
       <span>
-        <Button>
-          <Link to="/user">Dashboard</Link>
-        </Button>
+        <Link to="/user">
+          <Button color="primary">Dashboard</Button>
+        </Link>
 
-        <Button>
-          <Link to="/logout">Log out</Link>
-        </Button>
+        <Link to="/logout">
+          <Button color="primary">Log out</Button>
+        </Link>
       </span>
     );
 
     const unauthenticatedActions = (
       <span>
-        <Button>
-          <Link to="/login">Log in</Link>
-        </Button>
+        <Link to="/login">
+          <Button color="primary">
+            Log in
+          </Button>
+        </Link>
 
-        <Button>
-          <Link to="/signup">Sign up</Link>
-        </Button>
+        <Link to="/signup">
+          <Button color="primary">
+            Sign up
+          </Button>
+        </Link>
       </span>
     );
 
@@ -228,13 +236,11 @@ class App extends React.Component {
           className={classes.root}
         >
           <Toolbar>
-            <Typography
-              variant="title"
-              color="primary"
-              className={classes.flex}
-            >
-              <Link to="/" style={{ color: 'inherit' }}>Ad Boost App</Link>
-            </Typography>
+            <Link to="/" style={{ color: 'inherit' }} className={classes.flex}>
+              <Typography variant="title" color="primary">
+                Ad Boost App
+              </Typography>
+            </Link>
 
             <Hidden smUp>
               <IconButton

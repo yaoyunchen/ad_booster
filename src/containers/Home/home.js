@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
-import Hidden from 'material-ui/Hidden';
 import Typography from 'material-ui/Typography';
 
 import ListView from '../../components/Views/List';
 
-import PageTitle from './../../components/PageTitle';
+import PageTitle from '../../components/PageTitle';
+import AdPostList from '../../components/Lists/Adposts';
 
 const HomePage = (props, context) => {
   return (
@@ -19,22 +19,10 @@ const HomePage = (props, context) => {
             <PageTitle title="Ad Boost App" />
 
             <Grid container>
-              <Hidden smUp>
-                More pinned ads
-              </Hidden>
-
-              <Grid item xs={12} sm={9} style={{ padding: 16 }}>
-                <ListView province={context.province} />
-              </Grid>
-
-              <Grid item xs={12} sm={3} style={{ padding: 16 }}>
-                <Hidden xsDown>
-                  <div style={{ margin: '16px 0' }}>
-                    <Typography variant="headline" gutterbottom="true">
-                      Pinned Ads
-                    </Typography>
-                  </div>
-                </Hidden>
+              <Grid item xs={12}>
+                <AdPostList
+                  province={context.province}
+                />
               </Grid>
             </Grid>
           </CardContent>

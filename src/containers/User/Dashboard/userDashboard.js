@@ -82,29 +82,29 @@ class UserDashboardPage extends React.Component {
 
                       <Grid container justify="center">
                         <Grid item xs={12} style={{ border: '1px solid black', textAlign: 'center' }}>
-                          <Button
-                            variant="raised" color="primary"
-                            style={{ width: '100%', maxWidth: '240px', marginBottom: 16 }}
+                          <Link
+                            to="/posts/new" params={{ id: '1' }}
+                            style={{ color: 'inherit' }}
                           >
-                            <Link
-                              to="/posts/new" params={{ id: '1' }}
-                              style={{ color: 'inherit' }}
+                            <Button
+                              variant="raised" color="primary"
+                              style={{ width: '100%', maxWidth: '240px', marginBottom: 16 }}
                             >
                               Create Ad
-                            </Link>
-                          </Button>
+                            </Button>
+                          </Link>
                         </Grid>
 
 
                         <Grid item xs={12} style={{ border: '1px solid black', textAlign: 'center' }}>
-                          <Button
-                            variant="raised" color="default"
-                            style={{ width: '100%', maxWidth: '240px' }}
-                          >
-                            <Link to="/user/edit" style={{ color: 'inherit' }}>
+                          <Link to="/user/edit" style={{ color: 'inherit' }}>
+                            <Button
+                              variant="raised" color="default"
+                              style={{ width: '100%', maxWidth: '240px' }}
+                            >
                               Edit User
-                            </Link>
-                          </Button>
+                            </Button>
+                          </Link>
                         </Grid>
                       </Grid>
 

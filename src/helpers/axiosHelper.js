@@ -1,13 +1,11 @@
 import axios from 'axios';
 
-import Auth from '../modules/Auth';
-
 import debugLog from '../utils/debug';
 
 class AxiosHelper {
   constructor() {
     this.defaultHeaders = {
-      'Content-type': 'application/x-www-form-urlencoded'
+      // 'Content-type': 'application/x-www-form-urlencoded'
     };
 
     this.defaultOptions = {
@@ -20,6 +18,23 @@ class AxiosHelper {
 
     const request = {
       method: 'get',
+      url,
+      headers
+    };
+
+    return axios(Object.assign({}, request, this.defaultOptions, reqOptions))
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => debugLog(error));
+  }
+
+  post(url, data, reqHeaders = {}, reqOptions = {}) {
+    const headers = Object.assign({}, this.defaultHeaders, reqHeaders);
+
+    const request = {
+      method: 'post',
+      data,
       url,
       headers
     };

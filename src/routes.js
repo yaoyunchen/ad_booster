@@ -5,40 +5,37 @@ import {
   Switch
 } from "react-router-dom";
 
-import Auth from './modules/Auth';
-
 import App from './App';
 import HomePage from './containers/Home';
-import LoginPage from './containers/Login';
+
 import SignUpPage from './containers/SignUp';
+import LoginPage from './containers/Login';
+import LogoutPage from './containers/Logout';
+
 import UserDashboardPage from './containers/User/Dashboard';
+import UserProfilePage from './containers/User/Profile';
+
 import AdminDashboardPage from './containers/Admin/Dashboard';
-import AdPostPage from './containers/AdPost';
-import ProfilePage from './containers/User/Profile';
 
-class LogoutPage extends React.Component {
-  componentWillMount() {
-    Auth.deauthenticateUser();
-    this.props.history.replace({ pathname: '/' });
-  }
-
-  render() {
-    return <div />;
-  }
-}
+import AdPostPage from './containers/AdPosts/AdPost';
+import AdPostNewPage from './containers/AdPosts/New';
 
 const Routes = () => (
   <Router>
     <App>
       <Switch>
-        <Route exact path="/" component={HomePage} />
         <Route path="/login" component={LoginPage} />
         <Route path="/logout" component={LogoutPage} />
         <Route path="/signup" component={SignUpPage} />
-        <Route path="/posts/new" component={AdPostPage} />
-        <Route path="/user/edit" component={ProfilePage} />
+
+        <Route path="/post/:id" component={AdPostPage}/>
+        <Route path="/posts/new" component={AdPostNewPage} />
+
+        <Route path="/user/edit" component={UserProfilePage} />
         <Route path="/user" component={UserDashboardPage} />
         <Route path="/admin" component={AdminDashboardPage} />
+
+        <Route path="/" component={HomePage} />
       </Switch>
     </App>
   </Router>

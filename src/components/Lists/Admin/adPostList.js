@@ -147,17 +147,17 @@ const AdminAdPostList = ({
                         </Grid>
 
                         <Grid item xs={12} style={{ marginTop: 16 }}>
-                          <Button
-                            variant="raised" color="primary"
-                            onClick={e => onManageClick(e, adPost)}
+                          <Link
+                            to="/posts/edit" params={{ id: adPost.id }}
+                            style={{ color: 'inherit' }}
                           >
-                            <Link
-                              to="/posts/edit" params={{ id: adPost.id }}
-                              style={{ color: 'inherit' }}
+                            <Button
+                              variant="raised" color="primary"
+                              onClick={e => onManageClick(e, adPost)}
                             >
                               Manage
-                            </Link>
-                        </Button>
+                            </Button>
+                          </Link>
                         </Grid>
                       </Grid>
                     </Grid>

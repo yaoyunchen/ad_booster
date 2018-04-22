@@ -13,10 +13,9 @@ class AdPost {
     return axiosHelper.get(`/adPost${paramsUrl}`);
   }
 
-  getAdPost = adPostId => {
-    const id = adPostId.trim();
-    return axiosHelper.get(`/adPost/${id}`);
-  }
+  getAdPostsByUser = (userId = null) => axiosHelper.get(`/adPost/userAdPosts?userId=${encodeURIComponent(userId)}`)
+
+  getAdPost = adPostId => axiosHelper.get(`/adPost/${encodeURIComponent(adPostId.trim())}`);
 }
 
 export default new AdPost();

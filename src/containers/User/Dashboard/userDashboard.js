@@ -13,6 +13,7 @@ import Typography from 'material-ui/Typography';
 import PageTitle from '../../../components/PageTitle';
 
 import User from '../../../modules/User';
+import AdPost from '../../../modules/AdPost';
 
 import debugLog from '../../../utils/debug';
 
@@ -21,8 +22,9 @@ class UserDashboardPage extends React.Component {
     super(props);
 
     this.state = {
-      points: 0,
-      loading: false
+      loading: false,
+      points: {},
+      adPosts: []
     };
   }
 
@@ -34,26 +36,43 @@ class UserDashboardPage extends React.Component {
   }
 
   componentDidMount() {
-    this.loadUserPoints();
+    // this.loadUserPoints();
+    this.loadUserAdPosts();
   }
 
   loadUserPoints = async () => {
     this.startLoading();
-    const points = await User.getUserPoints();
+    const result = await User.getUserPoints();
+
+    debugLog('User points loaded: ', result);
+
+    if (result && result.data) this.setState({ points: result.data });
+
     this.endLoading();
-    this.setState({ points });
+
+  }
+
+  loadUserAdPosts = async () => {
+    this.startLoading();
+    const result = await AdPost.getAdPostsByUser();
+
+    debugLog('Ad Posts loaded', result);
+
+    if (result && result.data) this.setState({ adPosts: result.data });
+
+    this.endLoading();
   }
 
   startLoading = () => {
-    this.setState({ loading: true }, () => {
-      debugLog('Loading: ', this.state.loading);
-    });
+    if (!this.startLoading.loading) {
+      this.setState({ loading: true }, () => debugLog('Loading: ', this.state.loading));
+    }
   };
 
   endLoading = () => {
-    this.setState({ loading: false }, () => {
-      debugLog('Loading: ', this.state.loading)
-    });
+    if (this.state.loading) {
+      this.setState({ loading: false }, () => debugLog('Loading: ', this.state.loading));
+    }
   };
 
   render() {
@@ -67,7 +86,6 @@ class UserDashboardPage extends React.Component {
               <Grid container spacing={16}>
                 <Grid item xs={12} style={{ border: '1px solid black' }}>
                   <Typography variant="title" align="right">
-                    Current Points: {this.state.points}
                   </Typography>
                 </Grid>
 

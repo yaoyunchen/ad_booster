@@ -11,7 +11,7 @@ router.get('/isAdmin', UserController.getIsAdmin);
 //get all active users
 router.get('/users',UserController.getUsers);
 //get user points by id
-router.get('/points/:userId',UserController.getPoints);
+router.get('/points',UserController.getPoints);
 //create user
 router.post('/',UserController.post);
 //update user by id

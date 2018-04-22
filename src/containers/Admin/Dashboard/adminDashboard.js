@@ -126,7 +126,7 @@ class AdminDashboardPage extends React.Component {
 
   isUserAdmin = async () => {
     this.startLoading();
-    const userType = await User.getUserType();
+    const userType = await User.getUserIsAdmin();
     if (userType !== 'admin') this.props.history.replace({ pathname: '/' });
     this.endLoading();
   }

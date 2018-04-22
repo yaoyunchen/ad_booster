@@ -28,6 +28,11 @@ const PricingSchema = new mongoose.Schema({
     default : "active",
     required: true
   },
+  interval : {
+    type: Number,
+    default: 0,
+    required: true
+  },
   editedBy : {
     type: ObjectId,
     required: true

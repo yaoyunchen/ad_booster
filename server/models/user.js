@@ -22,20 +22,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     // required: true
   },
-  vtoken: {
-    type: String,
-    // required: true
-  },
-  firstname: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  lastname: {
-    type: String,
-    required: true,
-    trim: true
-  },
   username: {
     type: String,
     index: { unique: true },
@@ -43,13 +29,6 @@ const UserSchema = new mongoose.Schema({
     trim: true
   },
   photo: String,
-  phone: String,
-  address: String,
-  city: String,
-  region: String,
-  province: String,
-  country: String,
-  accessToken: String,
   promocode: String,
   devices: [],
   emailConfirmed: {

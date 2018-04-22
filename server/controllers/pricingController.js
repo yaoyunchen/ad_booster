@@ -55,6 +55,7 @@ class PricingController {
 
     (req.body.name) ? pricingData['name'] = req.body.name.trim() : '';
     (req.body.price) ? pricingData['price'] = req.body.price : '';
+    (req.body.interval) ? pricingData['interval'] = req.body.interval : '';
     (req.body.type) ? pricingData['type'] = req.body.type.trim() : '';
     (req.body.desc) ? pricingData['desc'] = req.body.desc.trim() : '';
     (req.body.editedBy) ? pricingData['editedBy'] = ObjectId(req.body.editedBy.trim()) : '';
@@ -78,6 +79,7 @@ class PricingController {
 
     (req.body.name) ? pricingData['name'] = req.body.name.trim() : '';
     (req.body.price) ? pricingData['price'] = req.body.price : '';
+    (req.body.interval) ? pricingData['interval'] = req.body.interval : '';
     (req.body.type) ? pricingData['type'] = req.body.type.trim() : '';
     (req.body.desc) ? pricingData['desc'] = req.body.desc.trim() : '';
     (req.body.status) ? pricingData['status'] = req.body.status.trim() : '';

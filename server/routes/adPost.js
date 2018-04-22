@@ -4,14 +4,19 @@ const AdPostController = require('../controllers/adPostController');
 
 const router = new express.Router();
 
-//get all ad posts
-router.get('/', AdPostController.get);
-//get ad post by id
-router.get('/:adPostId', AdPostController.getAdPost);
+
 //get all ad posts by user
-router.get('/userAdPosts/:userId', AdPostController.getUserAdPosts);
+router.get('/userAdPosts', AdPostController.getUserAdPosts);
+
 //get all ad posts by status
 router.get('/status/:adPostId', AdPostController.getStatus);
+
+//get ad post by id
+router.get('/:adPostId', AdPostController.getAdPost);
+
+//get all ad posts
+router.get('/', AdPostController.get);
+
 //create ad post
 router.post('/', AdPostController.post);
 //update ad post by id

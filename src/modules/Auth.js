@@ -2,7 +2,7 @@ import debugLog from '../utils/debug';
 
 class Auth {
   static authenticateUser(token) {
-    debugLog('SETTING AUTH TOKEN');
+    debugLog('SETTING AUTH TOKEN', token);
     localStorage.setItem('token', token);
   }
 

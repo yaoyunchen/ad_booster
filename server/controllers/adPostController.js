@@ -1,4 +1,7 @@
+const jwt = require('jsonwebtoken');
 const Mongoose = require('mongoose');
+
+const config = require('../../config');
 
 const AdPost = Mongoose.model('AdPost');
 const CollectionIndex = Mongoose.model('CollectionIndex');
@@ -30,17 +33,23 @@ class AdPostController {
   }
 
   getUserAdPosts(req, res) {
-    const userId = req.params.userId;
+    const { userId } = req.query;
+    const token = userId !== 'null' ? userId : req.headers.authorization.split(' ')[1];
 
-    AdPost.find({createdBy : ObjectId(userId)})
-    .then(adPost => {
-      return res.status(200).json({
-        status : 1,
-        data : adPost
+    return jwt.verify(token, config.jwtSecret, (err, decoded) => {
+      if (err) return res.status(401).end();
+
+      const id = decoded.sub;
+
+      return AdPost.find({ createdBy: ObjectId(id) }).then(adPost => {
+        return res.status(200).json({
+          status: 1,
+          data: adPost
+        });
+      }).catch(err => {
+        const ret = Object.assign(err, { status: 0 });
+        return res.status(401).json(ret);
       });
-    }).catch(err => {
-      const ret = Object.assign(err, {status : 0});
-      return res.status(401).json(ret);
     });
   }
 
@@ -66,7 +75,6 @@ class AdPostController {
   }
 
   getAdPost(req, res) {
-    console.log('fuck you')
     const adPostId = req.params.adPostId;
 
     AdPost.findById(adPostId)

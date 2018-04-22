@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const Mongoose = require('mongoose');
 
 const config = require('../../config');
+
 const User = Mongoose.model('User');
 
 class UserController {
@@ -17,7 +18,9 @@ class UserController {
 
   // Default GET for user.  Returns complete user data.
   get(req, res) {
-    const token = this._getUserToken(req);
+    const { id } = req.query;
+
+    const token = id !== 'null' ? id : this._getUserToken(req);
 
     return jwt.verify(token, config.jwtSecret, (err, decoded) => {
       if (err) return res.status(401).end();
@@ -62,23 +65,34 @@ class UserController {
   }
 
   getPoints(req, res) {
-    const userId = req.params.userId;
+    const { id } = req.query;
 
-    User.findById(userId)
-    .then(user => {
-      if(!user) {
-        return res.status(404).json({ data: {
-          status : 0,
-          msg : "Ad Post not found with id: " + userId
-      }})};
+    const token = id !== 'null' ? id : this._getUserToken(req);
 
-      return res.status(200).json({
-        status : 1,
-        data : user.points
-      });
-    }).catch(err => {
-        const ret = Object.assign(err, {status : 0});
-        return res.status(401).json(ret);
+    return jwt.verify(token, config.jwtSecret, (err, decoded) => {
+      if (err) return res.status(401).end();
+
+      const userId = decoded.sub;
+
+      return User.findById(userId)
+        .then(user => {
+          if (!user) {
+            return res.status(404).json({
+              data: {
+                status: 0,
+                msg: "Ad Post not found with id: " + userId
+              }
+            })
+          };
+
+          return res.status(200).json({
+            status: 1,
+            data: user.points || 0
+          });
+        }).catch(err => {
+          const ret = Object.assign(err, { status: 0 });
+          return res.status(401).json(ret);
+        });
     });
   }
 

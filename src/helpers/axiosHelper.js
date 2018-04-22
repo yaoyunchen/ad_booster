@@ -1,11 +1,12 @@
 import axios from 'axios';
 
+import Auth from '../modules/Auth';
 import debugLog from '../utils/debug';
 
 class AxiosHelper {
   constructor() {
     this.defaultHeaders = {
-      // 'Content-type': 'application/x-www-form-urlencoded'
+      'Authorization': `bearer ${Auth.getToken()}`
     };
 
     this.defaultOptions = {

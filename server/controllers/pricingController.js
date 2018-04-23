@@ -58,6 +58,7 @@ class PricingController {
     (req.body.interval) ? pricingData['interval'] = req.body.interval : '';
     (req.body.type) ? pricingData['type'] = req.body.type.trim() : '';
     (req.body.desc) ? pricingData['desc'] = req.body.desc.trim() : '';
+    (req.body.createdBy) ? pricingData['createdBy'] = ObjectId(req.body.createdBy.trim()) : '';
     (req.body.editedBy) ? pricingData['editedBy'] = ObjectId(req.body.editedBy.trim()) : '';
 
     Pricing.create(pricingData)

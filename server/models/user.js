@@ -3,6 +3,9 @@
 const mongoose = require('mongoose');
 const bycrypt = require('bcrypt');
 
+const Schema = mongoose.Schema;
+const ObjectId = Schema.ObjectId;
+
 const UserSchema = new mongoose.Schema({
   accountStatus: {
     type: String,
@@ -43,6 +46,15 @@ const UserSchema = new mongoose.Schema({
   dateCreated: {
     type: Date,
     default: Date.now,
+    // required: true
+  },
+  lastEdited: {
+    type: Date,
+    default: Date.now,
+    // required: true
+  },
+  editedBy: {
+    type: ObjectId,
     // required: true
   }
 });

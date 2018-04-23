@@ -49,6 +49,10 @@ const AdPostSchema = new mongoose.Schema({
     default: Date.now,
     // required: true
   },
+  editedBy: {
+    type: ObjectId,
+    // required: true
+  },
   expiryDated: {
     type: Date,
     // required: true
@@ -57,6 +61,17 @@ const AdPostSchema = new mongoose.Schema({
     type: Boolean,
     // required: true,
     default: false
+  },
+  pinned: {
+    type: Boolean,
+    // required: true,
+    default: false
+  },
+  pinnedDate: {
+    type: Date
+  },
+  pinExpiryDate: {
+    type: Date
   },
   visits: {
     type: Number,

@@ -11,11 +11,11 @@ const ObjectId = Mongoose.Types.ObjectId;
 class AdPostController {
   constructor() {
     this.get = this.get.bind(this);
-    this.getUserAdPosts = this.getUserAdPosts.bind(this);
-    this.getStatus = this.getStatus.bind(this);
-    this.getAdPost = this.getAdPost.bind(this);
+    this.getSearch = this.getSearch.bind(this);
+    this.getField = this.getField.bind(this);
     this.post = this.post.bind(this);
     this.put = this.put.bind(this);
+    this.putPinned = this.putPinned.bind(this);
     this.delete = this.delete.bind(this);
   }
 
@@ -32,109 +32,55 @@ class AdPostController {
       });
   }
 
-  getUserAdPosts(req, res) {
-    const { userId } = req.query;
-    const token = userId !== 'null' ? userId : req.headers.authorization.split(' ')[1];
+  getSearch(req, res) {
+    const { field } = req.query;
+    const { value } = req.query;
 
-    return jwt.verify(token, config.jwtSecret, (err, decoded) => {
-      if (err) return res.status(401).end();
+    if(field == null || value == null) return res.status(401).end();
 
-      const id = decoded.sub;
+    let query = {};
+    query[field] = {"$regex":value,"$options":"i"};
 
-      return AdPost.find({ createdBy: ObjectId(id) }).then(adPost => {
+    return AdPost.find(query)
+      .then(adPost => {
         return res.status(200).json({
-          status: 1,
-          data: adPost
+          status : 1,
+          data : adPost
         });
       }).catch(err => {
-        const ret = Object.assign(err, { status: 0 });
-        return res.status(401).json(ret);
-      });
-    });
-  }
-
-  getStatus(req, res) {
-    const adPostId = req.params.adPostId;
-
-    AdPost.findById(adPostId)
-    .then(adPost => {
-      if(!adPost) {
-        return res.status(404).json({ data: {
-          status : 0,
-          msg : "Ad Post not found with id: " + adPostId
-      }})};
-
-      return res.status(200).json({
-        status : 1,
-        data : adPost.status
-      });
-    }).catch(err => {
         const ret = Object.assign(err, {status : 0});
         return res.status(401).json(ret);
-    });
+      });
   }
 
-  getAdPost(req, res) {
-    const adPostId = req.params.adPostId;
+  getField(req, res) {
+    const { adPostId } = req.query;
+    const { field } = req.query;
 
-    AdPost.findById(adPostId)
+    if(adPostId == null || field == null) return res.status(401).end();
+
+    const projection = field + " -_id";
+
+    AdPost.findById(adPostId, projection)
     .then(adPost => {
-      if(!adPost) {
-        return res.status(404).json({ data: {
-          status : 0,
-          msg : "Ad Post not found with id: " + adPostId
-      }})};
-
-      return res.status(200).json({
-        status : 1,
-        data : adPost
-      });
+      if(!adPost) return res.status(401).end();
+      return res.status(200).json({data : adPost});
     }).catch(err => {
-        const ret = Object.assign(err, {status : 0});
-        return res.status(401).json(ret);
+      return res.status(401).end();
     });
   }
 
   post(req, res) {
-    //User data
-    let adPostData = {};
-
-    (req.body.postType) ? adPostData['postType'] = req.body.postType.trim() : '';
-    (req.body.title) ? adPostData['title'] = req.body.title.trim() : '';
-    (req.body.subtitle) ? adPostData['subtitle'] = req.body.subtitle.trim() : '';
-    (req.body.desc) ? adPostData['desc'] = req.body.desc.trim() : '';
-    (req.body.body) ? adPostData['body'] = req.body.body.trim() : '';
-    (req.body.status) ? adPostData['status'] = req.body.status : '';
-    (req.body.createdBy) ? adPostData['createdBy'] = req.body.createdBy : '';
-    (req.body.expiryDated) ? adPostData['expiryDated'] = req.body.expiryDated : '';
-    (req.body.notifiy) ? adPostData['notifiy'] = req.body.notifiy : '';
-    (req.body.visits) ? adPostData['visits'] = req.body.visits : '';
-    (req.body.replies) ? adPostData['replies'] = req.body.replies : '';
-    (req.body.address) ? adPostData['address'] = req.body.address.trim() : '';
-    (req.body.city) ? adPostData['city'] = req.body.city.trim() : '';
-    (req.body.region) ? adPostData['region'] = req.body.region.trim() : '';
-    (req.body.province) ? adPostData['province'] = req.body.province.trim() : '';
-    (req.body.country) ? adPostData['country'] = req.body.country.trim() : '';
-    (req.body.photo) ? adPostData['photo'] = req.body.photo : '';
-
-    CollectionIndex.findById('5ada9fbd7a3d620e112ed24b')
+    CollectionIndex.find({name : "ad_post"})
     .then(collectionIndex => {
-      if(!collectionIndex) {
-        return res.status(404).json({ data: {
-          status : 0,
-          msg : "Index not found with id: 5ada9fbd7a3d620e112ed24b. Can not get index."
-      }})};
+      if(!collectionIndex) return res.status(401).end();
 
       const newIndex = collectionIndex.index+1;
       adPostData['priority'] = newIndex;
 
-      CollectionIndex.findByIdAndUpdate('5ada9fbd7a3d620e112ed24b', { index : newIndex })
+      CollectionIndex.findByIdAndUpdate(collectionIndex._id, { index : newIndex })
       .then(adPost => {
-        if(!adPost) {
-          return res.status(404).json({ data: {
-            status : 0,
-            msg : "Index not found with id: 5ada9fbd7a3d620e112ed24b"
-        }})};
+        if(!adPost) return res.status(401).end();
       }).catch(err => {
           const ret = Object.assign(err, {status : 0});
           return res.status(401).json(ret);
@@ -155,36 +101,15 @@ class AdPostController {
         const ret = Object.assign(err, {status : 0});
         return res.status(401).json(ret);
     });
-
   }
 
   put(req, res) {
-    let adPostData = {};
+    // let adPostData = {};
     const adPostId = req.body.adPostId;
 
-    (req.body.postType) ? adPostData['postType'] = req.body.postType.trim() : '';
-    (req.body.priority) ? adPostData['priority'] = req.body.priority : '';
-    (req.body.title) ? adPostData['title'] = req.body.title.trim() : '';
-    (req.body.subtitle) ? adPostData['subtitle'] = req.body.subtitle.trim() : '';
-    (req.body.desc) ? adPostData['desc'] = req.body.desc.trim() : '';
-    (req.body.body) ? adPostData['body'] = req.body.body.trim() : '';
-    (req.body.status) ? adPostData['status'] = req.body.status : '';
-    (req.body.createdBy) ? adPostData['createdBy'] = req.body.createdBy : '';
-    (req.body.pin) ? adPostData['pin'] = req.body.pin.trim() : '';
-    (req.body.expiryDated) ? adPostData['expiryDated'] = req.body.expiryDated : '';
-    (req.body.notifiy) ? adPostData['notifiy'] = req.body.notifiy : '';
-    (req.body.visits) ? adPostData['visits'] = req.body.visits : '';
-    (req.body.replies) ? adPostData['replies'] = req.body.replies : '';
-    (req.body.address) ? adPostData['address'] = req.body.address.trim() : '';
-    (req.body.city) ? adPostData['city'] = req.body.city.trim() : '';
-    (req.body.region) ? adPostData['region'] = req.body.region.trim() : '';
-    (req.body.province) ? adPostData['province'] = req.body.province.trim() : '';
-    (req.body.country) ? adPostData['country'] = req.body.country.trim() : '';
-    (req.body.photo) ? adPostData['photo'] = req.body.photo : '';
+    req.body['lastEdited'] = new Date();
 
-    adPostData['lastEdited'] = new Date();
-
-    AdPost.findByIdAndUpdate(adPostId, adPostData)
+    AdPost.findByIdAndUpdate(adPostId, req.body)
     .then(adPost => {
       if(!adPost) {
         return res.status(404).json({ data: {
@@ -200,6 +125,46 @@ class AdPostController {
         const ret = Object.assign(err, {status : 0});
         return res.status(401).json(ret);
     });
+  }
+
+  putPinned(req, res) {
+    const adPostId = req.body.adPostId;
+    const maxPinCount = 5;
+
+    //check if postId is pinned already
+    return findById(adPostId,"pinned").then(adPost => {
+      if(!adPost) return res.status(401).end();
+      if(adPost.pinned == true) return res.status(200).json({
+        status : 1,
+        msg : 'Ad post is already pinned. Request aborted.'
+      });
+
+      //check count of pinned posts
+      return AdPost.count({pinned : true}).then(pinnedCount => {
+        if(pinnedCount <= maxPinCount){
+          //pinn post
+          return findByIdAndUpdate(adPostId, {pinned : true}).then(pinnedCount => {
+
+          }).catch(err => {
+            const ret = Object.assign(err, {status : 0});
+            return res.status(401).json(ret);
+          });
+        } else {
+          return res.status(200).json({ data: {
+            status : 2,
+            msg : 'There are more than ' + maxPinCount + 'pinned Post. Pin failed.'
+          }});
+        }
+      }).catch(err => {
+        const ret = Object.assign(err, {status : 0});
+        return res.status(401).json(ret);
+      });
+
+    }).catch(err => {
+      const ret = Object.assign(err, {status : 0});
+      return res.status(401).json(ret);
+    });
+
   }
 
   delete(req, res) {

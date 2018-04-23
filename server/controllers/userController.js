@@ -111,11 +111,11 @@ class UserController {
     (req.body.lastActive) ? userData['lastActive'] = req.body.lastActive : '';
     (req.body.dateCreated) ? userData['dateCreated'] = req.body.dateCreated : '';
 
-    const token = jwt.sign({ id: user._id }, config.secret, {
-      expiresIn: 86400
-    });
+    // const token = jwt.sign({ id: user._id }, config.secret, {
+    //   expiresIn: 86400
+    // });
 
-    User.create(adPostData)
+    User.create(userData)
     .then(user => {
         return res.status(200).json({ data: {
           status : 1,

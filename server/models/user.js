@@ -51,6 +51,7 @@ const UserSchema = new mongoose.Schema({
   country: String,
   accessToken: String,
   promocode: String,
+  points: Number,
   devices: [],
   emailConfirmed: {
     type: Boolean,

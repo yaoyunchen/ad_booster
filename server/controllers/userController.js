@@ -80,11 +80,10 @@ class UserController {
             return res.status(404).json({
               data: {
                 status: 0,
-                msg: "Ad Post not found with id: " + userId
+                msg: "User not found with id: " + userId
               }
             })
           };
-
           return res.status(200).json({
             status: 1,
             data: user.points || 0
@@ -96,26 +95,13 @@ class UserController {
     });
   }
 
+  /* eslint-disable max-statements */
   post(req, res) {
-    //User data
-    let userData = {};
-    (req.body.accountStatus) ? userData['accountStatus'] = req.body.accountStatus : '';
-    (req.body.accountType) ? userData['accountType'] = req.body.accountType : '';
-    (req.body.email) ? userData['email'] = req.body.email : '';
-    (req.body.password) ? userData['password'] = req.body.password : '';
-    (req.body.username) ? userData['username'] = req.body.username : '';
-    (req.body.photo) ? userData['photo'] = req.body.photo : '';
-    (req.body.promocode) ? userData['promocode'] = req.body.promocode : '';
-    (req.body.devices) ? userData['devices'] = req.body.devices : '';
-    (req.body.emailConfirmed) ? userData['emailConfirmed'] = req.body.emailConfirmed : '';
-    (req.body.lastActive) ? userData['lastActive'] = req.body.lastActive : '';
-    (req.body.dateCreated) ? userData['dateCreated'] = req.body.dateCreated : '';
-
     // const token = jwt.sign({ id: user._id }, config.secret, {
     //   expiresIn: 86400
     // });
 
-    User.create(userData)
+    User.create(req.body)
     .then(user => {
         return res.status(200).json({ data: {
           status : 1,
@@ -156,7 +142,7 @@ class UserController {
     }).catch(err => {
         const ret = Object.assign(err, {status : 0});
         return res.status(401).json(ret);
-    });
+      });
   }
 
   delete(req, res) {
@@ -167,7 +153,7 @@ class UserController {
       if(!user) {
         return res.status(404).json({ data: {
           status : 0,
-          msg : "Ad Post not found with id: " + userId
+          msg : "User not found with id: " + userId
       }})};
 
       return res.status(200).json({

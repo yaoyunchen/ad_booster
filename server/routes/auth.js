@@ -2,7 +2,11 @@ const express = require('express');
 const validator = require('validator');
 const passport = require('passport');
 
+const User = require('../controllers/userController');
+const AdPost = require('../controllers/adPostController');
+
 const router = new express.Router();
+
 
 /* eslint-disable max-statements */
 /* TODO: Refactor this */
@@ -62,6 +66,65 @@ const validateLoginForm = (payload) => {
     errors
   };
 };
+
+const validateUserEditForm = data => {
+  const errors = {};
+  let isFormValid = true;
+  let message = '';
+
+  if (!data || typeof data.email !== 'string' || !validator.isEmail(data.email)) {
+    isFormValid = false;
+    errors.email = 'Please provide a correct email address.';
+  }
+
+  if (!isFormValid) message = 'Check the form for errors.';
+
+  return {
+    success: isFormValid,
+    message,
+    errors
+  };
+};
+
+router.put('/user/edit', (req, res, next) => {
+  const result = validateUserEditForm(req.query);
+  if (!result.success) {
+    return res.status(400).json({
+      success: false,
+      message: result.message,
+      errors: result.errors
+    });
+  }
+
+  return User.put(req, res);
+});
+
+const validateAdPostForm = data => {
+  const errors = {};
+  let isFormValid = true;
+  let message = '';
+
+  if (!isFormValid) message = 'Check the form for errors.';
+
+  return {
+    success: isFormValid,
+    message,
+    errors
+  };
+}
+
+router.post('/adPost', (req, res, next) => {
+  const result = validateAdPostForm(req.query);
+
+  if (!result.success) {
+    return res.status(400).json({
+      success: false,
+      message: result.message,
+      errors: result.errors
+    });
+  }
+  return AdPost.post(req, res);
+});
 
 router.post('/signup', (req, res, next) => {
   const validationResult = validateSignUpForm(req.body);

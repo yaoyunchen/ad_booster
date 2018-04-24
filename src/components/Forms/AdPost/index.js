@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Button from 'material-ui/Button';
+import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
+import Hidden from 'material-ui/Hidden';
 import Typography from 'material-ui/Typography';
 
 import {
@@ -11,6 +13,8 @@ import {
   buildRadioGroup,
   buildSelect
 } from '../../../helpers/formHelper';
+
+import { convertReadableNum } from '../../../helpers/contentHelper';
 
 // import ReactQuill from 'react-quill';
 // import 'react-quill/dist/quill.snow.css';
@@ -37,16 +41,16 @@ const content = {
       options: [
         { text: 'In', value: 'in', },
         { text: 'Out', value: 'out' },
-        { text: 'Any', value: 'any' }
+        { text: 'Both', value: 'both' }
       ]
     },
-    rate: {
-      field: 'rate',
-      title: 'Rate per Hour',
-      shrink: true,
-      type: 'number',
-      adornment: '$'
-    },
+    // rate: {
+    //   field: 'rate',
+    //   title: 'Rate per Hour',
+    //   shrink: true,
+    //   type: 'number',
+    //   adornment: '$'
+    // },
     age: {
       field: 'age',
       title: 'Age',
@@ -222,7 +226,14 @@ class AdPostForm extends React.Component {
   // }
 
   render() {
-    const { adPost, errors, onChange, onSubmit } = this.props;
+    const {
+      adPost,
+      errors,
+      points,
+      postPoints,
+      onChange,
+      onSubmit
+    } = this.props;
 
     const { region, province } = content.form;
 
@@ -237,79 +248,116 @@ class AdPostForm extends React.Component {
     return (
       <form action="/" onSubmit={onSubmit}>
         <Grid container justify="center">
-          <Grid item xs={12} md={10}>
+          <Grid item xs={12} sm={10} lg={8}>
             {errors.summary && (
               <Typography color="error">{errors.summary}</Typography>
             )}
           </Grid>
 
-          <Grid item xs={12} lg={10}>
+          <Grid item xs={12} sm={10} lg={8}>
             {buildTextInput(content.form.title, { data: adPost, errors, onChange })}
           </Grid>
 
-          <Grid item xs={12} lg={10}>
+          <Grid item xs={12} sm={10} lg={8}>
             {buildTextInput(content.form.subtitle, { data: adPost, errors, onChange })}
           </Grid>
 
-          <Grid item xs={12} lg={10} style={{ marginBottom: 16 }}>
+          <Grid item xs={12} sm={10} lg={8} style={{ marginBottom: 16 }}>
             {buildTextAreaInput(content.form.desc, { data: adPost, errors, onChange })}
           </Grid>
 
-          <Grid item xs={12} lg={10}>
-            <Grid container spacing={16}>
-              <Grid item xs={12} lg={8}>
-                <Grid container spacing={16} justify="center">
-                  <Grid item xs={12} sm={12} md={4} lg={6}>
-                    {buildRadioGroup(content.form.availability, { data: adPost, errors, onChange })}
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={4} lg={3}>
-                    {buildTextInput(content.form.rate, { data: adPost, errors, onChange })}
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={4} lg={3}>
-                    {buildTextInput(content.form.age, { data: adPost, errors, onChange })}
-                  </Grid>
-                </Grid>
+          <Grid item xs={12} sm={10} lg={8}>
+            <Grid container spacing={16} justify="center">
+              <Grid item xs={12} sm={6} md={4}>
+                {buildRadioGroup(content.form.availability, { data: adPost, errors, onChange })}
               </Grid>
 
-              <Grid item xs={12} lg={4}>
-                <Grid container spacing={16} justify="center">
-                  <Grid item xs={12} sm={6}>
-                    {buildSelect(content.form.gender, { data: adPost, errors, onChange })}
-                  </Grid>
+              <Hidden smDown>
+                <Grid item md={1}></Grid>
+              </Hidden>
 
-                  <Grid item xs={12} sm={6}>
-                    {}
-                    {buildSelect(content.form.ethnicity, { data: adPost, errors, onChange })}
-                  </Grid>
+              {/*
+                <Grid item xs={12} sm={6} md={4} lg={3}>
+                  {buildTextInput(content.form.rate, { data: adPost, errors, onChange })}
                 </Grid>
+              */}
+
+              <Grid item xs={12} sm={6} md={4}>
+                {buildTextInput(content.form.age, { data: adPost, errors, onChange })}
               </Grid>
             </Grid>
           </Grid>
 
-          <Grid item xs={12} lg={10}>
+          <Grid item xs={12} sm={10} lg={8}>
             <Grid container spacing={16} justify="center">
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
+                {buildSelect(content.form.gender, { data: adPost, errors, onChange })}
+              </Grid>
+
+              <Hidden smDown>
+                <Grid item md={1}></Grid>
+              </Hidden>
+
+              <Grid item xs={12} sm={6} md={4}>
+                {buildSelect(content.form.ethnicity, { data: adPost, errors, onChange })}
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={16} justify="center">
+              <Grid item xs={12} sm={6} md={4}>
                 {buildSelect(content.form.province, { data: adPost, errors, onChange })}
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Hidden smDown>
+                <Grid item md={1}></Grid>
+              </Hidden>
+
+              <Grid item xs={12} sm={6} md={4}>
                 {buildSelect(regionInput, { data: adPost, errors, onChange })}
               </Grid>
             </Grid>
           </Grid>
 
-          <Grid item xs={12} lg={10}>
-            <Typography variant="caption" align="center">
-              Some price calculation here
+          <Grid item xs={12} sm={10} lg={8}>
+            <Divider />
+          </Grid>
+
+          <Grid item xs={12} sm={10} lg={8}>
+            <Typography
+              variant="caption" align="right"
+              style={{ margin: '8px 0' }}
+            >
+              Current Points: {convertReadableNum(points)}
+            </Typography>
+
+            <Typography
+              variant="caption" align="right"
+              style={{ marginBottom: 8 }}
+            >
+              Post Cost: {postPoints}
+            </Typography>
+
+            <Typography
+              variant="caption" align="right"
+              style={{ marginBottom: 8 }}
+            >
+              {
+                this.props.points - this.props.postPoints >= 0 ? `
+                  Remaining Points: ${convertReadableNum(points - postPoints)}
+                ` : 'Insuffifient points to post'
+              }
+
             </Typography>
           </Grid>
 
-          <Grid item xs={12} lg={10}>
+          <Grid item xs={12} sm={10} lg={8}>
+            <Divider />
+          </Grid>
+
+          <Grid item xs={12} sm={10} lg={8}>
             <Button
               variant="raised" type="submit" color="primary"
-              disabled={this.props.points - this.props.postCost < 0}
+              disabled={points - postPoints < 0}
               style={{ margin: '24px auto 0 auto', display: 'block' }}
             >
               {content.form.submit}
@@ -324,6 +372,8 @@ class AdPostForm extends React.Component {
 AdPostForm.propTypes = {
   adPost: PropTypes.object,
   errors: PropTypes.object,
+  points: PropTypes.number,
+  postPoints: PropTypes.number,
   onChange: PropTypes.func,
   onSubmit: PropTypes.func
 };
@@ -331,6 +381,8 @@ AdPostForm.propTypes = {
 AdPostForm.defaultProps = {
   adPost: {},
   errors: {},
+  points: 0,
+  postPoints: 100,
   onChange: () => {},
   onSubmit: () => {}
 };

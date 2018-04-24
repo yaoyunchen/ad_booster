@@ -14,6 +14,7 @@ const PricingSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  maxQuantity : Number,
   type : {
     type: String,
     default : "",

@@ -17,6 +17,8 @@ router.post('/', AdPostController.post);
 router.put('/', AdPostController.put);
 //update ad post by id
 router.put('/pinned', AdPostController.putPinned);
+//update ad post by id
+router.put('/boost', AdPostController.putPinned);
 //delete ad post by id
 router.delete('/:adPostId', AdPostController.delete);
 

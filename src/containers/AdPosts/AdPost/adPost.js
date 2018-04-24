@@ -9,6 +9,7 @@ import Typography from 'material-ui/Typography';
 import debugLog from '../../../utils/debug';
 
 import AdPost from '../../../modules/AdPost';
+import { convertDate } from '../../../helpers/contentHelper';
 
 class AdPostPage extends React.Component {
   constructor(props) {
@@ -54,12 +55,9 @@ class AdPostPage extends React.Component {
     }
   }
 
-  convertDate = str => str ? new Date(str).toLocaleString() : ''
 
   render() {
     const { adPost } = this.state;
-
-    const isTabletUp = window && window.matchMedia("(min-width: 600px)").matches;
 
     const imageElement = (
       <div>
@@ -82,7 +80,7 @@ class AdPostPage extends React.Component {
                       </Typography>
 
                       <Typography align="center">
-                        {adPost.dateCreated ? `Date created: ${this.convertDate(adPost.dateCreated)}` : ''}
+                        {adPost.dateCreated ? `Date created: ${convertDate(adPost.dateCreated)}` : ''}
                       </Typography>
                     </Grid>
                   </Grid>

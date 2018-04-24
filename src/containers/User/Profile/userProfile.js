@@ -4,16 +4,20 @@ import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 
-import UserProfileForm from '../../../components/Forms/UserProfile';
 import Auth from '../../../modules/Auth';
-
 import User from '../../../modules/User';
+import debugLog from '../../../utils/debug';
+import axiosHelper from '../../../helpers/axiosHelper';
+
+import UserProfileForm from '../../../components/Forms/UserProfile';
 
 class UserProfilePage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { user: {}, errors: {} };
+    this.state = {
+      user: null, errors: {}
+    };
   }
 
   componentWillMount() {
@@ -24,74 +28,77 @@ class UserProfilePage extends React.Component {
   }
 
   componentDidMount() {
-    const { location } = this.props;
-    // if (location.state && location.state.id) {
-    //   this.loadUser();
-    // }
-
-    this.loadCurrentUser();
+    this.loadUser();
   }
 
-  loadCurrentUser = () => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('get', '/user');
-
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.setRequestHeader('Authorization', `bearer ${Auth.getToken()}`);
-
-    xhr.responseType = 'json';
-
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
-        this.setState({ user: xhr.response.data });
-        return;
-      };
-    });
-
-    xhr.send();
+  loadUser = async () => {
+    const result = await User.getUser();
+    debugLog('User loaded', result);
+    if (result && result.data) this.setState({ user: result.data });
   }
 
   submitUser = (e) => {
     e.preventDefault();
-    let encodedFormData = '';
-    const keys = Object.keys(this.state.adPost);
 
-    for (let i = 0; i < keys.length; i++) {
-      const field = this.state.adPost[keys[i]];
-      const data = encodeURIComponent(field);
+    axiosHelper.put('/auth/user/edit', this.state.user)
+      .then((res) => {
+        if (res && res.data && !res.data.success) {
+          const { errors, message } = res.data;
+          errors.summary = message;
 
-      if (encodedFormData === '') {
-        encodedFormData = `${keys[i]}=${data}`;
-      } else {
-        encodedFormData += `&${keys[i]}=${data}`;
-      }
-    }
+          this.setState({ errors: errors || {} });
+          return;
+        }
 
-    const xhr = new XMLHttpRequest();
-    xhr.open('post', '/user');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
-        // success
-
-        // change the component-container state
+        debugLog('User updated.');
         this.setState({ errors: {} });
 
-        localStorage.setItem('successMessage', xhr.response.message);
-        this.props.history.replace('/login');
-      } else {
-        // failure
+        sessionStorage.setItem('globalMessage', res.data.message);
+        this.props.history.replace('/user');
+      })
+      .catch(e => {
+        debugLog(e);
+      });
 
-        const errors = xhr.response.errors ? xhr.response.errors : {};
-        errors.summary = xhr.response.message;
+    // let encodedFormData = '';
+    // const keys = Object.keys(this.state.adPost);
 
-        this.setState({ errors });
-      }
-    });
+    // for (let i = 0; i < keys.length; i++) {
+    //   const field = this.state.adPost[keys[i]];
+    //   const data = encodeURIComponent(field);
 
-    xhr.send(encodedFormData);
+    //   if (encodedFormData === '') {
+    //     encodedFormData = `${keys[i]}=${data}`;
+    //   } else {
+    //     encodedFormData += `&${keys[i]}=${data}`;
+    //   }
+    // }
+
+    // const xhr = new XMLHttpRequest();
+    // xhr.open('post', '/user');
+    // xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    // xhr.responseType = 'json';
+
+    // xhr.addEventListener('load', () => {
+    //   if (xhr.status === 200) {
+    //     // success
+
+    //     // change the component-container state
+    //     this.setState({ errors: {} });
+
+    //     localStorage.setItem('successMessage', xhr.response.message);
+    //     this.props.history.replace('/login');
+    //   } else {
+    //     // failure
+
+    //     const errors = xhr.response.errors ? xhr.response.errors : {};
+    //     errors.summary = xhr.response.message;
+
+    //     this.setState({ errors });
+    //   }
+    // });
+
+    // xhr.send(encodedFormData);
   }
 
   updateUser = (field, value) => {
@@ -102,6 +109,8 @@ class UserProfilePage extends React.Component {
 
 
   render() {
+    if (!this.state.user) return <div />;
+
     return (
       <Grid container justify="center">
         <Grid item xs={12}>

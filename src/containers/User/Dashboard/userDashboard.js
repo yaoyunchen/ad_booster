@@ -6,8 +6,7 @@ import Auth from '../../../modules/Auth';
 import Button from 'material-ui/Button';
 import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
-// import List, { ListItem, ListItemIcon } from 'material-ui/List';
-// import Divider from 'material-ui/Divider';
+import Divider from 'material-ui/Divider';
 import Typography from 'material-ui/Typography';
 
 import PageTitle from '../../../components/PageTitle';
@@ -16,6 +15,7 @@ import User from '../../../modules/User';
 import AdPost from '../../../modules/AdPost';
 
 import debugLog from '../../../utils/debug';
+import { convertDate } from '../../../helpers/contentHelper';
 
 class UserDashboardPage extends React.Component {
   constructor(props) {
@@ -23,8 +23,8 @@ class UserDashboardPage extends React.Component {
 
     this.state = {
       loading: false,
-      points: {},
-      adPosts: []
+      user: null,
+      adPosts: null
     };
   }
 
@@ -36,20 +36,19 @@ class UserDashboardPage extends React.Component {
   }
 
   componentDidMount() {
-    // this.loadUserPoints();
+    this.loadUser();
     this.loadUserAdPosts();
   }
 
-  loadUserPoints = async () => {
+  loadUser = async () => {
     this.startLoading();
-    const result = await User.getUserPoints();
+    const result = await User.getUser();
 
-    debugLog('User points loaded: ', result);
+    debugLog('User loaded: ', result.data);
 
-    if (result && result.data) this.setState({ points: result.data });
-
-    this.endLoading();
-
+    if (result && result.data) {
+      this.setState({ user: result.data }, () => this.endLoading());
+    }
   }
 
   loadUserAdPosts = async () => {
@@ -58,9 +57,9 @@ class UserDashboardPage extends React.Component {
 
     debugLog('Ad Posts loaded', result);
 
-    if (result && result.data) this.setState({ adPosts: result.data });
-
-    this.endLoading();
+    if (result && result.data) {
+      this.setState({ adPosts: result.data }, () => this.endLoading());
+    }
   }
 
   startLoading = () => {
@@ -76,6 +75,11 @@ class UserDashboardPage extends React.Component {
   };
 
   render() {
+    const { user, adPosts } = this.state;
+    if (!user) return <div />;
+
+    const isTabletUp = window && window.matchMedia("(min-width: 600px)").matches;
+
     return (
       <Grid container justify="center">
         <Grid item xs={12}>
@@ -84,50 +88,104 @@ class UserDashboardPage extends React.Component {
               <PageTitle title="Dashboard" />
 
               <Grid container spacing={16}>
-                <Grid item xs={12} style={{ border: '1px solid black' }}>
-                  <Typography variant="title" align="right">
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={12} style={{ border: '1px solid black' }}>
-
+                {/* Headers */}
+                <Grid item xs={12}>
                   <Grid container>
-                    <Grid item xs={12} sm={8} style={{ border: '1px solid black' }}>
+                    <Grid item xs={12} sm={6}>
+                      <Typography variant="title" gutterBottom>
+                        Welcome, {user.username}.
+                      </Typography>
+
+                      <Typography variant="subheading">
+                        Last Login: {convertDate(user.dateCreated)}
+                      </Typography>
                     </Grid>
 
-
-                    <Grid item xs={12} sm={4} style={{ border: '1px solid black' }}>
-
-                      <Grid container justify="center">
-                        <Grid item xs={12} style={{ border: '1px solid black', textAlign: 'center' }}>
-                          <Link
-                            to="/posts/new" params={{ id: '1' }}
-                            style={{ color: 'inherit' }}
-                          >
-                            <Button
-                              variant="raised" color="primary"
-                              style={{ width: '100%', maxWidth: '240px', marginBottom: 16 }}
-                            >
-                              Create Ad
-                            </Button>
-                          </Link>
-                        </Grid>
-
-
-                        <Grid item xs={12} style={{ border: '1px solid black', textAlign: 'center' }}>
-                          <Link to="/user/edit" style={{ color: 'inherit' }}>
-                            <Button
-                              variant="raised" color="default"
-                              style={{ width: '100%', maxWidth: '240px' }}
-                            >
-                              Edit User
-                            </Button>
-                          </Link>
-                        </Grid>
-                      </Grid>
-
+                    <Grid item xs={12} sm={6}>
+                      <Typography variant="title" align="right" color={user.points && user.points > 0 ? 'primary' : 'secondary'}>
+                        Points: {user.points || 0}
+                      </Typography>
                     </Grid>
                   </Grid>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Divider />
+                </Grid>
+
+                {/* Control buttons */}
+                <Grid item xs={12}>
+                  <Grid container spacing={16}>
+                    <Grid item xs={12}
+                      style={{
+                        textAlign: isTabletUp ? 'right' : 'center'
+                      }}
+                    >
+                      <Link
+                        to="/posts/new"
+                        style={{
+                          color: 'inherit',
+                          marginRight: isTabletUp ? 16 : 0
+                        }}
+                      >
+                        <Button
+                          variant="raised" color="primary"
+                          style={{
+                            width: !isTabletUp ? '100%' : 'auto',
+                            maxWidth: !isTabletUp ? 208 : 'none',
+                            marginBottom: isTabletUp ? 0 : 16
+                          }}
+                        >
+                          Create Ad
+                        </Button>
+                      </Link>
+
+
+                      <Link
+                        to="/user"
+                        style={{
+                          color: 'inherit',
+                          marginRight: isTabletUp ? 16 : 0
+                        }}
+                      >
+                        <Button
+                          variant="raised" color="secondary"
+                          style={{
+                            width: !isTabletUp ? '100%' : 'auto',
+                            maxWidth: !isTabletUp ? 208 : 'none',
+                            marginBottom: isTabletUp ? 0 : 16
+                          }}
+                        >
+                          Refill Points
+                        </Button>
+                      </Link>
+
+                      <Link
+                        to="/user/edit"
+                        style={{
+                          color: 'inherit'
+                        }}
+                      >
+                        <Button
+                          variant="raised" color="default"
+                          style={{
+                            width: !isTabletUp ? '100%' : 'auto',
+                            maxWidth: !isTabletUp ? 208 : 'none'
+                          }}
+                        >
+                          Edit User
+                        </Button>
+                      </Link>
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Divider />
+                </Grid>
+
+                {/* Ad Posts */}
+                <Grid item xs={12} style={{ border: '1px solid black' }}>
 
                 </Grid>
               </Grid>

@@ -33,7 +33,7 @@ const AdPostSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    // required: true
+    default: "active",
   },
   createdBy: {
     type: ObjectId,

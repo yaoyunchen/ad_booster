@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import Auth from '../../../modules/Auth';
+import Auth from '../../modules/Auth';
 
 import Button from 'material-ui/Button';
 import Card, { CardContent } from 'material-ui/Card';
@@ -12,15 +12,15 @@ import Divider from 'material-ui/Divider';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 
-import PageTitle from '../../../components/PageTitle';
+import PageTitle from '../../components/PageTitle';
 
 // import UserModule from '../../../modules/User';
 // import AdPostModule from '../../../modules/AdPost';
 
-import AxiosHelper from '../../../helpers/axiosHelper';
+import AxiosHelper from '../../helpers/axiosHelper';
 
-import debugLog from '../../../utils/debug';
-import { convertDate } from '../../../helpers/contentHelper';
+import debugLog from '../../utils/debug';
+import { convertDate } from '../../helpers/contentHelper';
 
 const styles = theme => ({
   root: {
@@ -83,7 +83,7 @@ class UserDashboardPage extends React.Component {
     // const AdPost = new AdPostModule();
     // const result = await AdPost.getAdPostsByUser();
     const Axios = new AxiosHelper();
-    const result = await Axios.get(`/adPost?createdBy=${Auth.getToken()}`);
+    const result = await Axios.get(`/adPost/userAdPosts?userId=${Auth.getToken()}`);
 
     debugLog('Ad Posts loaded', result);
 

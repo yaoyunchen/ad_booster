@@ -24,7 +24,7 @@ class AxiosHelper {
       url,
       headers
     };
-    console.log('fucking requesst', request)
+    console.log('fucking request', request)
 
     return axios(Object.assign({}, request, this.defaultOptions, reqOptions))
       .then(response => {

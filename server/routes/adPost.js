@@ -18,9 +18,6 @@ router.get('/field', AdPostController.getField);
 //get all ad posts
 router.get('/', AdPostController.get);
 
-//get all ad posts
-router.get('/adpost', AdPostController.getAdPost);
-
 //create ad post (auth/plan/index/pays)
 router.post('/',
   AuthHelper.authUser,

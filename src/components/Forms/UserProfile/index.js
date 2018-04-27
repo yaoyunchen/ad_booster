@@ -102,15 +102,15 @@ class UserProfileForm extends React.Component {
                     <Grid item xs={9} md={8}>
                       {buildTextInput(content.form.lastname, { data: user, errors, onChange })}
                     </Grid>
+
+                    <Grid item xs={9} md={8}>
+                      {buildTextInput(content.form.phone, { data: user, errors, onChange })}
+                    </Grid>
                   */}
 
 
                   <Grid item xs={9} md={8}>
                     {buildTextInput(content.form.email, { data: user, errors, onChange })}
-                  </Grid>
-
-                  <Grid item xs={9} md={8}>
-                    {buildTextInput(content.form.phone, { data: user, errors, onChange })}
                   </Grid>
                 </Grid>
               </Grid>

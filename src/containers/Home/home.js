@@ -10,16 +10,14 @@ import AdPostList from '../../components/Lists/Adposts';
 const HomePage = (props, context) => {
   return (
     <Grid container justify="center">
-      <Grid item xs={12}>
+      <Grid item xs={12} lg={10}>
         <Card raised style={{ margin: '36px 24px' }}>
           <CardContent>
             <PageTitle title="Ad Boost App" />
 
-            <Grid container>
-              <Grid item xs={12}>
-                <AdPostList
-                  province={context.province}
-                />
+            <Grid container justify="center">
+              <Grid item xs={12} lg={10}>
+                <AdPostList province={context.province} />
               </Grid>
             </Grid>
           </CardContent>

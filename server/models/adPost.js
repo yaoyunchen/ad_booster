@@ -88,7 +88,7 @@ const AdPostSchema = new mongoose.Schema({
     type: String,
     default: ""
   },
-  photo: {
+  photos: {
     type: [String],
     default: []
   }

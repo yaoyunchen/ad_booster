@@ -96,7 +96,8 @@ class AdPostController {
   }
 
   post(req, res) {
-    const params = req.query;
+    const params = req.body;
+    console.log(params);
     const adPostData = {};
     const token = this._getUserToken(req);
 
@@ -121,7 +122,7 @@ class AdPostController {
       adPostData.region = (params.region && params.region.trim()) || '';
       adPostData.province = (params.province && params.province.trim()) || '';
       adPostData.country = (params.country && params.country.trim()) || '';
-      adPostData.photo = params.photo || [];
+      adPostData.photos = params.photos || [];
 
       AdPost.create(adPostData)
         .then(adPost => {
@@ -262,4 +263,4 @@ class AdPostController {
   }
 }
 
-module.exports = new AdPostController();
+module.exports = AdPostController;

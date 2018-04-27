@@ -106,7 +106,8 @@ class App extends React.Component {
   openRegionSelect = () => this.setState({ showRegion: true })
 
   checkIfUserAdmin = async () => {
-    const response = await AxiosHelper.get('/user/isAdmin');
+    const Axios = new AxiosHelper();
+    const response = await Axios.get('/user/isAdmin', { token: Auth.getToken() });
 
     if (response && response.data) {
       this.setState({ admin: response.data, user: Auth.getToken() });

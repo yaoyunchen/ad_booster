@@ -5,8 +5,9 @@ import debugLog from '../utils/debug';
 
 class AxiosHelper {
   constructor() {
+    const token = Auth.getToken();
     this.defaultHeaders = {
-      'Authorization': `bearer ${Auth.getToken()}`,
+      'Authorization': `bearer ${token}`,
       'Content-Type': 'application/json; charset=utf-8'
     };
 
@@ -15,14 +16,15 @@ class AxiosHelper {
     };
   }
 
-  get(url, reqHeaders = {}, reqOptions = {}) {
+  get(url, params, reqHeaders = {}, reqOptions = {}) {
     const headers = Object.assign({}, this.defaultHeaders, reqHeaders);
-
     const request = {
       method: 'get',
+      params,
       url,
       headers
     };
+    console.log('fucking requesst', request)
 
     return axios(Object.assign({}, request, this.defaultOptions, reqOptions))
       .then(response => {
@@ -36,10 +38,14 @@ class AxiosHelper {
 
     const request = {
       method: 'post',
+      body: params,
+      data: params,
       params,
       url,
       headers
     };
+
+    console.log(request);
 
     return axios(Object.assign({}, request, this.defaultOptions, reqOptions))
       .then(response => response.data)
@@ -54,6 +60,7 @@ class AxiosHelper {
 
     const request = {
       method: 'put',
+      body: params,
       params,
       url,
       headers
@@ -69,4 +76,4 @@ class AxiosHelper {
   }
 }
 
-export default new AxiosHelper();
+export default AxiosHelper;

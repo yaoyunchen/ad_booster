@@ -6,7 +6,7 @@ import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
 
 import debugLog from '../../../utils/debug';
-import User from '../../../modules/User';
+import UserModule from '../../../modules/User';
 
 import PageTitle from '../../../components/PageTitle';
 import { AdminAdPostList, AdminUserList } from '../../../components/Lists/Admin';
@@ -109,7 +109,8 @@ class AdminDashboardPage extends React.Component {
     super(props);
 
     this.state = {
-      loading: false
+      loading: false,
+      isAdmin: null
     };
   }
 
@@ -124,10 +125,22 @@ class AdminDashboardPage extends React.Component {
     this.isUserAdmin();
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if (this.state.isAdmin !== nextState.isAdmin && !nextState.isAdmin) {
+      debugLog('User is not an admin.');
+      this.props.history.replace({ pathname: '/' });
+    }
+  }
+
   isUserAdmin = async () => {
     this.startLoading();
+
+    const User = new UserModule();
     const userType = await User.getUserIsAdmin();
-    if (userType !== 'admin') this.props.history.replace({ pathname: '/' });
+
+    if (userType && userType.data) {
+      this.setState({ isAdmin: userType.data });
+    }
     this.endLoading();
   }
 

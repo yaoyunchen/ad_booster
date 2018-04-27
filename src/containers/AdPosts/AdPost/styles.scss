@@ -1,0 +1,153 @@
+.image {
+  &__main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 0;
+    border: 2px solid #e0e0e0;
+
+    img {
+      height: auto;
+      width: auto;
+      max-height: 50vh;
+      max-width: 100%;
+    }
+  }
+
+  &__icons {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 80px;
+    border: 2px solid #e0e0e0;
+    border-bottom: none;
+
+    &--photos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0px 20px;
+      padding: 4px;
+      overflow-x: scroll;
+    }
+
+    &--photo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 4px;
+      height: 78px;
+      overflow: hidden;
+
+      img {
+        height: auto;
+        width: 74px;
+      }
+
+      &:hover {
+        cursor: pointer;
+        transform: scale(1.04);
+        transition: transform 0.1s ease-in-out;
+      }
+    }
+
+    &--current {
+      border: 2px solid #3f51b5;
+    }
+
+    &--left {
+      position: absolute;
+      left: 0;
+    }
+
+    &--right {
+      position: absolute;
+      right: 0;
+    }
+ }
+}
+
+
+// .image {
+//   border: 2px solid #e0e0e0;
+
+//   &__main {
+//     position: relative;
+//     width:  212px;
+//     height: 212px;
+//     margin: auto;
+//     margin: 8px auto;
+//     background-position: 50% 50%;
+//     background-repeat: no-repeat;
+//     background-size: cover;
+//     border: 2px solid #e0e0e0;
+//     border-bottom: none;
+
+//     &:hover {
+//       cursor: pointer;
+//       transform: scale(1.05);
+//       transition: transform 0.1s ease-in-out;
+//     }
+//   }
+
+//   &__icons {
+//     position: relative;
+//     display: flex;
+//     justify-content: flex-start;
+//     align-items: center;
+//     height: 60px;
+//     border-top: 2px solid #e0e0e0;
+
+//     &--photos {
+//       display: flex;
+//       justify-content: center;
+//       align-items: center;
+//       margin: 0 20px;
+//       overflow-x: scroll;
+//       overflow-y: hidden;
+//     }
+
+//     &--photo {
+//       position: relative;
+//       float: left;
+//       width:  60px;
+//       height: 60px;
+//       margin: 0 4px;
+//       background-position: 50% 50%;
+//       background-repeat: no-repeat;
+//       background-size: cover;
+//       border: 2px solid #e0e0e0;
+
+
+//       &:hover {
+//         cursor: pointer;
+//         transform: scale(1.05);
+//         transition: transform 0.1s ease-in-out;
+//       }
+//     }
+
+//     &--left {
+//       position: absolute;
+//       left: 0;
+//     }
+
+//     &--right {
+//       position: absolute;
+//       right: 0;
+//     }
+//  }
+// }
+
+// .dialog {
+//   &__photo {
+//       position: relative;
+//       float: left;
+//       width:  120px;
+//       height: 120px;
+//       margin: 0 4px;
+//       background-position: 50% 50%;
+//       background-repeat: no-repeat;
+//       background-size: cover;
+//   }
+// }

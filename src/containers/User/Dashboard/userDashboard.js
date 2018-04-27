@@ -69,7 +69,7 @@ class UserDashboardPage extends React.Component {
     // const User = new UserModule();
     // const result = await User.getUser();
     const Axios = new AxiosHelper();
-    const result = await Axios.get(`/user?id=${Auth.getToken()}`)
+    const result = await Axios.get(`/user?userId=${Auth.getToken()}`)
 
     debugLog('User loaded: ', result.data);
 

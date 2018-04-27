@@ -34,8 +34,8 @@ class AdPostController {
   getAdPost(req, res) {
     const { adPostId } = req.query;
 
-    return AdPost.findOneById(adPostId).then(adPost => {
-      if(!adPost.length) return helper.retError(res,'200',true,'','No matching results',adPost);
+    return AdPost.findById(adPostId).then(adPost => {
+      if(!adPost) return helper.retError(res,'200',true,'','No matching results',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
       return helper.retError(res,'400',false,err,'Error','');

@@ -1,5 +1,6 @@
 const Mongoose = require('mongoose');
 const config = require('../../config');
+const jwt = require('jsonwebtoken');
 
 const helperClass = require('../controllers/controllerHelper');
 const helper = new helperClass();
@@ -11,6 +12,7 @@ const CollectionIndex = Mongoose.model('CollectionIndex');
 
 class AuthHelper {
   constructor() {
+    this.authUser = this.authUser.bind(this);
     this.decryptId = this.decryptId.bind(this);
   }
 
@@ -25,9 +27,9 @@ class AuthHelper {
     if (!req.headers.authorization) return helper.retError(res,'400',false,'','requesterId can not be null','');;
 
     //decript userId requesterId createdBy
-    if(req.body.userId) await AuthHelper.decryptId(req.body.userId);
-    if(req.body.requesterId) await AuthHelper.decryptId(req.body.requesterId);
-    if(req.body.createdBy) await AuthHelper.decryptId(req.body.createdBy);
+    if(req.body.userId) await this.decryptId(req.body.userId);
+    if(req.body.requesterId) await this.decryptId(req.body.requesterId);
+    if(req.body.createdBy) await this.decryptId(req.body.createdBy);
     if(req.body.userId == 'error' || req.body.requesterId == 'error' || req.body.createdBy == 'error') return helper.retError(res,'400',false,'','decrypt failed','');;
 
     //created requesterId
@@ -49,7 +51,7 @@ class AuthHelper {
   }
 
   decryptId(id){
-    return jwt.verify(token, config.jwtSecret, (err, decoded) => {
+    return jwt.verify(id, config.jwtSecret, (err, decoded) => {
       if (err) return 'error';
       return decoded.sub;
     });

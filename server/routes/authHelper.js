@@ -20,7 +20,7 @@ class AuthHelper {
     next();
   }
 
-  asyc authUser(req,res,next){
+  async authUser(req,res,next){
     //check headers
     if (!req.headers.authorization) return helper.retError(res,'400',false,'','requesterId can not be null','');;
 

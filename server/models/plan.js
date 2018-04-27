@@ -5,7 +5,7 @@ const bycrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
-const PricingSchema = new mongoose.Schema({
+const PlanSchema = new mongoose.Schema({
   name : {
     type: String,
     required: true
@@ -32,7 +32,6 @@ const PricingSchema = new mongoose.Schema({
   interval : {
     type: Number,
     default: 0,
-    required: true
   },
   editedBy : {
     type: ObjectId,
@@ -50,4 +49,4 @@ const PricingSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('Pricing', PricingSchema);
+module.exports = mongoose.model('Plan', PlanSchema);

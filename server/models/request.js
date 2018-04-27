@@ -5,19 +5,22 @@ const bycrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
-const PointRequestSchema = new Schema({
+const RequestSchema = new Schema({
   amount : {
     type: Number
   },
   userId : {
     type: ObjectId
   },
+  type : {
+    type: String
+  },
   email : {
     type: String
   },
   phone : {
     type: String
-  }
+  },
   dateCreated : {
     type: Date
   },
@@ -29,4 +32,4 @@ const PointRequestSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('PointRequest', PointRequestSchema);
+module.exports = mongoose.model('Request', RequestSchema);

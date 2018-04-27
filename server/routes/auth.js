@@ -2,8 +2,11 @@ const express = require('express');
 const validator = require('validator');
 const passport = require('passport');
 
-const User = require('../controllers/userController');
-const AdPost = require('../controllers/adPostController');
+const UserClass = require('../controllers/userController');
+const User = new UserClass();
+
+const AdPostClass = require('../controllers/adPostController');
+const AdPost = new AdPostClass();
 
 const router = new express.Router();
 

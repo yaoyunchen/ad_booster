@@ -1,6 +1,7 @@
 const express = require('express');
 
-const UserController = require('../controllers/userController');
+const UserControllerClass = require('../controllers/userController');
+const UserController = new UserControllerClass();
 
 const router = new express.Router();
 
@@ -11,7 +12,7 @@ router.get('/isAdmin', UserController.getIsAdmin);
 //get all active users
 router.get('/users',UserController.getUsers);
 //get user points by id
-router.get('/points',UserController.getPoints);
+router.get('/field',UserController.getField);
 //create user
 router.post('/',UserController.post);
 //update user by id

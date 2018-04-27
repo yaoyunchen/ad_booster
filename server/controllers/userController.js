@@ -3,6 +3,9 @@ const Mongoose = require('mongoose');
 
 const config = require('../../config');
 
+const helperClass = require('./controllerHelper');
+const helper = new helperClass();
+
 const User = Mongoose.model('User');
 
 class UserController {
@@ -10,7 +13,7 @@ class UserController {
     this.get = this.get.bind(this);
     this.getIsAdmin = this.getIsAdmin.bind(this);
     this.getUsers = this.getUsers.bind(this);
-    this.getPoints = this.getPoints.bind(this);
+    this.getField = this.getField.bind(this);
     this.post = this.post.bind(this);
     this.put = this.put.bind(this);
     this.delete = this.delete.bind(this);
@@ -52,117 +55,56 @@ class UserController {
   }
 
   getUsers(req, res) {
-    User.find()
-    .then(user => {
-      return res.status(200).json({
-        status : 1,
-        data : user
-      });
+    return User.find(req.query).then(userData => {
+      if(!userData.length) return helper.retError(res,'200',true,'','No matching results',userData);
+      return helper.retSuccess(res,'200',true,'','Sucess',userData);
     }).catch(err => {
-      const ret = Object.assign(err, {status : 0});
-      return res.status(401).json(ret);
+      return helper.retError(res,'400',false,err,'Error','');
     });
   }
 
-  getPoints(req, res) {
-    const { id } = req.query;
+  getField(req, res) {
+    const { userId } = req.query;
+    const { field } = req.query;
 
-    const token = id !== 'null' ? id : this._getUserToken(req);
+    if(userId == null || field == null) return res.status(400).end();
 
-    return jwt.verify(token, config.jwtSecret, (err, decoded) => {
-      if (err) return res.status(401).end();
+    const projection = field + " -_id";
 
-      const userId = decoded.sub;
-
-      return User.findById(userId)
-        .then(user => {
-          if (!user) {
-            return res.status(404).json({
-              data: {
-                status: 0,
-                msg: "User not found with id: " + userId
-              }
-            })
-          };
-          return res.status(200).json({
-            status: 1,
-            data: user.points || 0
-          });
-        }).catch(err => {
-          const ret = Object.assign(err, { status: 0 });
-          return res.status(401).json(ret);
-        });
+    return User.findById(userId, projection).then(userData => {
+      if(!user.length) return helper.retError(res,'200',true,'','No matching results',userData);
+      return helper.retSuccess(res,'200',true,'','Sucess',userData);
+    }).catch(err => {
+      return helper.retError(res,'400',false,err,'Error','');
     });
   }
 
   /* eslint-disable max-statements */
   post(req, res) {
-    // const token = jwt.sign({ id: user._id }, config.secret, {
-    //   expiresIn: 86400
-    // });
-
-    User.create(req.body)
-    .then(user => {
-        return res.status(200).json({ data: {
-          status : 1,
-          msg : 'Ad post created successfully'
-        }});
+    return User.create(req.body).then(userData => {
+      return helper.retSuccess(res,'200',true,'','Sucess',userData);
     }).catch(err => {
-        const ret = Object.assign(err, {status : 0});
-        return res.status(401).json(ret);
+      return helper.retError(res,'400',false,err,'Error','');
     });
   }
 
   put(req, res) {
-    let userData = {};
-    (req.body.accountStatus) ? userData['accountStatus'] = req.body.accountStatus : '';
-    (req.body.accountType) ? userData['accountType'] = req.body.accountType : '';
-    (req.body.email) ? userData['email'] = req.body.email : '';
-    (req.body.password) ? userData['password'] = req.body.password : '';
-    (req.body.username) ? userData['username'] = req.body.username : '';
-    (req.body.photo) ? userData['photo'] = req.body.photo : '';
-    (req.body.promocode) ? userData['promocode'] = req.body.promocode : '';
-    (req.body.devices) ? userData['devices'] = req.body.devices : '';
-    (req.body.emailConfirmed) ? userData['emailConfirmed'] = req.body.emailConfirmed : '';
-    (req.body.lastActive) ? userData['lastActive'] = req.body.lastActive : '';
-    (req.body.dateCreated) ? userData['dateCreated'] = req.body.dateCreated : '';
+    const { userId } = req.body
 
-    User.findByIdAndUpdate(userId, adPostData)
-    .then(user => {
-      if(!user) {
-        return res.status(404).json({ data: {
-          status : 0,
-          msg : "Ad Post not found with id: " + userId
-      }})};
-
-      return res.status(200).json({ data: {
-        status : 1,
-        msg : 'Ad post updated successfully'
-      }});
+    return User.findByIdAndUpdate(userId, adPostData).then(userData => {
+      return helper.retSuccess(res,'200',true,'','Sucess',userData);
     }).catch(err => {
-        const ret = Object.assign(err, {status : 0});
-        return res.status(401).json(ret);
-      });
+      return helper.retError(res,'400',false,err,'Error','');
+    });
   }
 
   delete(req, res) {
-    const userId = req.params.userId;
+    const { userId } = req.params;
 
-    User.findByIdAndRemove(userId)
-    .then(user => {
-      if(!user) {
-        return res.status(404).json({ data: {
-          status : 0,
-          msg : "User not found with id: " + userId
-      }})};
-
-      return res.status(200).json({
-        status : 1,
-        msg : 'Ad post deleted successfully'
-      });
+    return User.findByIdAndRemove(userId).then(userData => {
+      return helper.retSuccess(res,'200',true,'','Sucess', userData);
     }).catch(err => {
-      const ret = Object.assign(err, {status : 0});
-      return res.status(401).json(ret);
+      return helper.retError(res,'400',false,err,'Error','');
     });
   }
 
@@ -173,4 +115,4 @@ class UserController {
   }
 }
 
-module.exports = new UserController();
+module.exports = UserController;

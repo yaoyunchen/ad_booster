@@ -59,11 +59,11 @@ app.use('/user', userRoutes);
 const adPostRoutes = require('./server/routes/adPost');
 app.use('/adPost', adPostRoutes);
 
-const pricingRoutes = require('./server/routes/pricing');
-app.use('/pricing', pricingRoutes);
+const planRoutes = require('./server/routes/plan');
+app.use('/plan', planRoutes);
 
-const pointrequestRoutes = require('./server/routes/pointrequest');
-app.use('/pointrequest', requestRoutes);
+const requestRoutes = require('./server/routes/request');
+app.use('/request', requestRoutes);
 
 //Start the server
 const port = process.env.PORT || 8080;

@@ -13,5 +13,6 @@ module.exports.connect = (uri) => {
   require('./user');
   require('./adPost');
   require('./collectionIndex');
-  require('./pricing');
+  require('./plan');
+  require('./request');
 };

@@ -106,7 +106,10 @@ const AdPostSchema = new mongoose.Schema({
   photo: {
     type: [String],
     default: []
-  }
+  },
+  gender : String,
+  age : String,
+  ethnicity : String,
 });
 
 module.exports = mongoose.model('AdPost', AdPostSchema);

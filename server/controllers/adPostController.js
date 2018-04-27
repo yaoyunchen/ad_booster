@@ -9,6 +9,7 @@ const AdPost = Mongoose.model('AdPost');
 class AdPostController {
   constructor() {
     this.get = this.get.bind(this);
+    this.getAdPost = this.getAdPost.bind(this);
     this.getSearch = this.getSearch.bind(this);
     this.getField = this.getField.bind(this);
     this.post = this.post.bind(this);
@@ -29,6 +30,18 @@ class AdPostController {
       return helper.retError(res,'400',false,err,'Error','');
     });
   }
+
+  getAdPost(req, res) {
+    const { adPostId } = req.query;
+
+    return AdPost.findOneById(adPostId).then(adPost => {
+      if(!adPost.length) return helper.retError(res,'200',true,'','No matching results',adPost);
+      return helper.retSuccess(res,'200',true,'','Sucess',adPost);
+    }).catch(err => {
+      return helper.retError(res,'400',false,err,'Error','');
+    });
+  }
+
 
   getSearch(req, res) {
     let query = {

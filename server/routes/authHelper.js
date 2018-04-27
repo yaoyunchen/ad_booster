@@ -41,7 +41,7 @@ class AuthHelper {
       if (err) return helper.retError(res,'400',false,err,'getPlan() Error','');
       if (!requester) return helper.retError(res,'200',false,err,'no requester found','');
 
-      User.findById(req.body.requesterId, (err, user) => {
+      User.findById(req.body.userId, (err, user) => {
         if (err) return helper.retError(res,'400',false,err,'getPlan() Error','');
         if (!user) return helper.retError(res,'200',false,err,'no user found','');
 

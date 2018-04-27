@@ -8,7 +8,7 @@ import Typography from 'material-ui/Typography';
 import Auth from '../../../modules/Auth';
 import UserModule from '../../../modules/User';
 
-
+import AxiosHelper from '../../../helpers/axiosHelper';
 import debugLog from '../../../utils/debug';
 
 import AdPostForm from '../../../components/Forms/AdPost';
@@ -38,7 +38,7 @@ class AdPostPage extends React.Component {
 
   getUserPoints = async () => {
     const User = new UserModule();
-    const result = await User.getUserPoints();
+    const result = await User.getUserPoints(Auth.getToken());
 
     if (result && result.data) this.setState({ points: result.data });
   }

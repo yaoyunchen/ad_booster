@@ -11,7 +11,7 @@ const CollectionIndex = Mongoose.model('CollectionIndex');
 
 class AuthHelper {
   constructor() {
-    this.test = this.test.bind(this);
+    this.decryptId = this.decryptId.bind(this);
   }
 
   test(req,res,next){
@@ -20,9 +20,16 @@ class AuthHelper {
     next();
   }
 
-  authUser(req,res,next){
+  asyc authUser(req,res,next){
     //check headers
     if (!req.headers.authorization) return helper.retError(res,'400',false,'','requesterId can not be null','');;
+
+    //decript userId requesterId createdBy
+    if(req.body.userId) await AuthHelper.decryptId(req.body.userId);
+    if(req.body.requesterId) await AuthHelper.decryptId(req.body.requesterId);
+    if(req.body.createdBy) await AuthHelper.decryptId(req.body.createdBy);
+    if(req.body.userId == 'error' || req.body.requesterId == 'error' || req.body.createdBy == 'error') return helper.retError(res,'400',false,'','decrypt failed','');;
+
     //created requesterId
     req.body.requesterId = req.headers.authorization.split(' ')[1];
     //create userId
@@ -38,6 +45,13 @@ class AuthHelper {
 
         next();
       });
+    });
+  }
+
+  decryptId(id){
+    return jwt.verify(token, config.jwtSecret, (err, decoded) => {
+      if (err) return 'error';
+      return decoded.sub;
     });
   }
 

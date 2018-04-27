@@ -21,9 +21,9 @@ class UserController {
 
   // Default GET for user.  Returns complete user data.
   get(req, res) {
-    const { id } = req.query;
+    const { userId } = req.query;
 
-    const token = id !== 'null' ? id : this._getUserToken(req);
+    const token = userId !== 'null' ? userId : this._getUserToken(req);
 
     return jwt.verify(token, config.jwtSecret, (err, decoded) => {
       if (err) return res.status(401).end();

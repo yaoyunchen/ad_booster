@@ -16,7 +16,7 @@ router.get('/search',AdPostController.getSearch);
 router.get('/field', AdPostController.getField);
 
 //get all ad posts
-router.get('/', AuthHelper.getPlan, AdPostController.get);
+router.get('/', AdPostController.get);
 
 //create ad post (auth/plan/index/pays)
 router.post('/',

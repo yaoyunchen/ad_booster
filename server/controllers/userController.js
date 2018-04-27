@@ -91,7 +91,11 @@ class UserController {
   put(req, res) {
     const { userId } = req.body
 
-    return User.findByIdAndUpdate(userId, adPostData).then(userData => {
+    const ret = req.body;
+    console.log(req.body);
+    return helper.retSuccess(res,'100',true,'','Sucess',ret);
+
+    User.findByIdAndUpdate(userId, adPostData).then(userData => {
       return helper.retSuccess(res,'200',true,'','Sucess',userData);
     }).catch(err => {
       return helper.retError(res,'400',false,err,'Error','');

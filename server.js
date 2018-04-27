@@ -1,7 +1,8 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const path = require('path');
 const passport = require('passport');
+const bb = require('express-busboy');
 
 const config = require('./config');
 
@@ -11,13 +12,16 @@ require('./server/models').connect(config.dbUrl);
 
 const app = express();
 
+bb.extend(app, {
+  upload: true
+});
 
 // Static file locations
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'build')));
 
 // Parse HTTP body messages
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 
 // CORs settings for requests

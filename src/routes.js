@@ -18,6 +18,7 @@ import UserProfilePage from './containers/User/Profile';
 import AdminDashboardPage from './containers/Admin/Dashboard';
 
 import AdPostPage from './containers/AdPosts/AdPost';
+import AdPostEditPage from './containers/AdPosts/AdPost/Edit';
 import AdPostNewPage from './containers/AdPosts/New';
 
 const Routes = () => (
@@ -28,7 +29,8 @@ const Routes = () => (
         <Route path="/logout" component={LogoutPage} />
         <Route path="/signup" component={SignUpPage} />
 
-        <Route path="/post/:id" component={AdPostPage}/>
+        <Route path="/post/:id/edit" component={AdPostEditPage} />
+        <Route path="/post/:id" component={AdPostPage} />
         <Route path="/posts/new" component={AdPostNewPage} />
 
         <Route path="/user/edit" component={UserProfilePage} />

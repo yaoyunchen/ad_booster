@@ -33,7 +33,7 @@ Region Select - Done
 Disclaimer - Done
 
 Homepage
-- list all ads by expiry date
+- list all ads by expiry date - Done
 - filter / search
 - side / top pinned ads
 
@@ -46,11 +46,12 @@ User Dashboard
     - Repost ads
 - Press button email admin to refill points
 
-Update User Profile Page
+Update User Profile Page - Done
     - deactivate account
 
 Create Ad Page
-- create but cannot post without points
+- Create but cannot post without points - Done
+- Upload images
 
 Edit Ad Page
 
@@ -61,5 +62,6 @@ Admin Dashboard
 - Edit all ads
 
 Ad page
-- View information about ad
+- View information about ad - Done
+- View image
   - report ads

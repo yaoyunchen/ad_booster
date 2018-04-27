@@ -21,7 +21,11 @@ class AuthHelper {
   }
 
   authUser(req,res,next){
-    if (!req.body.requesterId) return helper.retError(res,'400',false,'','requesterId can not be null','');
+    //check headers
+    if (!req.headers.authorization) return helper.retError(res,'400',false,'','requesterId can not be null','');;
+    //created requesterId
+    req.body.requesterId = req.headers.authorization.split(' ')[1];
+    //create userId
     if (!req.body.userId) req.body.userId = req.body.requesterId;
 
     User.findById(req.body.requesterId, (err, requester) => {

@@ -6,9 +6,9 @@ import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 
 import Auth from '../../../modules/Auth';
-import User from '../../../modules/User';
+import UserModule from '../../../modules/User';
 
-import axiosHelper from '../../../helpers/axiosHelper';
+
 import debugLog from '../../../utils/debug';
 
 import AdPostForm from '../../../components/Forms/AdPost';
@@ -37,18 +37,22 @@ class AdPostPage extends React.Component {
   }
 
   getUserPoints = async () => {
+    const User = new UserModule();
     const result = await User.getUserPoints();
 
     if (result && result.data) this.setState({ points: result.data });
   }
 
   decrementUserPoints = async () => {
+    const Axios = new AxiosHelper();
+
     const { points, postPoints } = this.state;
 
-    const result = await axiosHelper.put('/user/user', { points: (points - postPoints) });
+    const result = await Axios.put('/user/user', { points: (points - postPoints) });
 
     debugLog('Points decremented.', result);
   }
+
 
   submitAdPost = (e) => {
     e.preventDefault();
@@ -59,9 +63,17 @@ class AdPostPage extends React.Component {
       return;
     }
 
-    axiosHelper.post('/auth/adPost', this.state.adPost)
+    const formData = new FormData();
+    const keys = Object.keys(this.state.adPost);
+
+    for (let i = 0; i < keys.length; i ++) {
+      formData.append(keys[i], this.state.adPost[keys[i]]);
+    }
+
+    const Axios = new AxiosHelper();
+    Axios.post('/auth/adPost', formData, { 'Content-Type': 'multipart/form-data' })
       .then((res) => {
-        if (res && res.data && !res.data.success) {
+        if (res && res.data && res.data.data && !res.data.data.success) {
           const { errors, message } = res.data;
           errors.summary = message;
 
@@ -72,7 +84,7 @@ class AdPostPage extends React.Component {
         debugLog('Ad Post created.');
         this.setState({ errors: {} });
 
-        sessionStorage.setItem('globalMessage', res.data.message);
+        // sessionStorage.setItem('globalMessage', res.data.data.message);
 
         this.decrementUserPoints();
 
@@ -81,47 +93,6 @@ class AdPostPage extends React.Component {
       .catch(e => {
         debugLog(e);
       });
-
-
-    // let encodedFormData = '';
-    // const keys = Object.keys(this.state.adPost);
-
-    // for (let i = 0; i < keys.length; i++) {
-    //   const field = this.state.adPost[keys[i]];
-    //   const data = encodeURIComponent(field);
-
-    //   if (encodedFormData === '') {
-    //     encodedFormData = `${keys[i]}=${data}`;
-    //   } else {
-    //     encodedFormData += `&${keys[i]}=${data}`;
-    //   }
-    // }
-
-    // const xhr = new XMLHttpRequest();
-    // xhr.open('post', '/auth/adPost');
-    // xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    // xhr.responseType = 'json';
-
-    // xhr.addEventListener('load', () => {
-    //   if (xhr.status === 200) {
-    //     // success
-
-    //     // change the component-container state
-    //     this.setState({ errors: {} });
-
-    //     localStorage.setItem('successMessage', xhr.response.message);
-    //     this.props.history.replace('/user');
-    //   } else {
-    //     // failure
-
-    //     const errors = xhr.response.errors ? xhr.response.errors : {};
-    //     errors.summary = xhr.response.message;
-
-    //     this.setState({ errors });
-    //   }
-    // });
-
-    // xhr.send(encodedFormData);
   }
 
   updateAdPost = (field, value) => {
@@ -154,7 +125,6 @@ class AdPostPage extends React.Component {
           </Card>
         </Grid>
       </Grid>
-
     );
   }
 }

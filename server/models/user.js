@@ -33,7 +33,11 @@ const UserSchema = new mongoose.Schema({
   },
   photo: String,
   promocode: String,
-  points: Number,
+  points: {
+    type : Number,
+    required: true,
+    default : 0
+  },
   devices: [],
   emailConfirmed: {
     type: Boolean,

@@ -1,16 +1,15 @@
-import Auth from './Auth';
+import AxiosHelper from '../helpers/axiosHelper';
 
-import axiosHelper from '../helpers/axiosHelper';
-
+const Axios = new AxiosHelper();
 
 class User {
-  getAll = () => axiosHelper.get('/users');
+  getAll = () => Axios.get('/users');
 
-  getUser = (id = null) => axiosHelper.get(`/user?id=${encodeURIComponent(id)}`);
+  getUser = (id = null) => Axios.get(`/user?userId=${encodeURIComponent(id)}`);
 
-  getUserIsAdmin = () => axiosHelper.get('/user/isAdmin');
+  getUserIsAdmin = () => Axios.get('/user/isAdmin');
 
-  getUserPoints = (id = null) => axiosHelper.get(`/user/points?id=${encodeURIComponent(id)}`);
+  getUserPoints = (id = null) => Axios.get(`/user/field?userId=${encodeURIComponent(id)}&field=points`);
 }
 
-export default new User();
+export default User;

@@ -1,7 +1,10 @@
-import axiosHelper from '../helpers/axiosHelper';
+import AxiosHelper from '../helpers/axiosHelper';
+
+const Axios = new AxiosHelper();
 
 class AdPost {
   getAdPosts = (params = {}) => {
+
     let paramsUrl = '';
     const keys = Object.keys(params);
 
@@ -10,12 +13,12 @@ class AdPost {
       paramsUrl += i === 0 ? `?${key}=${value}` : `&${key}=${value}`;
     });
 
-    return axiosHelper.get(`/adPost${paramsUrl}`);
+    return Axios.get(`/adPost${paramsUrl}`);
   }
 
-  getAdPostsByUser = (userId = null) => axiosHelper.get(`/adPost/userAdPosts?userId=${encodeURIComponent(userId)}`)
+  getAdPostsByUser = (userId = null) => Axios.get(`/adPost/userAdPosts?userId=${encodeURIComponent(userId)}`)
 
-  getAdPost = adPostId => axiosHelper.get(`/adPost/${encodeURIComponent(adPostId.trim())}`);
+  getAdPost = adPostId => Axios.get(`/adPost/${encodeURIComponent(adPostId.trim())}`);
 }
 
-export default new AdPost();
+export default AdPost;

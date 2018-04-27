@@ -5,9 +5,9 @@ import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 
 import Auth from '../../../modules/Auth';
-import User from '../../../modules/User';
+import UserModule from '../../../modules/User';
 import debugLog from '../../../utils/debug';
-import axiosHelper from '../../../helpers/axiosHelper';
+import AxiosHelper from '../../../helpers/axiosHelper';
 
 import UserProfileForm from '../../../components/Forms/UserProfile';
 
@@ -32,6 +32,7 @@ class UserProfilePage extends React.Component {
   }
 
   loadUser = async () => {
+    const User = new UserModule();
     const result = await User.getUser();
     debugLog('User loaded', result);
     if (result && result.data) this.setState({ user: result.data });
@@ -40,7 +41,8 @@ class UserProfilePage extends React.Component {
   submitUser = (e) => {
     e.preventDefault();
 
-    axiosHelper.put('/auth/user/edit', this.state.user)
+    const Axios = new AxiosHelper();
+    Axios.put('/auth/user/edit', this.state.user)
       .then((res) => {
         if (res && res.data && !res.data.success) {
           const { errors, message } = res.data;

@@ -10,14 +10,14 @@ router.get('/', UserController.get);
 //get user is admin true/false by id
 router.get('/isAdmin', UserController.getIsAdmin);
 //get all active users
-router.get('/users',UserController.getUsers);
+router.get('/users', UserController.getUsers);
 //get user points by id
 router.get('/field',UserController.getField);
 //create user
-router.post('/',UserController.post);
+router.post('/', UserController.post);
 //update user by id
-router.put('/user',UserController.put);
+router.put('/user', UserController.put);
 //delete user by id
-router.delete('/:userId',UserController.delete);
+router.delete('/:userId', UserController.delete);
 
 module.exports = router;

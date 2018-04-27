@@ -11,7 +11,7 @@ import { withStyles } from 'material-ui/styles';
 
 import debugLog from '../../../utils/debug';
 
-import AdPost from '../../../modules/AdPost';
+import AdPostModule from '../../../modules/AdPost';
 
 // import content from '../../../content';
 
@@ -55,6 +55,7 @@ class AdPostList extends React.Component {
   getAdPosts = async (params) => {
     this.startLoading();
 
+    const AdPost = new AdPostModule();
     const results = await AdPost.getAdPosts(params);
 
     debugLog('AdPost results:', results);
@@ -75,30 +76,55 @@ class AdPostList extends React.Component {
     }
   }
 
-  buildImageElement = () => {
+  buildImageElement = (adPost) => {
+    const { photos } = adPost;
+
     let size = 60;
-    if(window && window.matchMedia("(min-width: 600px)").matches) {
+    if (window && window.matchMedia("(min-width: 600px)").matches) {
       size = 80;
     }
 
-    return (
-      <Icon style={{
-        fontSize: size,
-        color: '#c1c1c1',
-        border: '2px solid rgb(63, 81, 181, 0.15)',
-        borderRadius: 5,
-        overflow: 'hidden'
-      }}>
-        person_outline
+    if (!photos || photos.length === 0) {
+      return (
+        <Icon style={{
+          fontSize: size,
+          color: '#c1c1c1',
+          border: '2px solid rgb(63, 81, 181, 0.15)',
+          borderRadius: 5,
+          overflow: 'hidden'
+        }}>
+          person_outline
       </Icon>
-    );
+      );
+    }
+
+    // const photo = photos[0]
+    const photo = `${process.env.PUBLIC_URL}/assets/images/adPost/1.png`;
+
+    return (
+      <div
+        style={{
+          position: 'relative',
+          float: 'left',
+          width:  size,
+          height: size,
+          backgroundPosition: '50% 50%',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          backgroundImage: `url(${photo})`,
+          border: '2px solid rgb(63, 81, 181, 0.15)',
+          borderRadius: 5,
+          border: '2px solid #e0e0e0'
+        }}
+      />
+    )
   }
 
   buildListElements = () => {
     const isTabletUp = window && window.matchMedia("(min-width: 600px)").matches;
 
     return this.state.adPosts.map((adPost) => {
-      const imageEle = this.buildImageElement();
+      const imageEle = this.buildImageElement(adPost);
 
       return [
         <GridListTile key={adPost._id} style={{

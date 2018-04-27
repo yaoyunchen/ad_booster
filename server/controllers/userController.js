@@ -64,18 +64,23 @@ class UserController {
   }
 
   getField(req, res) {
-    const { userId } = req.query;
-    const { field } = req.query;
+    const token = req.query.userId;
 
-    if(userId == null || field == null) return res.status(400).end();
+    return jwt.verify(token, config.jwtSecret, (err, decoded) => {
+      if (err) return res.status(401).end();
 
-    const projection = field + " -_id";
+      const userId = decoded.sub;
+      const { field } = req.query;
 
-    return User.findById(userId, projection).then(userData => {
-      if(!user.length) return helper.retError(res,'200',true,'','No matching results',userData);
-      return helper.retSuccess(res,'200',true,'','Sucess',userData);
-    }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      if(userId == null || field == null) return res.status(400).end();
+      const projection = field + " -_id";
+
+      return User.findById(userId, projection).then(userData => {
+        if(!userData) return helper.retError(res,'200',true,'','No matching results',userData);
+        return helper.retSuccess(res,'200',true,'','Sucess',userData);
+      }).catch(err => {
+        return helper.retError(res,'400',false,err,'Error','');
+      });
     });
   }
 

@@ -110,6 +110,7 @@ const AdPostSchema = new mongoose.Schema({
   gender : String,
   age : String,
   ethnicity : String,
+  availability : String
 });
 
 module.exports = mongoose.model('AdPost', AdPostSchema);

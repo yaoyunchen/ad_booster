@@ -5,13 +5,14 @@ import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 
-import Auth from '../../../modules/Auth';
-import UserModule from '../../../modules/User';
+import Auth from '../../modules/Auth';
+import UserModule from '../../modules/userModule';
 
-import AxiosHelper from '../../../helpers/axiosHelper';
-import debugLog from '../../../utils/debug';
+import debugLog from '../../utils/debug';
 
-import AdPostForm from '../../../components/Forms/AdPost';
+import AdPostForm from '../../components/Forms/AdPost';
+
+import AxiosHelper from '../../helpers/axiosHelper';
 
 class AdPostPage extends React.Component {
   constructor(props) {
@@ -21,7 +22,7 @@ class AdPostPage extends React.Component {
       adPost: {},
       errors: {},
       points: 0,
-      postPoints: 100
+      price: 5
     };
   }
 
@@ -37,10 +38,10 @@ class AdPostPage extends React.Component {
   }
 
   getUserPoints = async () => {
-    const User = new UserModule();
-    const result = await User.getUserPoints(Auth.getToken());
-
-    if (result && result.data) this.setState({ points: result.data });
+    const result = await UserModule.getUserPoints(Auth.getToken());
+    if (result && result.data) {
+      this.setState({ points: result.data.points });
+    }
   }
 
   decrementUserPoints = async () => {
@@ -70,8 +71,11 @@ class AdPostPage extends React.Component {
       formData.append(keys[i], this.state.adPost[keys[i]]);
     }
 
+    formData.append('requesterId', Auth.getToken());
+    formData.append('planName', 'std_post_adpost');
+
     const Axios = new AxiosHelper();
-    Axios.post('/auth/adPost', formData, { 'Content-Type': 'multipart/form-data' })
+    Axios.post('/adPost', formData, { 'Content-Type': 'multipart/form-data' })
       .then((res) => {
         if (res && res.data && res.data.data && !res.data.data.success) {
           const { errors, message } = res.data;
@@ -119,7 +123,7 @@ class AdPostPage extends React.Component {
                 onSubmit={this.submitAdPost}
                 onChange={this.updateAdPost}
                 points={this.state.points}
-                postPoints={this.state.postPoints}
+                price={this.state.price}
               />
             </CardContent>
           </Card>

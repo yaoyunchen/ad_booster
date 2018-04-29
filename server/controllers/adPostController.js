@@ -1,4 +1,6 @@
 const Mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+
 const config = require('../../config');
 
 const helperClass = require('./controllerHelper');
@@ -18,11 +20,32 @@ class AdPostController {
     this.putPinned = this.putPinned.bind(this);
     this.putBoost = this.putBoost.bind(this);
     this.delete = this.delete.bind(this);
+
+    this.decrypt = this.decrypt.bind(this);
   }
 
+
+  decrypt(token) {
+    return jwt.verify(token, config.jwtSecret, (err, decoded) => {
+      if (err) return '';
+      return decoded.sub;
+    });
+  }
+
+<<<<<<< HEAD
   get(req, res) {
     return AdPost.find(req.query).sort({ priority: -1 }).then(adPost => {
       if(!adPost.length) return helper.retError(res,'400',true,'','No matching results',adPost);
+=======
+  async get (req, res) {
+    // const ret = req.query;
+    // return res.status(200).json(ret);
+    const shit = req.query;
+    if (shit.createdBy) shit.createdBy = await this.decrypt(shit.createdBy);
+
+    return AdPost.find(shit).then(adPost => {
+      if(!adPost.length) return helper.retError(res,'200',true,'','No matching results',adPost);
+>>>>>>> 0f5ab38f355bac3588c48b4465838c23363f3e2d
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
       return helper.retError(res,'400',false,err,'Error','');

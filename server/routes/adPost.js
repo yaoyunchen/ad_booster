@@ -24,6 +24,7 @@ router.get('/',
   AuthHelper.decryptRequesterUserId,
   AdPostController.get);
 
+<<<<<<< HEAD
 //get one AdPost by adPostId
 router.get('/adpost',
   AuthHelper.decryptRequesterUserId,
@@ -34,6 +35,8 @@ router.get('/adpost/user',
   AuthHelper.decryptRequesterUserId,
   AdPostController.getUserAdPost);
 
+=======
+>>>>>>> 0f5ab38f355bac3588c48b4465838c23363f3e2d
 //create ad post (auth/plan/index/pays)
 router.post('/',
   AuthHelper.authUser,

@@ -18,7 +18,7 @@ class AdPost {
 
   getAdPostsByUser = (userId = null) => Axios.get(`/adPost/userAdPosts?userId=${encodeURIComponent(userId)}`)
 
-  getAdPost = adPostId => Axios.get(`/adPost/${encodeURIComponent(adPostId.trim())}`);
+  getAdPost = adPostId => Axios.get(`/adPost/adpost?adPostId=${encodeURIComponent(adPostId.trim())}`);
 }
 
 export default AdPost;

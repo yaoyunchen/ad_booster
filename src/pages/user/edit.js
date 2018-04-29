@@ -4,12 +4,12 @@ import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 
-import Auth from '../../../modules/Auth';
-import UserModule from '../../../modules/User';
-import debugLog from '../../../utils/debug';
-import AxiosHelper from '../../../helpers/axiosHelper';
+import Auth from '../../modules/Auth';
+import UserModule from '../../modules/User';
+import debugLog from '../../utils/debug';
+import AxiosHelper from '../../helpers/axiosHelper';
 
-import UserProfileForm from '../../../components/Forms/UserProfile';
+import UserProfileForm from '../../components/Forms/UserProfile';
 
 class UserProfilePage extends React.Component {
   constructor(props) {
@@ -33,7 +33,7 @@ class UserProfilePage extends React.Component {
 
   loadUser = async () => {
     const User = new UserModule();
-    console.log('shit', Auth.getToken())
+    console.log('shit, ', Auth.getToken())
     const result = await User.getUser(Auth.getToken());
     debugLog('User loaded', result);
     if (result && result.data) this.setState({ user: result.data });

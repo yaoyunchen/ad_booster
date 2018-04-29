@@ -128,6 +128,7 @@ class UserDashboardPage extends React.Component {
   }
 
   buildListElements = () => {
+    if (!Array.isArray(this.state.adPosts)) return;
     return this.state.adPosts.map((adPost) => {
       const imageEle = this.buildImageElement(adPost);
 

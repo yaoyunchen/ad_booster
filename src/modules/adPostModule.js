@@ -36,7 +36,7 @@ const getAdPostsWithSearch = (params = {}) => {
 const getAdPostsByUser = userId => {
   if (!userId) debugLog('getUser:', 'user Id was not provided, defaulting to request header.');
 
-  return Axios.get(`/adPost?createdBy=${encodeURIComponent(userId)}`);
+  return Axios.get(`/adPost/user?requesterId=${userId}`);
 };
 
 const getAdPost = adPostId => {

@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 
 import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
-import Input, { InputLabel } from 'material-ui/Input';
 import { FormControl, FormHelperText } from 'material-ui/Form';
+import Input, { InputLabel } from 'material-ui/Input';
 import Typography from 'material-ui/Typography';
 
 class SignUpForm extends React.Component {

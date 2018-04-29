@@ -1,14 +1,14 @@
 import React from 'react';
 
-import Auth from '../../modules/Auth';
+import Auth from '../../modules/authModule';
 
 import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
 
 import debugLog from '../../utils/debug';
-import UserModule from '../../modules/User';
+import UserModule from '../../modules/userModule';
 
-import PageTitle from '../../components/PageTitle';
+import PageTitle from '../../components/pageTitle';
 import { AdminAdPostList, AdminUserList } from '../../components/Lists/Admin';
 
 const mockUsers = [
@@ -135,8 +135,7 @@ class AdminDashboardPage extends React.Component {
   isUserAdmin = async () => {
     this.startLoading();
 
-    const User = new UserModule();
-    const userType = await User.getUserIsAdmin();
+    const userType = await UserModule.getUserIsAdmin();
 
     if (userType && userType.data) {
       this.setState({ isAdmin: userType.data });

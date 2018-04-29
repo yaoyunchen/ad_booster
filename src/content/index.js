@@ -1,3 +1,7 @@
-import content from './content';
+const content = {
+  home: {
+    title: 'Home Page Title'
+  }
+};
 
 export default content;

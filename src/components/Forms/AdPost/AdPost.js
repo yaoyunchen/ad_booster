@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 
 import Button from 'material-ui/Button';
 import Divider from 'material-ui/Divider';
-import { FormControl, FormControlLabel, FormLabel, FormHelperText } from 'material-ui/Form';
+import { FormControl, FormHelperText } from 'material-ui/Form';
 import Grid from 'material-ui/Grid';
 import Hidden from 'material-ui/Hidden';
 import Icon from 'material-ui/Icon';
-import { InputLabel } from 'material-ui/Input';
+import Input, { InputLabel } from 'material-ui/Input';
 import Typography from 'material-ui/Typography';
 
 import {
@@ -229,12 +229,23 @@ class AdPostForm extends React.Component {
     //       ['link', 'image', 'video']
     //     ]
     //   };
-
     this.state = {
       photoPreviewUrls: [],
       photoError: '',
       selectedPhoto: ''
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.adPost.photos) return;
+
+    if (nextProps.adPost.photos.length > 0 && this.state.photoPreviewUrls.length === 0) {
+      this.setPreviewPhotoUrls(nextProps.adPost.photos);
+    }
+  }
+
+  setPreviewPhotoUrls = (photos) => {
+    this.setState({ photoPreviewUrls: photos });
   }
 
   handlePhotosChange = e => {
@@ -269,19 +280,17 @@ class AdPostForm extends React.Component {
       }
     }
 
-
-    this.setState({ photoPreviewUrls: [], photoError: '' });
+    this.setState({ photoError: '' });
 
     [].forEach.call(files, this.readFile);
-    this.props.onChange('photos', e.target.files);
+    this.props.onChange('photos', this.state.photoPreviewUrls);
   }
 
   readFile = (file) => {
     const reader = new FileReader();
-
     reader.onloadend = () => {
       const photos = this.state.photoPreviewUrls;
-      photos.push({ name: file.name, url: reader.result });
+      photos.push({ name: file.name, file, url: reader.result });
       this.setState({ photoPreviewUrls: photos });
     };
 
@@ -296,7 +305,6 @@ class AdPostForm extends React.Component {
 
   buildPhotoPreview = () => {
     const { photoPreviewUrls, selectedPhoto } = this.state;
-
     if (photoPreviewUrls.length === 0) {
       return (
         <Typography
@@ -317,7 +325,7 @@ class AdPostForm extends React.Component {
         >
           <img
             className="photos__display--image"
-            src={photo.url} alt={photo.name}
+            src={`${process.env.PUBLIC_URL}${photo.url}`} alt={photo.name}
           />
         </div>
       );
@@ -338,7 +346,6 @@ class AdPostForm extends React.Component {
         const temp = tempArr[i - 1];
         tempArr[i - 1] = photo;
         tempArr[i] = temp;
-
         this.setState({ photoPreviewUrls: tempArr }, () => {
           document.querySelector('.photos__display--active-image').scrollIntoView();
         });
@@ -372,7 +379,6 @@ class AdPostForm extends React.Component {
     }
   }
 
-
   buildPhotoUploads = () => {
     const { errors } = this.props;
     const { photoPreviewUrls, photoError, selectedPhoto } = this.state;
@@ -391,11 +397,19 @@ class AdPostForm extends React.Component {
           Upload Photos
         </InputLabel>
 
-        <input
-          className="photos__input"
-          id="photos" type="file" accept="image/*" multiple
-          onChange={e => this.handlePhotosChange(e)}
-        />
+        <Grid container justify="flex-start">
+          <Grid item xs={12}>
+            <input
+              className="photos__input"
+              id="photos" type="file" accept="image/*" multiple
+              onChange={e => this.handlePhotosChange(e)}
+            />
+
+            <Button color="secondary" onClick={() => this.clearImages()}>
+              Clear images
+            </Button>
+          </Grid>
+        </Grid>
 
         <div className="photos__display">
           {photoPreviewEle}
@@ -434,8 +448,14 @@ class AdPostForm extends React.Component {
     );
   }
 
+  clearImages = () => {
+    this.setState({ photoPreviewUrls: [], photoError: '' });
+
+    this.props.onChange('photos', []);
+  }
+
   buildPricingElement = () => {
-    const { points, postPoints } = this.props;
+    const { points, price } = this.props;
 
     return (
       <div>
@@ -450,7 +470,7 @@ class AdPostForm extends React.Component {
           variant="caption" align="right"
           style={{ marginBottom: 8 }}
         >
-          Post Cost: {postPoints}
+          Post Cost: {price}
         </Typography>
 
         <Typography
@@ -458,8 +478,8 @@ class AdPostForm extends React.Component {
           style={{ marginBottom: 8 }}
         >
           {
-            this.props.points - this.props.postPoints >= 0 ? `
-                  Remaining Points: ${convertReadableNum(points - postPoints)}
+            this.props.points - this.props.price >= 0 ? `
+                  Remaining Points: ${convertReadableNum(points - price)}
                 ` : 'Insuffifient points to post'
           }
         </Typography>
@@ -472,12 +492,11 @@ class AdPostForm extends React.Component {
       adPost,
       errors,
       points,
-      postPoints,
+      price,
       onChange,
       onSubmit
     } = this.props;
     const { region, province } = content.form;
-
     let regionInput = region;
 
     if (adPost.province) {
@@ -488,7 +507,6 @@ class AdPostForm extends React.Component {
 
     const photoUploadElement = this.buildPhotoUploads();
     const pricingElement = this.buildPricingElement();
-
 
     return (
       <form action="/" onSubmit={onSubmit}>
@@ -527,7 +545,25 @@ class AdPostForm extends React.Component {
               </Hidden>
 
               <Grid item xs={12} sm={6} md={4}>
-                {buildTextInput(content.form.age, { data: adPost, errors, onChange })}
+                <FormControl
+                  error={errors['age'] ? true : false}
+                  aria-describedby={`${'age'}-error`}
+                  fullWidth
+                >
+                  <InputLabel shrink htmlFor="age">Age</InputLabel>
+                  <Input
+                    id="age"
+                    value={adPost.age || ''}
+                    type="number"
+                    inputProps={{ min: "18", step: "1" }}
+                    onChange={e => onChange('age', e.target.value)}
+                  />
+
+                  <FormHelperText id={`${'age'}-error`}>
+                    {errors.age}
+                  </FormHelperText>
+                </FormControl>
+
               </Grid>
             </Grid>
           </Grid>
@@ -574,7 +610,7 @@ class AdPostForm extends React.Component {
 
           {/* Price Calculation */}
           {
-            this.props.price ? (
+            this.props.state === "new" ? (
               <Grid item xs={12} sm={10} lg={8}>
                 {pricingElement}
               </Grid>
@@ -586,7 +622,7 @@ class AdPostForm extends React.Component {
           <Grid item xs={12} sm={10} lg={8}>
             <Button
               variant="raised" type="submit" color="primary"
-              disabled={points && points - postPoints < 0 ? true : false}
+              disabled={points && points - price < 0 ? true : false}
               style={{ margin: '24px auto 0 auto', display: 'block' }}
             >
               {content.form.submit}
@@ -599,19 +635,21 @@ class AdPostForm extends React.Component {
 }
 
 AdPostForm.propTypes = {
+  state: PropTypes.string,
   adPost: PropTypes.object,
   errors: PropTypes.object,
   points: PropTypes.number,
-  postPoints: PropTypes.number,
+  price: PropTypes.number,
   onChange: PropTypes.func,
   onSubmit: PropTypes.func
 };
 
 AdPostForm.defaultProps = {
+  state: 'new',
   adPost: {},
   errors: {},
   points: 0,
-  postPoints: 100,
+  price: 5,
   onChange: () => { },
   onSubmit: () => { }
 };

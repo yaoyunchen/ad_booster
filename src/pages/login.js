@@ -4,8 +4,12 @@ import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 
-import Auth from '../modules/Auth';
-import LoginForm from '../components/Forms/Login';
+import debugLog from '../utils/debug';
+import Auth from '../modules/authModule';
+import UserModule from '../modules/userModule';
+import { buildFormData } from '../helpers/formHelper';
+
+import LoginForm from '../components/Forms/logIn';
 
 class LoginPage extends React.Component {
   constructor(props) {
@@ -22,49 +26,37 @@ class LoginPage extends React.Component {
       errors: {},
       successMessage,
       user: {
-        username: '',
-        password: ''
+        username: '', password: ''
       }
     };
   }
 
-  processForm = (e) => {
+  setErrors = (data) => {
+    const { errors } = data;
+    errors.summary = data.message;
+    this.setState({ errors });
+  }
+
+  processForm = async (e) => {
     e.preventDefault();
 
-    const { user } = this.state;
+    try {
+      const formData = buildFormData(this.state.user);
+      const result = await UserModule.loginUser(formData);
+      const { data } = result;
 
-    // create a string for an HTTP body message
-    const username = encodeURIComponent(user.username);
-    const password = encodeURIComponent(user.password);
-    const formData = `username=${username}&password=${password}`;
-
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('post', '/auth/login');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
-        // success
-
-        // change the component-container state
-        this.setState({ errors: {} });
-
-        Auth.authenticateUser(xhr.response.token);
-        this.props.history.replace('/user');
-      } else {
-        // failure
-
-        // change the component state
-        const errors = xhr.response.errors ? xhr.response.errors : {};
-        errors.summary = xhr.response.message;
-
-        this.setState({
-          errors
-        });
+      if (!data.success) {
+        debugLog('processForm errors:', data);
+        this.setErrors(data);
+        return;
       }
-    });
-    xhr.send(formData);
+
+      this.setState({ errors: {} });
+      Auth.authenticateUser(data.token);
+      this.props.history.replace('/user');
+    } catch (e) {
+      debugLog('processForm failed:', e);
+    }
   }
 
   changeUser = (field, value) => {

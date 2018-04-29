@@ -4,7 +4,11 @@ import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 
-import SignUpForm from '../components/Forms/SignUp';
+import debugLog from '../utils/debug';
+import UserModule from '../modules/userModule';
+import { buildFormData } from '../helpers/formHelper';
+
+import SignUpForm from '../components/Forms/signUp';
 
 class SignUpPage extends React.Component {
   constructor(props) {
@@ -13,55 +17,44 @@ class SignUpPage extends React.Component {
     this.state = {
       errors: {},
       user: {
-        email: '',
-        username: '',
-        password: ''
+        email: '', username: '', password: ''
       }
     };
   }
 
-  processForm = (e) => {
+  setErrors = (data) => {
+    const { errors } = data;
+    errors.summary = data.message;
+    this.setState({ errors });
+  }
+
+  processForm = async (e) => {
     e.preventDefault();
-    const { user } = this.state;
 
-    // create a string for an HTTP body message
-    const username = encodeURIComponent(user.username);
-    const email = encodeURIComponent(user.email);
-    const password = encodeURIComponent(user.password);
+    try {
+      const formData = buildFormData(this.state.user);
+      const result = await UserModule.postUser(formData);
+      const { data } = result;
 
-    const formData = `username=${username}&email=${email}&password=${password}`;
+      if (!data.success) {
+        debugLog('processForm errors:', data);
+        this.setErrors(data);
+        return;
+      }
 
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('post', '/auth/signup');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
-        // success
-
-        // change the component-container state
         this.setState({ errors: {} });
 
-        localStorage.setItem('successMessage', xhr.response.message);
+        localStorage.setItem('successMessage', data.message);
+
         this.props.history.replace('/login');
-      } else {
-        // failure
-
-        const errors = xhr.response.errors ? xhr.response.errors : {};
-        errors.summary = xhr.response.message;
-
-        this.setState({ errors });
-      }
-    });
-
-    xhr.send(formData);
+    } catch (e) {
+      debugLog('processForm failed:', e);
+    }
   }
 
   changeUser = (field, value) => {
     const user = this.state.user;
     user[field] = value;
-
     this.setState({ user });
   }
 

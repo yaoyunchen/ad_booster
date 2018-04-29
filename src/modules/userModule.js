@@ -24,10 +24,27 @@ const getUserIsAdmin = () => Axios.get(`/user/isAdmin`);
 
 const getUserPoints = id => getUserField(id, 'points');
 
+const postUser = formData => {
+  return Axios.post('/auth/signup', formData, {
+    'Content-Type': 'multipart/form-data'
+  });
+};
+
+const updateUser = user => Axios.put('/auth/user/edit', user);
+
+const loginUser = formData => {
+  return Axios.post('/auth/login', formData, {
+    'Content-Type': 'multipart/form-data'
+  });
+};
+
 export default {
   getAllUsers,
   getUser,
   getUserField,
   getUserIsAdmin,
-  getUserPoints
+  getUserPoints,
+  postUser,
+  updateUser,
+  loginUser
 };

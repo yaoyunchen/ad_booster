@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Auth from '../modules/Auth';
+import Auth from '../modules/authModule';
 
 class LogoutPage extends React.Component {
   componentWillMount() {

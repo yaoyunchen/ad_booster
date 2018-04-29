@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
 
-import PageTitle from '../components/PageTitle';
-import AdPostList from '../components/Lists/Adposts';
+import PageTitle from '../components/pageTitle';
+import AdPostList from '../components/Lists/adPost';
 
 const HomePage = (props, context) => {
   return (

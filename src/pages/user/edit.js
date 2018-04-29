@@ -1,107 +1,49 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 
-import Auth from '../../modules/Auth';
-import UserModule from '../../modules/User';
-import debugLog from '../../utils/debug';
-import AxiosHelper from '../../helpers/axiosHelper';
+import withUser from '../../hocs/withUser';
 
-import UserProfileForm from '../../components/Forms/UserProfile';
+import debugLog from '../../utils/debug';
+import UserModule from '../../modules/userModule';
+
+import UserProfileForm from '../../components/Forms/userProfile';
 
 class UserProfilePage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      user: null, errors: {}
+      user: {},
+      errors: {}
     };
   }
 
-  componentWillMount() {
-    if (!Auth.isUserAuthenticated()) {
-      // Redirect to homepage if user is not authenticated.
-      this.props.history.replace({ pathname: '/' });
-    }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.user === nextProps.user) return;
+    this.setUser(nextProps.user);
   }
 
-  componentDidMount() {
-    this.loadUser();
-  }
+  setUser = user => this.setState({ user });
 
-  loadUser = async () => {
-    const User = new UserModule();
-    console.log('shit, ', Auth.getToken())
-    const result = await User.getUser(Auth.getToken());
-    debugLog('User loaded', result);
-    if (result && result.data) this.setState({ user: result.data });
-  }
-
-  submitUser = (e) => {
+  submitUser = async (e) => {
     e.preventDefault();
 
-    const Axios = new AxiosHelper();
-    Axios.put('/auth/user/edit', this.state.user)
-      .then((res) => {
-        if (res && res.data && !res.data.success) {
-          const { errors, message } = res.data;
-          errors.summary = message;
+    try {
+      const result = await UserModule.postUser(this.state.user);
 
-          this.setState({ errors: errors || {} });
-          return;
-        }
+      if (!result.success) {
+        debugLog('submitUser Error: ', result);
+      }
 
-        debugLog('User updated.');
-        this.setState({ errors: {} });
-
-        sessionStorage.setItem('globalMessage', res.data.message);
-        this.props.history.replace('/user');
-      })
-      .catch(e => {
-        debugLog(e);
-      });
-
-    // let encodedFormData = '';
-    // const keys = Object.keys(this.state.adPost);
-
-    // for (let i = 0; i < keys.length; i++) {
-    //   const field = this.state.adPost[keys[i]];
-    //   const data = encodeURIComponent(field);
-
-    //   if (encodedFormData === '') {
-    //     encodedFormData = `${keys[i]}=${data}`;
-    //   } else {
-    //     encodedFormData += `&${keys[i]}=${data}`;
-    //   }
-    // }
-
-    // const xhr = new XMLHttpRequest();
-    // xhr.open('post', '/user');
-    // xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    // xhr.responseType = 'json';
-
-    // xhr.addEventListener('load', () => {
-    //   if (xhr.status === 200) {
-    //     // success
-
-    //     // change the component-container state
-    //     this.setState({ errors: {} });
-
-    //     localStorage.setItem('successMessage', xhr.response.message);
-    //     this.props.history.replace('/login');
-    //   } else {
-    //     // failure
-
-    //     const errors = xhr.response.errors ? xhr.response.errors : {};
-    //     errors.summary = xhr.response.message;
-
-    //     this.setState({ errors });
-    //   }
-    // });
-
-    // xhr.send(encodedFormData);
+      debugLog('submitUser: ', 'User updated');
+      this.props.history.replace('/user');
+    } catch (e) {
+      debugLog('submitUser: Error: Unable to post ad', e);
+    }
   }
 
   updateUser = (field, value) => {
@@ -110,10 +52,7 @@ class UserProfilePage extends React.Component {
     this.setState({ user });
   }
 
-
   render() {
-    if (!this.state.user) return <div />;
-
     return (
       <Grid container justify="center">
         <Grid item xs={12}>
@@ -133,9 +72,16 @@ class UserProfilePage extends React.Component {
           </Card>
         </Grid>
       </Grid>
-
     );
   }
 }
 
-export default UserProfilePage;
+UserProfilePage.propTypes = {
+  user: PropTypes.object
+};
+
+UserProfilePage.defaultProps = {
+  user: {}
+};
+
+export default withUser(UserProfilePage);

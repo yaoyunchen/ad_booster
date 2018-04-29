@@ -154,9 +154,18 @@ const buildSelect = (input, props) => {
   );
 };
 
+const buildFormData = data => {
+  const formData = new FormData();
+
+  Object.keys(data).forEach((key, i) => formData.append(key, data[key]));
+
+  return formData;
+};
+
 export {
   buildRadioGroup,
   buildSelect,
   buildTextInput,
-  buildTextAreaInput
+  buildTextAreaInput,
+  buildFormData
 };

@@ -6,20 +6,22 @@ import {
 } from "react-router-dom";
 
 import App from './App';
-import HomePage from './containers/Home';
+import HomePage from './pages/home';
 
-import SignUpPage from './containers/SignUp';
-import LoginPage from './containers/Login';
-import LogoutPage from './containers/Logout';
+import SignUpPage from './pages/signUp';
+import LoginPage from './pages/login';
+import LogoutPage from './pages/logout';
 
-import UserDashboardPage from './containers/User/Dashboard';
-import UserProfilePage from './containers/User/Profile';
+import InfoPage from './pages/info';
 
-import AdminDashboardPage from './containers/Admin/Dashboard';
+import AdPostPage from './pages/adPosts/adPost';
+import AdPostEditPage from './pages/adPosts/editAdPost';
+import AdPostNewPage from './pages/adPosts/newAdPost';
 
-import AdPostPage from './containers/AdPosts/AdPost';
-import AdPostEditPage from './containers/AdPosts/AdPost/Edit';
-import AdPostNewPage from './containers/AdPosts/New';
+import UserDashboardPage from './pages/user/dashboard';
+import UserProfilePage from './pages/user/edit';
+
+import AdminDashboardPage from './pages/admin/dashboard';
 
 const Routes = () => (
   <Router>
@@ -29,12 +31,15 @@ const Routes = () => (
         <Route path="/logout" component={LogoutPage} />
         <Route path="/signup" component={SignUpPage} />
 
+        <Route path="/info" component={InfoPage} />
+
         <Route path="/post/:id/edit" component={AdPostEditPage} />
         <Route path="/post/:id" component={AdPostPage} />
         <Route path="/posts/new" component={AdPostNewPage} />
 
         <Route path="/user/edit" component={UserProfilePage} />
         <Route path="/user" component={UserDashboardPage} />
+
         <Route path="/admin" component={AdminDashboardPage} />
 
         <Route path="/" component={HomePage} />

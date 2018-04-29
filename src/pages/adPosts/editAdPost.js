@@ -5,8 +5,8 @@ import Divider from 'material-ui/Divider';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 
+import Auth from '../../modules/authModule';
 import AdPostModule from '../../modules/adPostModule';
-import Auth from '../../modules/Auth';
 
 import debugLog from '../../utils/debug';
 
@@ -16,15 +16,11 @@ class AdPostEditPage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      adPost: {},
-      errors: {}
-    };
+    this.state = { adPost: {}, errors: {} };
   }
 
   componentWillMount() {
     if (!Auth.isUserAuthenticated()) {
-      // Redirect to homepage if user is not authenticated.
       this.props.history.replace({ pathname: '/' });
     }
   }
@@ -43,20 +39,66 @@ class AdPostEditPage extends React.Component {
       debugLog('Unable to get id param');
     }
 
-    const AdPost = new AdPostModule();
-    const result = await AdPost.getAdPost(id);
+    const result = await AdPostModule.getAdPost(id);
 
     debugLog('Ad Post loaded: ', result);
-    if (result && result.data) this.setState({ adPost: result.data });
+    if (result && result.data) this.setState({
+      adPost: result.data
+    });
 
     this.endLoading();
   }
 
-  submitAdPost = (e) => {
+
+  buildFormData = () => {
+    const formData = new FormData();
+    const { adPost } = this.state;
+    const keys = Object.keys(adPost);
+    for (let i = 0; i< keys.length; i++) {
+      const key = keys[i];
+      const value = adPost[key];
+
+      if (key === 'photos') {
+        for (let j = 0; j < value.length; j++) {
+          if (value[j].file) {
+            formData.append(`${key}[${j}]`, value[j].file, value[j].file.name);
+          } else {
+            formData.append(`${key}[${j}]`, value[j].url);
+          }
+        }
+      } else {
+        formData.append(key, value);
+      }
+    }
+
+    formData.append('requesterId', Auth.getToken());
+
+    return formData;
+  };
+
+  submitAdPost = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = this.buildFormData();
+
+      const result = await AdPostModule.updateAdPost(formData);
+
+      if (!result.success) {
+        debugLog('submitAdPost Error: ', result);
+        return;
+      }
+
+      debugLog('submitAdPost: ', 'AdPost updated');
+      this.props.history.replace('/user');
+    } catch (e) {
+      debugLog('submitAdPost: Error: Unable to post ad', e);
+    }
   }
 
   updateAdPost = (field, value) => {
     const { adPost } = this.state;
+
     adPost[field] = value;
     this.setState({ adPost });
   }
@@ -86,6 +128,7 @@ class AdPostEditPage extends React.Component {
               <Divider />
 
               <AdPostForm
+                state="edit"
                 errors={this.state.errors}
                 adPost={this.state.adPost}
                 onSubmit={this.submitAdPost}

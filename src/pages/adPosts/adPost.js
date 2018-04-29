@@ -1,5 +1,4 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 
 import Card, { CardContent } from 'material-ui/Card';
 
@@ -10,7 +9,8 @@ import Typography from 'material-ui/Typography';
 
 import debugLog from '../../utils/debug';
 
-import AdPostModule from '../../modules/AdPost';
+import AdPostModule from '../../modules/adPostModule';
+
 import { convertDate } from '../../helpers/contentHelper';
 
 import './styles.scss';
@@ -40,8 +40,7 @@ class AdPostPage extends React.Component {
       debugLog('Unable to get id param');
     }
 
-    const AdPost = new AdPostModule();
-    const result = await AdPost.getAdPost(id);
+    const result = await AdPostModule.getAdPost(id);
 
     debugLog('Ad Post loaded: ', result);
     if (result && result.data) this.setState({ adPost: result.data });

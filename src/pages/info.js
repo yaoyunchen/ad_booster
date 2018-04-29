@@ -4,20 +4,18 @@ import PropTypes from 'prop-types';
 import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
 
-import PageTitle from '../../components/PageTitle';
-import AdPostList from '../../components/Lists/Adposts';
+import PageTitle from '../components/pageTitle';
 
-const HomePage = (props, context) => {
+const InfoPage = (props, context) => {
   return (
     <Grid container justify="center">
       <Grid item xs={12} lg={10}>
         <Card raised style={{ margin: '36px 24px' }}>
           <CardContent>
-            <PageTitle title="Ad Boost App" />
+            <PageTitle title="Info" />
 
             <Grid container justify="center">
               <Grid item xs={12} lg={10}>
-                <AdPostList province={context.province} />
               </Grid>
             </Grid>
           </CardContent>
@@ -27,8 +25,8 @@ const HomePage = (props, context) => {
   );
 };
 
-HomePage.contextTypes = {
+InfoPage.contextTypes = {
   province: PropTypes.string
 };
 
-export default HomePage;
+export default InfoPage;

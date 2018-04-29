@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import Auth from '../../modules/Auth';
+import Auth from '../../modules/authModule';
 
 import Button from 'material-ui/Button';
 import Card, { CardContent } from 'material-ui/Card';
@@ -12,15 +13,16 @@ import Divider from 'material-ui/Divider';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 
-import PageTitle from '../../components/PageTitle';
-
-// import UserModule from '../../../modules/User';
-// import AdPostModule from '../../../modules/AdPost';
-
-import AxiosHelper from '../../helpers/axiosHelper';
-
+import withUser from '../../hocs/withUser';
+import AdPostModule from '../../modules/adPostModule';
 import debugLog from '../../utils/debug';
 import { convertDate } from '../../helpers/contentHelper';
+
+import PageTitle from '../../components/pageTitle';
+import RequestRefillDialog from '../../components/Dialogs/requestRefill';
+import {
+  RefillButton, PinButton, BoostButton
+} from '../../components/Buttons';
 
 const styles = theme => ({
   root: {
@@ -41,68 +43,46 @@ const styles = theme => ({
   }
 });
 
+const isTabletUp = window && window.matchMedia("(min-width: 600px)").matches;
+
 class UserDashboardPage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      user: {},
       loading: false,
-      user: null,
-      adPosts: []
+      adPosts: [],
+      showRefillDialog: false
     };
   }
 
-  componentWillMount() {
-    if (!Auth.isUserAuthenticated()) {
-      // Redirect to homepage if user is not authenticated.
-      this.props.history.replace({ pathname: '/' });
-    }
-  }
-
   componentDidMount() {
-    this.loadUser();
     this.loadUserAdPosts();
   }
 
-  loadUser = async () => {
-    this.startLoading();
-    // const User = new UserModule();
-    // const result = await User.getUser();
-    const Axios = new AxiosHelper();
-    const result = await Axios.get(`/user?id=${Auth.getToken()}`)
-
-    debugLog('User loaded: ', result.data);
-
-    if (result && result.data) {
-      this.setState({ user: result.data }, () => this.endLoading());
-    }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.user === nextProps.user) return;
+    this.updateUser(nextProps.user);
   }
+
+  updateUser = user => this.setState({ user });
 
   loadUserAdPosts = async () => {
     this.startLoading();
-    // const AdPost = new AdPostModule();
-    // const result = await AdPost.getAdPostsByUser();
-    const Axios = new AxiosHelper();
-    const result = await Axios.get(`/adPost/userAdPosts?userId=${Auth.getToken()}`);
-
-    debugLog('Ad Posts loaded', result);
+    const result = await AdPostModule.getAdPostsByUser(Auth.getToken());
 
     if (result && result.data) {
+      debugLog('loadAdPosts (Success): ', result.data);
       this.setState({ adPosts: result.data }, () => this.endLoading());
+    } else {
+      debugLog('loadAdPosts (Error): ', result);
     }
   }
 
-  startLoading = () => {
-    if (!this.startLoading.loading) {
-      this.setState({ loading: true }, () => debugLog('Loading: ', this.state.loading));
-    }
-  };
+  startLoading = () => !this.state.loading && this.setState({ loading: true })
 
-  endLoading = () => {
-    if (this.state.loading) {
-      this.setState({ loading: false }, () => debugLog('Loading: ', this.state.loading));
-    }
-  };
+  endLoading = () => this.state.loading && this.setState({ loading: false })
 
   buildImageElement = (adPost) => {
     const { photos } = adPost;
@@ -148,8 +128,6 @@ class UserDashboardPage extends React.Component {
   }
 
   buildListElements = () => {
-    const isTabletUp = window && window.matchMedia("(min-width: 600px)").matches;
-
     return this.state.adPosts.map((adPost) => {
       const imageEle = this.buildImageElement(adPost);
 
@@ -214,15 +192,17 @@ class UserDashboardPage extends React.Component {
             >
               <Grid container spacing={8}>
                 <Grid item xs={6} sm={6} style={{ textAlign: 'center' }}>
-                  <Button variant="raised" color="primary">
-                    Boost
-                  </Button>
+                  <BoostButton
+                    adPostId={adPost._id}
+                    onClick={this.updateUser}
+                  />
                 </Grid>
 
                 <Grid item xs={6} sm={6} style={{ textAlign: 'center' }}>
-                  <Button variant="raised" color="secondary">
-                    Pin
-                  </Button>
+                  <PinButton
+                    adPostId={adPost._id}
+                    onClick={this.updateUser}
+                  />
                 </Grid>
 
                 <Grid item xs={6} sm={6} style={{ textAlign: 'center' }}>
@@ -245,12 +225,14 @@ class UserDashboardPage extends React.Component {
     });
   }
 
+  showRefillDialog = () => this.setState({ showRefillDialog: true });
+
+  hideRefillDialog = () => this.setState({ showRefillDialog: false });
+
   render() {
     const { classes } = this.props;
     const { user } = this.state;
     if (!user) return <div />;
-
-    const isTabletUp = window && window.matchMedia("(min-width: 600px)").matches;
 
     return (
       <Grid container justify="center">
@@ -313,24 +295,15 @@ class UserDashboardPage extends React.Component {
                       </Link>
 
 
-                      <Link
-                        to="/user"
+                      <RefillButton
+                        onClick={() => this.showRefillDialog()}
                         style={{
-                          color: 'inherit',
+                          width: !isTabletUp ? '100%' : 'auto',
+                          maxWidth: !isTabletUp ? 208 : 'none',
+                          marginBottom: isTabletUp ? 0 : 16,
                           marginRight: isTabletUp ? 16 : 0
                         }}
-                      >
-                        <Button
-                          variant="raised" color="secondary"
-                          style={{
-                            width: !isTabletUp ? '100%' : 'auto',
-                            maxWidth: !isTabletUp ? 208 : 'none',
-                            marginBottom: isTabletUp ? 0 : 16
-                          }}
-                        >
-                          Refill Points
-                        </Button>
-                      </Link>
+                      />
 
                       <Link
                         to="/user/edit"
@@ -368,9 +341,26 @@ class UserDashboardPage extends React.Component {
             </CardContent>
           </Card>
         </Grid>
+
+        <RequestRefillDialog
+          open={this.state.showRefillDialog}
+          onCancel={this.hideRefillDialog}
+          email={this.state.user.email}
+          phone={this.state.user.phone}
+        />
       </Grid>
     );
   }
 }
 
-export default withStyles(styles)(UserDashboardPage);
+UserDashboardPage.propTypes = {
+  user: PropTypes.object
+};
+
+UserDashboardPage.defaultProps = {
+  user: {}
+};
+
+const styledPage = withStyles(styles)(UserDashboardPage);
+
+export default withUser(styledPage);

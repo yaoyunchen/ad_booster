@@ -8,7 +8,7 @@ import Typography from 'material-ui/Typography';
 
 import {
   buildTextInput
-} from '../../../helpers/formHelper';
+} from '../../helpers/formHelper';
 
 const content = {
   form: {

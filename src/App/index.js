@@ -15,11 +15,11 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 
 import AxiosHelper from '../helpers/axiosHelper';
-import Auth from '../modules/Auth';
+import Auth from '../modules/authModule';
 import debugLog from '../utils/debug';
 
-import RegionSelectDialog from '../components/Dialogs/RegionSelect';
-import DisclaimerDialog from '../components/Dialogs/Disclaimer';
+import RegionSelectDialog from '../components/Dialogs/regionSelect';
+import DisclaimerDialog from '../components/Dialogs/disclaimer';
 
 import './App.scss';
 
@@ -139,6 +139,12 @@ class App extends React.Component {
 
     const menuAuthenticatedActions = (
       <div>
+        <Link to="/info">
+          <MenuItem onClick={() => this.handleMenuClose()}>
+            Info
+          </MenuItem>
+        </Link>
+
         <Link to="/user">
           <MenuItem onClick={() => this.handleMenuClose()}>
             Dashboard
@@ -187,6 +193,10 @@ class App extends React.Component {
 
     const authenticatedActions = (
       <span>
+        <Link to="/info">
+          <Button color="primary">Info</Button>
+        </Link>
+
         <Link to="/user">
           <Button color="primary">Dashboard</Button>
         </Link>

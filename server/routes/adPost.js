@@ -30,7 +30,7 @@ router.get('/adpost',
   AdPostController.getAdPost);
 
 //get one AdPost by userId or createdBy
-router.get('/adpost/user',
+router.get('/user',
   AuthHelper.decryptRequesterUserId,
   AdPostController.getUserAdPost);
 

@@ -15,6 +15,7 @@ class AuthHelper {
   constructor() {
     this.authUser = this.authUser.bind(this);
     this.decryptId = this.decryptId.bind(this);
+    this.decryptRequesterUserId = this.decryptRequesterUserId.bind(this);
   }
 
   //AUTHENTICATE

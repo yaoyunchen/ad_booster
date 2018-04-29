@@ -16,6 +16,7 @@ class UserController {
     this.getField = this.getField.bind(this);
     this.post = this.post.bind(this);
     this.put = this.put.bind(this);
+    this.putAddPoints = this.putAddPoints.bind(this);
     this.delete = this.delete.bind(this);
   }
 
@@ -56,7 +57,7 @@ class UserController {
 
   getUsers(req, res) {
     return User.find(req.query).then(userData => {
-      if(!userData.length) return helper.retError(res,'200',true,'','No matching results',userData);
+      if(!userData.length) return helper.retError(res,'400',true,'','No matching results',userData);
       return helper.retSuccess(res,'200',true,'','Sucess',userData);
     }).catch(err => {
       return helper.retError(res,'400',false,err,'Error','');
@@ -76,7 +77,7 @@ class UserController {
       const projection = field + " -_id";
 
       return User.findById(userId, projection).then(userData => {
-        if(!userData) return helper.retError(res,'200',true,'','No matching results',userData);
+        if(!userData) return helper.retError(res,'400',true,'','No matching results',userData);
         return helper.retSuccess(res,'200',true,'','Sucess',userData);
       }).catch(err => {
         return helper.retError(res,'400',false,err,'Error','');
@@ -96,10 +97,6 @@ class UserController {
   put(req, res) {
     const { userId } = req.body
 
-    const ret = req.body;
-    console.log(req.body);
-    return helper.retSuccess(res,'100',true,'','Sucess',ret);
-
     User.findByIdAndUpdate(userId, adPostData).then(userData => {
       return helper.retSuccess(res,'200',true,'','Sucess',userData);
     }).catch(err => {
@@ -107,8 +104,21 @@ class UserController {
     });
   }
 
+  putAddPoints(req, res) {
+    const { requestAmount } = req.body.data
+    const { userPoints } = req.body.data
+    const { requestUserId } = req.body.data
+    const newPoints = userPoints + requestAmount;
+
+    User.findByIdAndUpdate(requestUserId, { points : newPoints}).then(userData => {
+      return helper.retSuccess(res,'200',true,'','Sucess',userData);
+    }).catch(err => {
+      return helper.retError(res,'400',false,err,'Error','');
+    });
+  }
+
   delete(req, res) {
-    const { userId } = req.params;
+    const { userId } = req.query;
 
     return User.findByIdAndRemove(userId).then(userData => {
       return helper.retSuccess(res,'200',true,'','Sucess', userData);

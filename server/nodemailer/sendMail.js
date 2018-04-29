@@ -1,34 +1,45 @@
 const nodemailer = require('nodemailer');
 const config = require('../../config');
 
-// let transporter = nodeMailer.createTransport({
+// const transporter = nodemailer.createTransport({
 //   service : 'gmail',
 //   auth : {
-//     user : 'zelthrox@gmail.com',
-//     pass : config.gpd
+//     user : 'hello@barbielist.com',
+//     pass : 'Poliku123!'
 //   }
 // });
 
-const sender = nodemailer.createTransport({
-  service : 'gmail',
-  auth : {
-    user : 'zelthrox@gmail.com',
-    pass : ''
-  }
+const transporter = nodemailer.createTransport({
+    port : '465',
+    host : 'us7.tmd.cloud',
+    auth : {
+      user : "hello@barbielist.com",
+      pass : "Poliku123!"
+    }
 });
 
 const mailoptions = {
-  from : 'zelthrox@gmail.com',
-  to : 'kwan.andy@hotmail.com',
-  subject : 'testing shit',
-  text : 'my node email'
+  from : 'kwan.andy@hotmail.com',
+  to : 'zelthrox@gmail.com',
+  subject : 'testing more shit',
+  text : 'my node email from kwan'
 };
 
-sender.sendMail(mailoptions,function(err,info){
+// const mailoptions = {
+//   port : '465',
+//   host : 'us7.tmd.cloud',
+//   auth : {
+//     user : 'hello@barbielist.com',
+//     pass : 'Poliku123!'
+//   }
+// };
+
+transporter.sendMail(mailoptions,function(err,info){
   if(err){
     console.log(err);
     console.log(info);
   } else {
+    console.log(info);
     console.log('email sent...');
   }
 })

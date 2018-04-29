@@ -10,16 +10,29 @@ const router = new express.Router();
 
 
 //get ad post filtered by search query
-router.get('/search',AdPostController.getSearch);
+router.get('/search',
+  AuthHelper.decryptRequesterUserId,
+  AdPostController.getSearch);
 
 //get one ad post field by adpostId
-router.get('/field', AdPostController.getField);
+router.get('/field',
+  AuthHelper.decryptRequesterUserId,
+  AdPostController.getField);
 
 //get all ad posts
-router.get('/', AdPostController.get);
+router.get('/',
+  AuthHelper.decryptRequesterUserId,
+  AdPostController.get);
 
-//get all ad posts
-router.get('/adpost', AdPostController.getAdPost);
+//get one AdPost by adPostId
+router.get('/adpost',
+  AuthHelper.decryptRequesterUserId,
+  AdPostController.getAdPost);
+
+//get one AdPost by userId or createdBy
+router.get('/adpost/user',
+  AuthHelper.decryptRequesterUserId,
+  AdPostController.getUserAdPost);
 
 //create ad post (auth/plan/index/pays)
 router.post('/',

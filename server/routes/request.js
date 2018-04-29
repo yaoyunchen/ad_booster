@@ -7,8 +7,6 @@ const router = new express.Router();
 
 //create request
 router.post('/',RequestController.post);
-//fulfill request
-router.put('/:requestId/fulfill',RequestController.putFulfill);
 //delete request by id
 router.delete('/:requestId',RequestController.delete);
 

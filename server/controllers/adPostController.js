@@ -10,6 +10,7 @@ class AdPostController {
   constructor() {
     this.get = this.get.bind(this);
     this.getAdPost = this.getAdPost.bind(this);
+    this.getUserAdPost = this.getUserAdPost.bind(this);
     this.getSearch = this.getSearch.bind(this);
     this.getField = this.getField.bind(this);
     this.post = this.post.bind(this);
@@ -20,11 +21,8 @@ class AdPostController {
   }
 
   get(req, res) {
-    // const ret = req.query;
-    // return res.status(200).json(ret);
-
-    return AdPost.find(req.query).then(adPost => {
-      if(!adPost.length) return helper.retError(res,'200',true,'','No matching results',adPost);
+    return AdPost.find(req.query).sort({ priority: -1 }).then(adPost => {
+      if(!adPost.length) return helper.retError(res,'400',true,'','No matching results',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
       return helper.retError(res,'400',false,err,'Error','');
@@ -35,13 +33,23 @@ class AdPostController {
     const { adPostId } = req.query;
 
     return AdPost.findById(adPostId).then(adPost => {
-      if(!adPost) return helper.retError(res,'200',true,'','No matching results',adPost);
+      if(!adPost) return helper.retError(res,'400',true,'','No matching results',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
       return helper.retError(res,'400',false,err,'Error','');
     });
   }
 
+  getUserAdPost(req, res) {
+    const findById = (req.query.createdById) ? req.query.createdById : req.query.requesterId;
+
+    return AdPost.findById(findById).then(adPost => {
+      if(!adPost) return helper.retError(res,'400',true,'','No matching results',adPost);
+      return helper.retSuccess(res,'200',true,'','Sucess',adPost);
+    }).catch(err => {
+      return helper.retError(res,'400',false,err,'Error','');
+    });
+  }
 
   getSearch(req, res) {
     let query = {
@@ -61,6 +69,7 @@ class AdPostController {
         (req.query.age) ? query['age'] = req.query.age : queryRgex.push({ age : { "$regex":word,"$options":"i"} });
         (req.query.ethnicity) ? query['ethnicity'] = req.query.ethnicity : queryRgex.push({ ethnicity : { "$regex":word,"$options":"i"} });
         (req.query.region) ? query['region'] = req.query.region : queryRgex.push({ region : { "$regex":word,"$options":"i"} });
+        (req.query.availability) ? query['availability'] = req.query.availability : queryRgex.push({ availability : { "$regex":word,"$options":"i"} });
       });
       query = Object.assign(query, { $or : queryRgex});
     } else {
@@ -72,11 +81,12 @@ class AdPostController {
       if (req.query.age) query['age'] = req.query.age;
       if (req.query.ethnicity) query['ethnicity'] = req.query.ethnicity;
       if (req.query.region) query['region'] = req.query.region;
+      if (req.query.availability) query['availability'] = req.query.availability;
     }
 
     if(query == {status : 'active'}) return helper.retError(res,'404',false,err,'Error: Invalid Search','');
-    return AdPost.find(query).then(adPost => {
-      if(!adPost.length) return helper.retError(res,'200',true,'','No matching results',adPost);
+    return AdPost.find(query).sort(-{ priority: -1 }).then(adPost => {
+      if(!adPost.length) return helper.retError(res,'400',true,'','No matching results',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
       return helper.retError(res,'400',false,err,'Error','');
@@ -92,7 +102,7 @@ class AdPostController {
     const projection = field + " -_id";
 
     return AdPost.findById(adPostId, projection).then(adPost => {
-      if(!adPost.length) return helper.retError(res,'200',true,'','No matching results',adPost);
+      if(!adPost.length) return helper.retError(res,'400',true,'','No matching results',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
       return helper.retError(res,'400',false,err,'Error','');
@@ -103,7 +113,7 @@ class AdPostController {
     //build create query
     let newAdPostData = req.body;
     newAdPostData['priority'] = req.body.data.collectionIndex;
-    newAdPostData['createBy'] = req.body.requesterId;
+    newAdPostData['createdBy'] = req.body.requesterId;
     newAdPostData['editedBy'] = req.body.requesterId;
     delete newAdPostData["data"];
 

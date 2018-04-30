@@ -1,3 +1,4 @@
+const nodemailer = require('nodemailer');
 const Mongoose = require('mongoose');
 const config = require('../../config');
 
@@ -16,14 +17,21 @@ class RequestController {
   post(req, res) {
     //build create query
     if(!req.body.userId) req.body.userId = req.body.requesterId;
+    const { phone } = (!req.body.phone) ? req.body.phone : 'N/A';
+    const { email } = (!req.body.email) ? req.body.email : 'N/A';
 
     Request.create(req.body).then(request => {
-      const transporter = nodemailer.createTransport({ port : '465', host : 'us7.tmd.cloud', auth : { user : em_user, pass : em_pwd } });
+      const transporter = nodemailer.createTransport({ port : '465', host : 'us7.tmd.cloud', auth : { user : config.em_user, pass : config.em_pwd } });
       const mailoptions = {
         from : 'hello@barbielist.com',
         to : 'zelthrox@gmail.com',
-        subject : 'testing shit',
-        text : 'my node email'
+        subject : '[BarbieList] Refill Points',
+        text : `
+                <br>i need shit
+                <br>email: `+email+`
+                <br>phone: `+phone+`
+                <br>requestId: `+request._id+`
+              `
       };
       transporter.sendMail(mailoptions,function(err,info){
         if(err) return helper.retError(res,'400',false,err,'Error','');

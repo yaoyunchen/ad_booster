@@ -52,7 +52,7 @@ class AuthHelper {
     if(req.body.userId) req.body.userId = await this.decryptId(req.body.userId);
     if(req.body.requesterId && req.body.userId == 'error' || req.body.requesterId == 'error') return helper.retError(res,'400',false,'','decrypt id failed','');;
     //create userId
-    if (!req.body.userId) req.body.userId = req.body.requesterId;
+    if (req.body.requesterId && !req.body.userId) req.body.userId = req.body.requesterId;
     //decrypt query
     if(req.query.requesterId) req.query.requesterId = await this.decryptId(req.query.requesterId);
     if(req.query.userId) req.query.userId = await this.decryptId(req.query.userId);

@@ -53,9 +53,9 @@ class AdPostController {
   }
 
   getUserAdPost(req, res) {
-    const findById = (req.query.createdById) ? req.query.createdById : req.query.requesterId;
+    const createdBy = (req.query.createdById) ? req.query.createdById : req.query.requesterId;
 
-    return AdPost.findById(findById).then(adPost => {
+    return AdPost.find({ createdBy : createdBy }).sort({ priority: -1 }).then(adPost => {
       if(!adPost) return helper.retError(res,'400',true,'','No matching results',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
@@ -97,7 +97,7 @@ class AdPostController {
     }
 
     if(query == {status : 'active'}) return helper.retError(res,'404',false,err,'Error: Invalid Search','');
-    return AdPost.find(query).sort(-{ priority: -1 }).then(adPost => {
+    return AdPost.find(query).sort({ priority: -1 }).then(adPost => {
       if(!adPost.length) return helper.retError(res,'400',true,'','No matching results',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {

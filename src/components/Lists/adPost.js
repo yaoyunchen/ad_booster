@@ -77,7 +77,14 @@ class AdPostList extends React.Component {
 
     debugLog('AdPost results:', results);
 
-    if (results && results.data) this.setState({ adPosts: results.data });
+    const { data, status } = results;
+
+    if (status && status !== 200) {
+      return;
+    }
+
+    if (data) this.setState({ adPosts: results.data });
+
     this.endLoading();
   }
 
@@ -224,6 +231,7 @@ class AdPostList extends React.Component {
     this.setState({ search });
   }
 
+  /* eslint-disable max-statements */
   submitSearch = async (e) => {
     e.preventDefault();
 
@@ -238,16 +246,22 @@ class AdPostList extends React.Component {
         return this.getAdPosts({ province: this.props.province });
       }
 
-      search.province = this.state.province;
+      search.search = search.text;
+      search.province = this.props.province;
       const result = await AdPostModule.getAdPostsWithSearch(search);
 
-      if (!result.success) {
+      const { data, status } = result;
+      if (status && status !== 200) {
         debugLog('submitSearch Error: ', result);
+
+        this.setState({
+          searchMessage: 'No results found',
+          search: initialSearchState
+        });
         return;
       }
 
       if (result.success) {
-        console.log(result.data)
         if (result.data.length === 0) {
           this.setState({
             searchMessage: 'No results found',

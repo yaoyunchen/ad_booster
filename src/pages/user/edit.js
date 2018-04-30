@@ -33,7 +33,7 @@ class UserProfilePage extends React.Component {
     e.preventDefault();
 
     try {
-      const result = await UserModule.postUser(this.state.user);
+      const result = await UserModule.updateUser(this.state.user);
 
       if (!result.success) {
         debugLog('submitUser Error: ', result);

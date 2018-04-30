@@ -10,6 +10,7 @@ import TextField from 'material-ui/TextField';
 
 import debugLog from '../../utils/debug';
 
+import AuthModule from '../../modules/authModule';
 import RequestModule from '../../modules/requestModule';
 
 class RequestRefillDialog extends React.Component {
@@ -29,7 +30,7 @@ class RequestRefillDialog extends React.Component {
 
     formData.append('email', this.state.email);
     formData.append('phone', this.state.phone);
-    formData.append('requesterId', this.state.requesterId);
+    formData.append('requesterId', '5ad5869670fe191996e5852c');
     return formData;
   };
 

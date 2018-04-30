@@ -12,7 +12,7 @@ const getAdPosts = (params = {}) => {
     paramsUrl += i === 0 ? `?${key}=${value}` : `&${key}=${value}`;
   });
 
-  return Axios.get(`/adPost${paramsUrl}`);
+  return Axios.get(`/adPost/search${paramsUrl}`);
 };
 
 const getAdPostsWithSearch = (params = {}) => {

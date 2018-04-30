@@ -43,16 +43,15 @@ class LoginPage extends React.Component {
     try {
       const formData = buildFormData(this.state.user);
       const result = await UserModule.loginUser(formData);
-      const { data } = result;
 
-      if (!data.success) {
-        debugLog('processForm errors:', data);
-        this.setErrors(data);
+      if (!result.success) {
+        debugLog('processForm errors:', result);
+        this.setErrors(result);
         return;
       }
 
       this.setState({ errors: {} });
-      Auth.authenticateUser(data.token);
+      Auth.authenticateUser(result.token);
       this.props.history.replace('/user');
     } catch (e) {
       debugLog('processForm failed:', e);

@@ -34,6 +34,10 @@ router.get('/user',
   AuthHelper.decryptRequesterUserId,
   AdPostController.getUserAdPost);
 
+// //test photo
+// router.post('/',
+//   AuthHelper.parseImages)
+
 //create ad post (auth/plan/index/pays)
 router.post('/',
   AuthHelper.authUser,

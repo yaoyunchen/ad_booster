@@ -8,6 +8,10 @@ const AuthHelper = new AuthHelperClass();
 
 const router = new express.Router();
 
+//get pending requests
+router.get('/',
+  AuthHelper.authUser,
+  RequestController.get);
 //create request
 router.post('/',
   AuthHelper.authUser,

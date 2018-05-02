@@ -37,7 +37,7 @@ class AdPostController {
       if(!adPost.length) return helper.retError(res,'400',true,'','No matching results',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error get','');
     });
   }
 
@@ -48,7 +48,7 @@ class AdPostController {
       if(!adPost) return helper.retError(res,'400',true,'','No matching results',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error getAdPost','');
     });
   }
 
@@ -59,7 +59,7 @@ class AdPostController {
       if(!adPost) return helper.retError(res,'400',true,'','No matching results',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error getUserAdPost','');
     });
   }
 
@@ -82,7 +82,7 @@ class AdPostController {
         (req.query.age) ? query['age'] = req.query.age : queryRgex.push({ age : { "$regex":word,"$options":"i"} });
         (req.query.ethnicity) ? query['ethnicity'] = req.query.ethnicity : queryRgex.push({ ethnicity : { "$regex":word,"$options":"i"} });
         (req.query.region) ? query['region'] = req.query.region : queryRgex.push({ region : { "$regex":word,"$options":"i"} });
-        (req.query.availability) ? query['availability'] = req.query.availability : queryRgex.push({ availability : { "$regex":word,"$options":"i"} });
+        (req.query.availability == 'both') ? query = Object.assign(query, { $or : [{ availability : 'in' }, { availability : 'out' }] }) : query['availability'] = req.query.availability;
       });
       query = Object.assign(query, { $or : queryRgex});
     } else {
@@ -94,7 +94,9 @@ class AdPostController {
       if (req.query.age) query['age'] = req.query.age;
       if (req.query.ethnicity) query['ethnicity'] = req.query.ethnicity;
       if (req.query.region) query['region'] = req.query.region;
-      if (req.query.availability) query['availability'] = req.query.availability;
+      if (req.query.availability) {
+        (req.query.availability == 'both') ? query = Object.assign(query, { $or : [{ availability : 'in' }, { availability : 'out' }] }) : query['availability'] = req.query.availability;
+      }
     }
 
     if(query == {status : 'active'}) return helper.retError(res,'404',false,err,'Error: Invalid Search','');
@@ -102,7 +104,7 @@ class AdPostController {
       if(!adPost.length) return helper.retError(res,'400',true,'','No matching results',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error getSearch','');
     });
   }
 
@@ -118,7 +120,7 @@ class AdPostController {
       if(!adPost.length) return helper.retError(res,'400',true,'','No matching results',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error getField','');
     });
   }
 
@@ -133,7 +135,7 @@ class AdPostController {
     AdPost.create(newAdPostData).then(adPost => {
       return helper.retSuccess(res,'200',true,'','Sucess','');
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error post','');
     });
   }
 
@@ -148,7 +150,7 @@ class AdPostController {
     return AdPost.findByIdAndUpdate(adPostId, adPostData).then(adPost => {
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error put','');
     });
   }
 
@@ -171,7 +173,7 @@ class AdPostController {
     AdPost.findByIdAndUpdate(adPostId, updatePin).then(adPost => {
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error putPinned','');
     });
   }
 
@@ -186,7 +188,7 @@ class AdPostController {
     AdPost.findByIdAndUpdate(adPostId, updatePriority).then(adPost => {
       return helper.retSuccess(res,'200',true,'','Sucess', adPost);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error putBoost','');
     });
   }
 
@@ -196,7 +198,7 @@ class AdPostController {
     return AdPost.findByIdAndRemove(adPostId).then(adPost => {
       return helper.retSuccess(res,'200',true,'','Sucess', adPost);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error delete','');
     });
   }
 

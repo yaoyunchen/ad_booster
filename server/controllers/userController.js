@@ -60,7 +60,7 @@ class UserController {
       if(!userData.length) return helper.retError(res,'400',true,'','No matching results',userData);
       return helper.retSuccess(res,'200',true,'','Sucess',userData);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error','');
     });
   }
 
@@ -80,7 +80,7 @@ class UserController {
         if(!userData) return helper.retError(res,'400',true,'','No matching results',userData);
         return helper.retSuccess(res,'200',true,'','Sucess',userData);
       }).catch(err => {
-        return helper.retError(res,'400',false,err,'Error','');
+        return helper.retError(res,'500',false,err,'Error','');
       });
     });
   }
@@ -90,7 +90,7 @@ class UserController {
     return User.create(req.body).then(userData => {
       return helper.retSuccess(res,'200',true,'','Sucess',userData);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error getField','');
     });
   }
 
@@ -100,7 +100,7 @@ class UserController {
     User.findByIdAndUpdate(userId, req.body).then(userData => {
       return helper.retSuccess(res,'200',true,'','Sucess',userData);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error put','');
     });
   }
 
@@ -113,7 +113,7 @@ class UserController {
     User.findByIdAndUpdate(requestUserId, { points : newPoints}).then(userData => {
       return helper.retSuccess(res,'200',true,'','Sucess',userData);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error putAddPoints','');
     });
   }
 
@@ -123,7 +123,7 @@ class UserController {
     return User.findByIdAndRemove(userId).then(userData => {
       return helper.retSuccess(res,'200',true,'','Sucess', userData);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error delete','');
     });
   }
 

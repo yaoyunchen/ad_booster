@@ -1,6 +1,7 @@
 const Mongoose = require('mongoose');
 const config = require('../../config');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 
 const helperClass = require('../controllers/controllerHelper');
 const helper = new helperClass();
@@ -21,25 +22,25 @@ class AuthHelper {
   //AUTHENTICATE
   async authUser(req,res,next){
     //check headers
-    if (!req.headers.authorization) return helper.retError(res,'400',false,'','requesterId can not be null','');;
+    if (!req.headers.authorization) return helper.retError(res,'401',true,'','requesterId can not be null','');;
     //created requesterId
     req.body.requesterId = req.headers.authorization.split(' ')[1];
 
     //decript userId requesterId createdBy
     if(req.body.requesterId) req.body.requesterId = await this.decryptId(req.body.requesterId);
     if(req.body.userId) req.body.userId = await this.decryptId(req.body.userId);
-    if(req.body.userId == 'error' || req.body.requesterId == 'error') return helper.retError(res,'400',false,'','decrypt id failed','');;
+    if(req.body.userId == 'error' || req.body.requesterId == 'error') return helper.retError(res,'401',true,'','decrypt id failed','');;
 
     //create userId
     if (!req.body.userId) req.body.userId = req.body.requesterId;
 
     User.findById(req.body.requesterId, (err, requester) => {
-      if (err) return helper.retError(res,'400',false,err,'getPlan() Error','');
-      if (!requester) return helper.retError(res,'400',false,err,'no requester found','');
+      if (err) return helper.retError(res,'500',false,err,'getPlan() Error','');
+      if (!requester) return helper.retError(res,'401',true,err,'no requester found','');
 
       User.findById(req.body.userId, (err, user) => {
-        if (err) return helper.retError(res,'400',false,err,'getPlan() Error','');
-        if (!user) return helper.retError(res,'400',false,err,'no user found','');
+        if (err) return helper.retError(res,'500',false,err,'getPlan() Error','');
+        if (!user) return helper.retError(res,'401',true,'no user found','');
 
         next();
       });
@@ -50,13 +51,13 @@ class AuthHelper {
     //decrypt body
     if(req.body.requesterId) req.body.requesterId = await this.decryptId(req.body.requesterId);
     if(req.body.userId) req.body.userId = await this.decryptId(req.body.userId);
-    if(req.body.requesterId && req.body.userId == 'error' || req.body.requesterId == 'error') return helper.retError(res,'400',false,'','decrypt id failed','');;
+    if(req.body.requesterId && req.body.userId == 'error' || req.body.requesterId == 'error') return helper.retError(res,'401',true,'','decrypt id failed','');;
     //create userId
     if (req.body.requesterId && !req.body.userId) req.body.userId = req.body.requesterId;
     //decrypt query
     if(req.query.requesterId) req.query.requesterId = await this.decryptId(req.query.requesterId);
     if(req.query.userId) req.query.userId = await this.decryptId(req.query.userId);
-    if(req.query.userId == 'error' || req.query.requesterId == 'error') return helper.retError(res,'400',false,'','decrypt id failed','');;
+    if(req.query.userId == 'error' || req.query.requesterId == 'error') return helper.retError(res,'401',true,'','decrypt id failed','');;
     //create userId
     if (req.query.requesterId && !req.query.userId) req.query.userId = req.query.requesterId;
 
@@ -76,8 +77,8 @@ class AuthHelper {
     const { planName } = req.body;
 
     Plan.findOne({ name : planName, status : 'active'}, (err, plan) => {
-      if (err) return helper.retError(res,'400',false,err,'getPlan() Error','');
-      if (!plan) return helper.retError(res,'400',false,err,'no plan found','');
+      if (err) return helper.retError(res,'500',false,err,'getPlan() Error','');
+      if (!plan) return helper.retError(res,'401',true,err,'no plan found','');
 
       req.body.data = (req.body.data) ? req.body.data : {};
       req.body.data.plan = plan;
@@ -94,15 +95,15 @@ class AuthHelper {
 
     //check if user has enough points
     User.findById(userId, (err, user) => {
-      if (err) return helper.retError(res,'400',false,err,'userPays().findById Error','');
-      if (!user) return helper.retError(res,'400',false,err,'no user found','');
-      if(user.points < req.body.data.plan.price) return helper.retError(res,'400',false,err,'user does not have enough points','');
+      if (err) return helper.retError(res,'500',false,err,'userPays().findById Error','');
+      if (!user) return helper.retError(res,'401',true,err,'no user found','');
+      if(user.points < req.body.data.plan.price) return helper.retError(res,'401',true,err,'user does not have enough points','');
 
       //charge user price
       const newPoints = user.points - req.body.data.plan.price;
       User.findByIdAndUpdate(userId, { points : newPoints }, (err, user) => {
-        if (err) return helper.retError(res,'400',false,err,'userPays().findByIdAndUpdate Error','');
-        if (!user) return helper.retError(res,'400',false,err,'no user found','');
+        if (err) return helper.retError(res,'500',false,err,'userPays().findByIdAndUpdate Error','');
+        if (!user) return helper.retError(res,'401',true,err,'no user found','');
 
         next();
       });
@@ -115,8 +116,8 @@ class AuthHelper {
     const { indexName } = req.body.data;
 
     CollectionIndex.findOneAndUpdate({ name : indexName }, { $inc : { index : 1 } },(err, index) => {
-      if (err) return helper.retError(res,'400',false,err,'getAndIncIndex().findOne Error','');
-      if (!index) return helper.retError(res,'400',false,err,'no index found','');
+      if (err) return helper.retError(res,'500',false,err,'getAndIncIndex().findOne Error','');
+      if (!index) return helper.retError(res,'401',true,err,'no index found','');
 
       req.body.data = (req.body.data) ? req.body.data : {};
       req.body.data.collectionIndex = index.index;
@@ -133,23 +134,23 @@ class AuthHelper {
 
     //check if post is already pinned
     AdPost.findById(adPostId, (err, adpost) => {
-      if (err) return helper.retError(res,'400',false,err,'setPinnedStatus().findByIdAndUpdate Error','');
-      if (!adpost) return helper.retError(res,'400',false,err,'no adpost found','');
-      if(adpost.pinned == true) return helper.retError(res,'400',false,err,'post is already pinned','');
+      if (err) return helper.retError(res,'500',false,err,'setPinnedStatus().findByIdAndUpdate Error','');
+      if (!adpost) return helper.retError(res,'401',true,err,'no adpost found','');
+      if(adpost.pinned == true) return helper.retError(res,'401',true,err,'post is already pinned','');
 
       AdPost.findByIdAndUpdate(adPostId, {pinned : true}, (err, adpost) => {
-        if (err) return helper.retError(res,'400',false,err,'setPinnedStatus().findByIdAndUpdate Error','');
-        if (!adpost) return helper.retError(res,'400',false,err,'no adpost found','');
+        if (err) return helper.retError(res,'500',false,err,'setPinnedStatus().findByIdAndUpdate Error','');
+        if (!adpost) return helper.retError(res,'401',true,err,'no adpost found','');
 
         //get count of pinned
         AdPost.count({pinned : true}, (err, count) => {
-          if (err) return helper.retError(res,'400',false,err,'setPinnedStatus().count Error','');
-          if (!count) return helper.retError(res,'400',false,err,'no count found','');
+          if (err) return helper.retError(res,'500',false,err,'setPinnedStatus().count Error','');
+          if (!count) return helper.retError(res,'401',true,err,'no count found','');
 
           //check user points
           User.findById(userId, (err, user) => {
-            if (err) return helper.retError(res,'400',false,err,'userPays().findById Error','');
-            if (!user) return helper.retError(res,'400',false,err,'no user found','');
+            if (err) return helper.retError(res,'500',false,err,'userPays().findById Error','');
+            if (!user) return helper.retError(res,'401',true,err,'no user found','');
 
             //if more than maxQuantity or not enough points, unpin
             const points = user.points;
@@ -159,7 +160,7 @@ class AuthHelper {
             if (points < price || maxQuantity < count){
               AdPost.findByIdAndUpdate(adPostId, { pinned : false }, (err, adpost) => {
                 if(maxQuantity < count) return helper.retError(res,'400',false,err,'number of pinned ad post has exceeded the limit','');
-                if(points < price) return helper.retError(res,'400',false,err,'user does not have enough points','');
+                if(points < price) return helper.retError(res,'401',true,err,'user does not have enough points','');
               });
             }
 
@@ -176,9 +177,9 @@ class AuthHelper {
     const { requestId } = req.body;
     //find request
     Request.findById(requestId, (err, request) => {
-      if (err) return helper.retError(res,'400',false,err,'fulfillRequest().findById Error','');
-      if (!request) return helper.retError(res,'400',false,err,'no request found','');
-      if(request.status != 'pending') return helper.retError(res,'400',false,err,'error, request is' + request.status,'');
+      if (err) return helper.retError(res,'500',false,err,'fulfillRequest().findById Error','');
+      if (!request) return helper.retError(res,'401',true,err,'no request found','');
+      if(request.status != 'pending') return helper.retError(res,'401',true,err,'error, request is' + request.status,'');
       //update request
       req.body.data = (req.body.data) ? req.body.data : {};
       req.body.data.requestAmount = request.amount;
@@ -189,12 +190,12 @@ class AuthHelper {
       };
       //find user
       User.findById(request.userId, (err, user) => {
-        if (err) return helper.retError(res,'400',false,err,'fulfillRequest().findById Error','');
-        if (!user) return helper.retError(res,'400',false,err,'request has does not have correct user','');
+        if (err) return helper.retError(res,'500',false,err,'fulfillRequest().findById Error','');
+        if (!user) return helper.retError(res,'401',true,err,'request has does not have correct user','');
         req.body.data.userPoints = user.points;
         //if user not found, unfilfill request
         Request.findByIdAndUpdate(requestId, updateData, (err, request) => {
-          if (err) return helper.retError(res,'400',false,err,'fulfillRequest().findByIdAndUpdate Error','');
+          if (err) return helper.retError(res,'500',false,err,'fulfillRequest().findByIdAndUpdate Error','');
 
           next();
         });
@@ -202,6 +203,27 @@ class AuthHelper {
     });
   }
 
+  //handle files
+  parseImages(req, res, next) {
+    const { files } = req;
+    console.log(files);
+
+    const { file } = files.image[0];
+    const { filename } = files.image[0];
+
+    var source = fs.createReadStream(file);
+    var dest = fs.createWriteStream('public/assets/images/'+filename);
+    source.pipe(dest);
+    source.on('error', function(err) { console.log('err') });
+    source.on('end', function() {
+      console.log('copied')
+    });
+
+    console.log(file);
+    console.log(filename);
+
+    return res.status(200).json({message: 'Image Uploaded Successfully !', path: filename})
+  }
 
 }
 

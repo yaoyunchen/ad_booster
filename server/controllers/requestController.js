@@ -9,8 +9,19 @@ const Request = Mongoose.model('Request');
 
 class RequestController {
   constructor() {
+    this.get = this.get.bind(this);
     this.post = this.post.bind(this);
     this.delete = this.delete.bind(this);
+  }
+
+  //get all pending requests sorted by createdDate
+  get(req, res) {
+    return Request.find({ status : pending }).sort({ dateCreated : 1 }).then(request => {
+      if(!request.length) return helper.retError(res,'400',true,'','No matching results',request);
+      return helper.retSuccess(res,'200',true,'','Sucess',request);
+    }).catch(err => {
+      return helper.retError(res,'500',false,err,'Error get','');
+    });
   }
 
   //create request and send email to admin
@@ -36,12 +47,12 @@ class RequestController {
       };
 
       transporter.sendMail(mailoptions,function(err,info){
-        if(err) return helper.retError(res,'400',false,err,'Error','');
+        if(err) return helper.retError(res,'400',false,err,'Error transporter','');
 
         return helper.retSuccess(res,'200',true,'','Sucess','');
       });
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error post','');
     });
   }
 
@@ -52,7 +63,7 @@ class RequestController {
     Request.findByIdAndRemove(requestId).then(requestData => {
       return helper.retSuccess(res,'200',true,'','Sucess', requestData);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error delete','');
     });
   }
 

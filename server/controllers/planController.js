@@ -21,7 +21,7 @@ class PlanController {
       if(!plan.length) return helper.retError(res,'400',true,'','No matching results',plan);
       return helper.retSuccess(res,'200',true,'','Sucess',plan);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error get','');
     });
   }
 
@@ -33,7 +33,7 @@ class PlanController {
       if(!plan.length) return helper.retError(res,'400',true,'','No matching results',plan);
       return helper.retSuccess(res,'200',true,'','Sucess',plan);
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error getPlan','');
     });
   }
 
@@ -47,7 +47,7 @@ class PlanController {
     Plan.create(planData).then(plan => {
       return helper.retSuccess(res,'200',true,'','Sucess','');
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error post','');
     });
   }
 
@@ -63,7 +63,7 @@ class PlanController {
     Plan.findByIdAndUpdate(planId,planData).then(plan => {
       return helper.retSuccess(res,'200',true,'','Sucessfully updated plan : ' + planId,'');
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error put','');
     });
   }
 
@@ -73,7 +73,7 @@ class PlanController {
     Plan.findByIdAndRemove(planId).then(plan => {
       return helper.retSuccess(res,'200',true,'','Sucessfully deleted plan : ' + planId,'');
     }).catch(err => {
-      return helper.retError(res,'400',false,err,'Error','');
+      return helper.retError(res,'500',false,err,'Error delete','');
     });
   }
 

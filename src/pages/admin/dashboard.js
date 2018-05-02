@@ -135,10 +135,12 @@ class AdminDashboardPage extends React.Component {
   isUserAdmin = async () => {
     this.startLoading();
 
-    const userType = await UserModule.getUserIsAdmin();
+    const result = await UserModule.getUserIsAdmin();
 
-    if (userType && userType.data) {
-      this.setState({ isAdmin: userType.data });
+    const { data } = result;
+
+    if (data && data.data) {
+      this.setState({ isAdmin: data.data });
     }
     this.endLoading();
   }

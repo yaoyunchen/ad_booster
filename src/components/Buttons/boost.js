@@ -13,9 +13,10 @@ const loadUser = async (onClick) => {
   try {
     const result = await UserModule.getUser(AuthModule.getToken());
 
-    if (result && result.data) {
-      debugLog('loadUser (Success): ', result.data);
-      onClick(result.data);
+    const { data } = result;
+    if (data && data.data) {
+      debugLog('loadUser (Success): ', data);
+      onClick(data.data);
       return;
     }
 
@@ -26,23 +27,27 @@ const loadUser = async (onClick) => {
 };
 
 const onBoostClick = async(adPostId, onClick) => {
-  try {
-    const formData = new FormData();
-    formData.append('adPostId', adPostId);
-    formData.append('userId', AuthModule.getToken());
-    formData.append('planName', 'std_boost_adpost');
+  /* eslint-disable no-restricted-globals */
+  if (confirm(`Are you sure you want to boost this ad for ${3} points?`)) {
+    try {
+      const formData = new FormData();
+      formData.append('adPostId', adPostId);
+      formData.append('userId', AuthModule.getToken());
+      formData.append('planName', 'std_boost_adpost');
 
-    const result = await AdPostModule.boostAdPost(formData);
+      const result = await AdPostModule.boostAdPost(formData);
 
-    if (!result.success) {
+      const { data } = result;
+      if (data && data.success) {
+        debugLog('onBoostClick: ', 'Ad boosted');
+        loadUser(onClick);
+        return;
+      }
+
       debugLog('onBoostClick Error: ', result);
-      return;
+    } catch (e) {
+      debugLog('onBoostClick: Error: Unable to boost ad', e);
     }
-
-    debugLog('onBoostClick: ', 'Ad boosted');
-    loadUser(onClick);
-  } catch (e) {
-    debugLog('onBoostClick: Error: Unable to boost ad', e);
   }
 };
 

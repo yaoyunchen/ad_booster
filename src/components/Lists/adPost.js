@@ -17,18 +17,14 @@ import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 
 import debugLog from '../../utils/debug';
-
 import AdPostModule from '../../modules/adPostModule';
-
-// import content from '../../../content';
 
 const styles = theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    overflow: 'hidden',
-    height: '80vh'
+    overflow: 'hidden'
   },
   gridList: {
     width: '100%',
@@ -57,33 +53,47 @@ class AdPostList extends React.Component {
     this.state = {
       loading: false,
       adPosts: [],
+      pinnedAdPosts: [],
       search: initialSearchState,
       searchMessage: ''
     };
   }
 
   componentDidMount() {
-    this.getAdPosts({ province: this.props.province });
+    this.getAdPosts();
+    this.getPinnedAdPosts();
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.province !== nextProps.province) this.getAdPosts();
+    if (this.props.province !== nextProps.province) this.getAdPosts({ province: nextProps.province });
   }
 
-  getAdPosts = async (params) => {
+  getAdPosts = async (params = {}) => {
     this.startLoading();
 
-    const results = await AdPostModule.getAdPosts(params);
+    const query = params;
+    if (!query.province) query.province = this.props.province;
+    // Do not include the pinned posts in the regular results.
+    query.pinned = false;
 
-    debugLog('AdPost results:', results);
+    const result = await AdPostModule.getAdPosts(query);
+    const { data } = result;
 
-    const { data, status } = results;
+    debugLog('AdPost results:', data);
 
-    if (status && status !== 200) {
-      return;
-    }
+    this.setState({ adPosts: data.data });
 
-    if (data) this.setState({ adPosts: results.data });
+    this.endLoading();
+  }
+
+  getPinnedAdPosts = async () => {
+    this.startLoading();
+
+    const result = await AdPostModule.getPinnedAdPosts(this.props.province);
+    const { data } = result;
+    debugLog('Pinned adpost results:', data);
+
+    this.setState({ pinnedAdPosts: data.data });
 
     this.endLoading();
   }
@@ -144,10 +154,14 @@ class AdPostList extends React.Component {
     )
   }
 
-  buildListElements = () => {
+  buildListElements = (adPosts, pinned = false) => {
     const isTabletUp = window && window.matchMedia("(min-width: 600px)").matches;
 
-    return this.state.adPosts.map((adPost) => {
+    if (adPosts.length === 0) return;
+
+    return adPosts.map((adPost, i) => {
+      if (adPost.pinned && !pinned) return '';
+
       const imageEle = this.buildImageElement(adPost);
 
       return [
@@ -155,7 +169,7 @@ class AdPostList extends React.Component {
           height: isTabletUp ? 120 : 'auto',
           padding: isTabletUp ? 0 : '8px',
           margin: '8px 0',
-          border: '2px solid #3f51b5',
+          border: pinned ? '2px solid red' : '2px solid #3f51b5',
           borderRadius: 5
         }}>
           <Link to={`/post/${adPost._id}`}>
@@ -216,11 +230,17 @@ class AdPostList extends React.Component {
             </Grid>
           </Link>
         </GridListTile>,
-        <Divider key={`${adPost.id}-divider`} style={{
-          height: 2,
-          padding: 0,
-          backgroundColor: '#eaeaea'
-        }}/>
+        <section key={`${adPost.id}-divider`} style={{ height: 0, padding: 0 }}>
+          {
+            i === adPosts.length - 1 ? '' : (
+              <Divider style={{
+                height: 2,
+                padding: 0,
+                backgroundColor: '#eaeaea'
+              }} />
+            )
+          }
+        </section>
       ];
     });
   }
@@ -261,8 +281,8 @@ class AdPostList extends React.Component {
         return;
       }
 
-      if (result.success) {
-        if (result.data.length === 0) {
+      if (data && data.success) {
+        if (data.data.length === 0) {
           this.setState({
             searchMessage: 'No results found',
             search: initialSearchState
@@ -271,7 +291,7 @@ class AdPostList extends React.Component {
         }
 
         this.setState({
-          adPosts: result.data,
+          adPosts: data.data,
           search: initialSearchState,
           searchMessage: ''
         });
@@ -439,8 +459,10 @@ class AdPostList extends React.Component {
 
   render() {
     const { classes } = this.props;
+    const { adPosts, pinnedAdPosts } = this.state;
 
-    const adPostElements = this.buildListElements();
+    const adPostElements = this.buildListElements(adPosts);
+    const pinnedElements = this.buildListElements(pinnedAdPosts, true);
 
     return (
       <Grid container spacing={16}>
@@ -448,12 +470,28 @@ class AdPostList extends React.Component {
           {this.buildSearchBar()}
         </Grid>
 
-        <Grid item xs={12} style={{
-          padding: 0
-        }}>
+        <Grid item xs={12} style={{ padding: 0, margin: '16px 0 32px' }}>
+          <Typography variant="display1">
+            Featured Ads
+          </Typography>
+
           <div className={classes.root}>
-            <GridList cellHeight={100} cols={1} className={classes.gridList}>
-              {adPostElements}
+            <GridList
+              cellHeight={100} cols={1}
+              className={`${classes.gridList} gridlist-override`}
+            >
+              {pinnedElements || <div />}
+            </GridList>
+          </div>
+        </Grid>
+
+        <Grid item xs={12} style={{ padding: 0 }}>
+          <div className={classes.root} style={{ height: '80vh' }}>
+            <GridList
+              cellHeight={100} cols={1}
+              className={`${classes.gridList} gridlist-override`}
+            >
+              {adPostElements || <div />}
             </GridList>
           </div>
         </Grid>
@@ -464,7 +502,11 @@ class AdPostList extends React.Component {
 
 AdPostList.propTypes = {
   classes: PropTypes.object.isRequired,
-  province: PropTypes.string.isRequired
+  province: PropTypes.string
+};
+
+AdPostList.defaultProps = {
+  province: 'BC'
 };
 
 export default withStyles(styles)(AdPostList);

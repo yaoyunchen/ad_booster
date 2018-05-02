@@ -1,3 +1,4 @@
+import AuthModule from './authModule';
 import AxiosHelper from '../helpers/axiosHelper';
 import debugLog from '../utils/debug';
 
@@ -20,7 +21,7 @@ const getUserField = (userId, field) => {
   return Axios.get(`/user/field?userId=${encodeURIComponent(userId)}&field=${field}`);
 }
 
-const getUserIsAdmin = () => Axios.get(`/user/isAdmin`);
+const getUserIsAdmin = () => Axios.get(`/user/isAdmin`, null, { 'Authorization': `bearer ${AuthModule.getToken()}`,});
 
 const getUserPoints = id => getUserField(id, 'points');
 
@@ -30,7 +31,11 @@ const postUser = formData => {
   });
 };
 
-const updateUser = user => Axios.put('/auth/user/edit', user);
+const updateUser = formData => {
+  return Axios.put('/user', formData, {
+    'Content-Type': 'multipart/form-data'
+  });
+};
 
 const loginUser = formData => {
   return Axios.post('/auth/login', formData, {

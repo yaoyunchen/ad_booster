@@ -34,17 +34,19 @@ class SignUpPage extends React.Component {
     try {
       const formData = buildFormData(this.state.user);
       const result = await UserModule.postUser(formData);
-      if (!result.success) {
+      const { data } = result;
+
+      if (!data.success) {
         debugLog('processForm errors:', result);
-        this.setErrors(result);
+        this.setErrors(data);
         return;
       }
 
-        this.setState({ errors: {} });
+      this.setState({ errors: {} });
 
-        localStorage.setItem('successMessage', result.message);
+      localStorage.setItem('successMessage', data.message);
 
-        this.props.history.replace('/login');
+      this.props.history.replace('/login');
     } catch (e) {
       debugLog('processForm failed:', e);
     }

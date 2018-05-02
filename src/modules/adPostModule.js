@@ -3,17 +3,9 @@ import debugLog from '../utils/debug';
 
 const Axios = new AxiosHelper();
 
-const getAdPosts = (params = {}) => {
-  let paramsUrl = '';
-  const keys = Object.keys(params);
+const getAdPosts = (params = {}) => getAdPostsWithSearch(params);
 
-  keys.forEach((key, i) => {
-    const value = encodeURIComponent(params[key]);
-    paramsUrl += i === 0 ? `?${key}=${value}` : `&${key}=${value}`;
-  });
-
-  return Axios.get(`/adPost/search${paramsUrl}`);
-};
+const getPinnedAdPosts = province => Axios.get('/adpost', { province, pinned: true, status: 'active' });
 
 const getAdPostsWithSearch = (params = {}) => {
   if (Object.keys(params).length === 0) {
@@ -95,6 +87,7 @@ const pinAdPost = formData => {
 
 export default {
   getAdPosts,
+  getPinnedAdPosts,
   getAdPostsWithSearch,
   getAdPostsByUser,
   getAdPost,

@@ -40,10 +40,11 @@ class AdPostEditPage extends React.Component {
     }
 
     const result = await AdPostModule.getAdPost(id);
+    const { data } = result;
 
-    debugLog('Ad Post loaded: ', result);
-    if (result && result.data) this.setState({
-      adPost: result.data
+    debugLog('Ad Post loaded: ', data);
+    if (data && data.data) this.setState({
+      adPost: data.data
     });
 
     this.endLoading();
@@ -83,8 +84,9 @@ class AdPostEditPage extends React.Component {
       const formData = this.buildFormData();
 
       const result = await AdPostModule.updateAdPost(formData);
+      const { data } = result;
 
-      if (!result.success) {
+      if (!data.success) {
         debugLog('submitAdPost Error: ', result);
         return;
       }

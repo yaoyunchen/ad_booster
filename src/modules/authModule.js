@@ -1,23 +1,24 @@
 import debugLog from '../utils/debug';
 
-class Auth {
-  static authenticateUser(token) {
-    debugLog('SETTING AUTH TOKEN', token);
-    localStorage.setItem('token', token);
-  }
+const authenticateUser = (token) => {
+  debugLog('SETTING AUTH TOKEN', token);
+  localStorage.setItem('token', token);
+  return true;
+};
 
-  static isUserAuthenticated() {
-    return localStorage.getItem('token') !== null;
-  }
+const isUserAuthenticated = () => localStorage.getItem('token') !== null;
 
-  static deauthenticateUser() {
-    debugLog('REMOVE AUTH TOKEN');
-    localStorage.removeItem('token');
-  }
-
-  static getToken() {
-    return localStorage.getItem('token');
-  }
+const deauthenticateUser = () => {
+  debugLog('REMOVE AUTH TOKEN');
+  localStorage.removeItem('token');
+  return true;
 }
 
-export default Auth;
+const getToken = () => localStorage.getItem('token');
+
+export default {
+  authenticateUser,
+  deauthenticateUser,
+  isUserAuthenticated,
+  getToken
+};

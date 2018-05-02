@@ -64,6 +64,7 @@ class AdPostController {
   }
 
   getSearch(req, res) {
+    console.log(req.query);
     let query = {
       status : 'active'
     };

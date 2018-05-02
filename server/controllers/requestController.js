@@ -20,6 +20,7 @@ class RequestController {
     const { phone } = (!req.body.phone) ? req.body.phone : 'N/A';
     const { email } = (!req.body.email) ? req.body.email : 'N/A';
 
+
     Request.create(req.body).then(request => {
       const transporter = nodemailer.createTransport({ port : '465', host : 'us7.tmd.cloud', auth : { user : config.em_user, pass : config.em_pwd } });
       const mailoptions = {
@@ -33,11 +34,12 @@ class RequestController {
                 <br>requestId: `+request._id+`
               `
       };
+
       transporter.sendMail(mailoptions,function(err,info){
         if(err) return helper.retError(res,'400',false,err,'Error','');
 
         return helper.retSuccess(res,'200',true,'','Sucess','');
-      })
+      });
     }).catch(err => {
       return helper.retError(res,'400',false,err,'Error','');
     });

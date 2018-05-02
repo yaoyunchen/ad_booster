@@ -12,10 +12,10 @@ import UserModule from '../../modules/userModule';
 const loadUser = async (onClick) => {
   try {
     const result = await UserModule.getUser(AuthModule.getToken());
-
-    if (result && result.data) {
-      debugLog('loadUser (Success): ', result.data);
-      onClick(result.data);
+    const { data } = result;
+    if (data && data.data) {
+      debugLog('loadUser (Success): ', data.data);
+      onClick(data.data);
       return;
     }
 
@@ -33,22 +33,26 @@ const onPinClick = async (adPostId, onClick) => {
     formData.append('planName', 'std_pin_adpost');
 
     const result = await AdPostModule.pinAdPost(formData);
+    const { data } = result;
 
-    if (!result.success) {
-      debugLog('onPinClick Error: ', result);
+    if (data && data.success) {
+      debugLog('onPinClick: ', 'Ad pinned');
+      loadUser(onClick);
       return;
     }
 
-    debugLog('onPinClick: ', 'Ad pinned');
-    loadUser(onClick);
+    debugLog('onPinClick Error: ', result);
   } catch (e) {
     debugLog('onPinClick: Error: Unable to pin ad', e);
   }
 };
 
-const PinButton = ({ onClick, style, adPostId }) => (
+const PinButton = ({
+  onClick, style, adPostId, pinned
+}) => (
   <Button
     variant="raised" color="secondary"
+    disabled={pinned}
     style={style}
     onClick={() => onPinClick(adPostId, onClick)}
   >
@@ -58,12 +62,14 @@ const PinButton = ({ onClick, style, adPostId }) => (
 
 PinButton.propTypes = {
   adPostId: PropTypes.string.isRequired,
+  pinned: PropTypes.bool,
   onClick: PropTypes.func,
   style: PropTypes.object
 };
 
 PinButton.defaultProps = {
   onClick: () => {},
+  pinned: false,
   style: {}
 };
 

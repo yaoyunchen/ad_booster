@@ -16,12 +16,20 @@ import RequestModule from '../../modules/requestModule';
 class RequestRefillDialog extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      email: props.email || '',
-      phone: props.phone || ''
+      email: '',
+      phone: ''
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.email !== nextProps.email) this.setEmail(nextProps.email);
+
+    if (this.props.phone !== nextProps.phone) this.setPhone(nextProps.phone);
+  }
+
+  setEmail = email => this.setState({ email });
+  setPhone = phone => this.setState({ phone });
 
   handleChange = name => e => this.setState({ [name]: e.target.value })
 
@@ -30,7 +38,7 @@ class RequestRefillDialog extends React.Component {
 
     formData.append('email', this.state.email);
     formData.append('phone', this.state.phone);
-    formData.append('requesterId', '5ad5869670fe191996e5852c');
+    formData.append('requesterId', AuthModule.getToken());
     return formData;
   };
 
@@ -46,13 +54,14 @@ class RequestRefillDialog extends React.Component {
       const formData = this.buildFormData();
 
       const result = await RequestModule.postRefillRequest(formData);
+      const { data } = result;
 
-      if (!result.success) {
-        debugLog('onRequestRefill Error: ', result);
+      if (data && data.success) {
+        debugLog('onRequestRefill: ', 'Request created');
         return;
       }
 
-      debugLog('onRequestRefill: ', 'Request created');
+      debugLog('onRequestRefill Error: ', result);
     } catch(e) {
       debugLog('onRequestRefill Error: ', e);
     }

@@ -14,8 +14,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 
-import AxiosHelper from '../helpers/axiosHelper';
-import Auth from '../modules/authModule';
+import AuthModule from '../modules/authModule';
+import UserModule from '../modules/userModule';
+
 import debugLog from '../utils/debug';
 
 import RegionSelectDialog from '../components/Dialogs/regionSelect';
@@ -44,24 +45,24 @@ class App extends React.Component {
       province,
       disclaimer: disclaimer === 'true' ? true : false,
       admin: null,
-      user: Auth.getToken(),
+      user: AuthModule.getToken(),
       menu: null
     };
   }
 
   componentDidMount() {
     this.checkRegionRequired();
-    Auth.isUserAuthenticated() && this.checkIfUserAdmin();
+    AuthModule.isUserAuthenticated() && this.checkIfUserAdmin();
   }
 
   componentWillUpdate() {
     const { user, admin } = this.state;
-    if (!Auth.isUserAuthenticated()) {
+    if (!AuthModule.isUserAuthenticated()) {
       this.removeUserInfo();
       return;
     }
 
-    if (Auth.isUserAuthenticated && (user !== Auth.getToken() || user === null || admin === null)) {
+    if (AuthModule.isUserAuthenticated && (user !== AuthModule.getToken() || user === null || admin === null)) {
       this.checkIfUserAdmin();
     }
   }
@@ -106,14 +107,23 @@ class App extends React.Component {
   openRegionSelect = () => this.setState({ showRegion: true })
 
   checkIfUserAdmin = async () => {
-    const Axios = new AxiosHelper();
-    const response = await Axios.get('/user/isAdmin', { token: Auth.getToken() });
+    // const Axios = new AxiosHelper();
+    // const response = await Axios.get('/user/isAdmin', { token: Auth.getToken() });
 
-    if (response && response.data) {
-      this.setState({ admin: response.data, user: Auth.getToken() });
+    const result = await UserModule.getUserIsAdmin();
+    const { data } = result;
+
+    if (data && data.data) {
+      this.setState({ admin: data.data, user: AuthModule.getToken() });
     } else {
-      this.setState({ admin: false, user: Auth.getToken() });
+      this.setState({ admin: false, user: AuthModule.getToken() });
     }
+
+    // if (response && response.data) {
+    //   this.setState({ admin: response.data, user: Auth.getToken() });
+    // } else {
+    //   this.setState({ admin: false, user: Auth.getToken() });
+    // }
   }
 
   checkRegionRequired = () => {
@@ -177,7 +187,7 @@ class App extends React.Component {
 
     const menuNavigation = (
       <div>
-        {Auth.isUserAuthenticated() ? menuAuthenticatedActions : menuUnauthenticatedActions}
+        {AuthModule.isUserAuthenticated() ? menuAuthenticatedActions : menuUnauthenticatedActions}
 
         <MenuItem
           color="secondary"
@@ -225,7 +235,7 @@ class App extends React.Component {
 
     const topNavigation = (
       <div>
-        {Auth.isUserAuthenticated() ? authenticatedActions : unauthenticatedActions}
+        {AuthModule.isUserAuthenticated() ? authenticatedActions : unauthenticatedActions}
 
         <Button
           color="secondary"

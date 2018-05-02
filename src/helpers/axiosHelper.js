@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-import Auth from '../modules/authModule';
+import AuthModule from '../modules/authModule';
 import debugLog from '../utils/debug';
 
 class AxiosHelper {
   constructor() {
-    const token = Auth.getToken();
+    const token = AuthModule.getToken();
     this.defaultHeaders = {
       'Authorization': `bearer ${token}`,
       'Content-Type': 'application/json; charset=utf-8'
@@ -19,12 +19,10 @@ class AxiosHelper {
     const request = { method: 'get', params, url, headers };
 
     return axios(Object.assign({}, request, this.defaultOptions, reqOptions))
-      .then(response => {
-        return response.data;
-      })
-      .catch(error => {
-        debugLog('axiosHelper.get Error: ', error);
-        return error.response;
+      .then(response => response)
+      .catch(err => {
+        debugLog('axiosHelper.get Error: ', err.response);
+        return err.response;
       });
   }
 
@@ -40,9 +38,9 @@ class AxiosHelper {
     // }
 
     return axios(Object.assign({}, request, this.defaultOptions, reqOptions))
-      .then(response => response.data)
+      .then(response => response)
       .catch(err => {
-        debugLog('axiosHelper.post Error: ', err);
+        debugLog('axiosHelper.post Error: ', err.response);
         return err.response;
       });
   }
@@ -55,9 +53,9 @@ class AxiosHelper {
     };
 
     return axios(Object.assign({}, request, this.defaultOptions, reqOptions))
-      .then(response => response.data)
+      .then(response => response)
       .catch(err => {
-        debugLog('axiosHelper.put Error: ', err);
+        debugLog('axiosHelper.put Error: ', err.response);
         return err.response;
       });
   }

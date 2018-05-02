@@ -32,18 +32,17 @@ class AdPostPage extends React.Component {
 
   getAdPost = async () => {
     this.startLoading();
-    let id = '';
 
     try {
-      id = this.props.match.params.id;
+      const id = this.props.match.params.id;
+      const result = await AdPostModule.getAdPost(id);
+
+      const { data } = result;
+      if (data && data.data) this.setState({ adPost: data.data });
+      debugLog('Ad Post loaded: ', data);
     } catch (e) {
       debugLog('Unable to get id param');
     }
-
-    const result = await AdPostModule.getAdPost(id);
-
-    debugLog('Ad Post loaded: ', result);
-    if (result && result.data) this.setState({ adPost: result.data });
 
     this.endLoading();
   }

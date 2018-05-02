@@ -5,7 +5,7 @@ import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 
 import debugLog from '../utils/debug';
-import Auth from '../modules/authModule';
+import AuthModule from '../modules/authModule';
 import UserModule from '../modules/userModule';
 import { buildFormData } from '../helpers/formHelper';
 
@@ -43,16 +43,18 @@ class LoginPage extends React.Component {
     try {
       const formData = buildFormData(this.state.user);
       const result = await UserModule.loginUser(formData);
+      const { data } = result;
 
-      if (!result.success) {
+      if (!data.success) {
         debugLog('processForm errors:', result);
-        this.setErrors(result);
+        this.setErrors(data);
         return;
       }
 
       this.setState({ errors: {} });
-      Auth.authenticateUser(result.token);
-      this.props.history.replace('/user');
+      const authenticated = await AuthModule.authenticateUser(data.token);
+
+      if (authenticated) this.props.history.replace('/user');
     } catch (e) {
       debugLog('processForm failed:', e);
     }

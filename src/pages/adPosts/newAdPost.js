@@ -41,8 +41,10 @@ class AdPostPage extends React.Component {
 
   getUserPoints = async () => {
     const result = await UserModule.getUserPoints(Auth.getToken());
-    if (result && result.data) {
-      this.setState({ points: result.data.points });
+    const { data } = result;
+
+    if (data && data.data) {
+      this.setState({ points: data.data.points });
     }
   }
 
@@ -88,8 +90,9 @@ class AdPostPage extends React.Component {
     try {
       const formData = this.buildFormData();
       const result = await AdPostModule.postAdPost(formData);
+      const { data } = result;
 
-      if (!result.success) {
+      if (!data.success) {
         debugLog('submitAdPost Error: ', result);
         return;
       }

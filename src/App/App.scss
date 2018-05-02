@@ -34,3 +34,8 @@
     }
   }
 }
+
+.gridlist-override {
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+}

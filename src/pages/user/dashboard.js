@@ -68,13 +68,20 @@ class UserDashboardPage extends React.Component {
 
   updateUser = user => this.setState({ user });
 
+  updateState = user => {
+    this.updateUser(user);
+    this.loadUserAdPosts();
+  }
+
   loadUserAdPosts = async () => {
     this.startLoading();
     const result = await AdPostModule.getAdPostsByUser(Auth.getToken());
 
-    if (result && result.data) {
-      debugLog('loadAdPosts (Success): ', result.data);
-      this.setState({ adPosts: result.data }, () => this.endLoading());
+    const { data } = result;
+
+    if (data && data.data) {
+      debugLog('loadAdPosts (Success): ', data.data);
+      this.setState({ adPosts: data.data }, () => this.endLoading());
     } else {
       debugLog('loadAdPosts (Error): ', result);
     }
@@ -195,14 +202,15 @@ class UserDashboardPage extends React.Component {
                 <Grid item xs={6} sm={6} style={{ textAlign: 'center' }}>
                   <BoostButton
                     adPostId={adPost._id}
-                    onClick={this.updateUser}
+                    onClick={this.updateState}
                   />
                 </Grid>
 
                 <Grid item xs={6} sm={6} style={{ textAlign: 'center' }}>
                   <PinButton
                     adPostId={adPost._id}
-                    onClick={this.updateUser}
+                    pinned={adPost.pinned}
+                    onClick={this.updateState}
                   />
                 </Grid>
 

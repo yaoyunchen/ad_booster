@@ -31,9 +31,10 @@ function withUser(WrappedComponent) {
         this.startUserLoading();
         const result = await UserModule.getUser(AuthModule.getToken());
 
-        if (result && result.data) {
-          debugLog('loadUser (Success): ', result.data);
-          this.setState({ user: result.data });
+        const { data } = result;
+        if (data && data.data) {
+          debugLog('loadUser (Success): ', data.data);
+          this.setState({ user: data.data });
         } else {
           debugLog('loadUser (Error): ', result);
         }

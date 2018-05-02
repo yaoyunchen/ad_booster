@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
 
 import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
@@ -9,6 +10,7 @@ import withUser from '../../hocs/withUser';
 
 import debugLog from '../../utils/debug';
 import UserModule from '../../modules/userModule';
+import AuthModule from '../../modules/authModule';
 
 import UserProfileForm from '../../components/Forms/userProfile';
 
@@ -29,14 +31,34 @@ class UserProfilePage extends React.Component {
 
   setUser = user => this.setState({ user });
 
+
+  buildFormData = () => {
+    const formData = new FormData();
+    const { user } = this.state;
+    const keys = Object.keys(user);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const value = user[key];
+
+      formData.append(key, value);
+    }
+
+    formData.append('requesterId', AuthModule.getToken());
+
+    return formData;
+  };
+
   submitUser = async (e) => {
     e.preventDefault();
 
     try {
-      const result = await UserModule.updateUser(this.state.user);
+      const formData = this.buildFormData();
+      const result = await UserModule.updateUser(formData);
+      const { data } = result;
 
-      if (!result.success) {
+      if (!data.success) {
         debugLog('submitUser Error: ', result);
+        return;
       }
 
       debugLog('submitUser: ', 'User updated');
@@ -77,11 +99,13 @@ class UserProfilePage extends React.Component {
 }
 
 UserProfilePage.propTypes = {
-  user: PropTypes.object
+  user: PropTypes.object,
+  history: PropTypes.object,
 };
 
 UserProfilePage.defaultProps = {
-  user: {}
+  user: {},
+  history: {}
 };
 
-export default withUser(UserProfilePage);
+export default withUser(withRouter(UserProfilePage));

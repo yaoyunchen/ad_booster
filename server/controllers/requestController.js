@@ -17,8 +17,8 @@ class RequestController {
   post(req, res) {
     //build create query
     if(!req.body.userId) req.body.userId = req.body.requesterId;
-    const { phone } = (!req.body.phone) ? req.body.phone : 'N/A';
-    const { email } = (!req.body.email) ? req.body.email : 'N/A';
+    const { phone } = (req.body.phone) ? req.body : 'N/A';
+    const { email } = (req.body.email) ? req.body : 'N/A';
 
 
     Request.create(req.body).then(request => {

@@ -475,7 +475,7 @@ class AdPostList extends React.Component {
             Featured Ads
           </Typography>
 
-          <div className={classes.root}>
+          <div className={classes.root} style={{ height: '500px' }}>
             <GridList
               cellHeight={100} cols={1}
               className={`${classes.gridList} gridlist-override`}

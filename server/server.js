@@ -1,14 +1,12 @@
 const express = require('express');
-// const bodyParser = require('body-parser');
 const path = require('path');
 const passport = require('passport');
 const bb = require('express-busboy');
 
-const config = require('./config');
+const config = require('../config');
 
 // Connect to database & load models
-require('./server/models').connect(config.dbUrl);
-
+require('./models').connect(config.dbUrl);
 
 const app = express();
 
@@ -19,10 +17,6 @@ bb.extend(app, {
 // Static file locations
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'build')));
-
-// Parse HTTP body messages
-// app.use(bodyParser.urlencoded({ extended: false }));
-
 
 // CORs settings for requests
 app.use((req, res, next) => {
@@ -35,14 +29,14 @@ app.use((req, res, next) => {
 // Passport
 app.use(passport.initialize());
 
-const localSignupStrategy = require('./server/passport/local-signup');
+const localSignupStrategy = require('./passport/local-signup');
 passport.use('local-signup', localSignupStrategy);
 
-const localLoginStrategy = require('./server/passport/local-login');
+const localLoginStrategy = require('./passport/local-login');
 passport.use('local-login', localLoginStrategy);
 
 // Authentication middleware
-const authCheckMiddleware = require('./server/middleware/auth-check');
+const authCheckMiddleware = require('./middleware/auth-check');
 app.use('/api', authCheckMiddleware);
 
 
@@ -51,23 +45,27 @@ app.get('/ping', function (req, res) {
   return res.send('pong');
 });
 
-const authRoutes = require('./server/routes/auth');
+const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
 
-const apiRoutes = require('./server/routes/api');
+const apiRoutes = require('./routes/api');
 app.use('/api', apiRoutes);
 
-const userRoutes = require('./server/routes/user');
+const userRoutes = require('./routes/user');
 app.use('/user', userRoutes);
 
-const adPostRoutes = require('./server/routes/adPost');
+const adPostRoutes = require('./routes/adPost');
 app.use('/adPost', adPostRoutes);
 
-const planRoutes = require('./server/routes/plan');
+const planRoutes = require('./routes/plan');
 app.use('/plan', planRoutes);
 
-const requestRoutes = require('./server/routes/request');
+const requestRoutes = require('./routes/request');
 app.use('/request', requestRoutes);
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build/index.html'));
+});
 
 //Start the server
 const port = process.env.PORT || 8080;

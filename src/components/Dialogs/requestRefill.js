@@ -36,8 +36,8 @@ class RequestRefillDialog extends React.Component {
   buildFormData = () => {
     const formData = new FormData();
 
-    formData.append('email', this.state.email);
-    formData.append('phone', this.state.phone);
+    formData.append('email', this.state.email || this.props.email);
+    formData.append('phone', this.state.phone || this.props.phone);
     formData.append('requesterId', AuthModule.getToken());
     return formData;
   };
@@ -58,10 +58,9 @@ class RequestRefillDialog extends React.Component {
 
       if (data && data.success) {
         debugLog('onRequestRefill: ', 'Request created');
-        return;
+      } else {
+        debugLog('onRequestRefill Error: ', result);
       }
-
-      debugLog('onRequestRefill Error: ', result);
     } catch(e) {
       debugLog('onRequestRefill Error: ', e);
     }

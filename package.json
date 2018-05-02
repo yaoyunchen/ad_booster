@@ -71,7 +71,7 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "server": "nodemon server/server.js"
+    "server": "nodemon server/index.js"
   },
   "jest": {
     "collectCoverageFrom": [

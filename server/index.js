@@ -10,6 +10,10 @@ require('./models').connect(config.dbUrl);
 
 const app = express();
 
+app.use('/health', (req, res) => {
+  res.json({ message: 'health check' });
+});
+
 bb.extend(app, {
   upload: true
 });

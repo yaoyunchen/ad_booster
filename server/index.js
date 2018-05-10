@@ -74,5 +74,5 @@ app.get('*', (req, res) => {
 //Start the server
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`); // eslint-disable-line no-console
+  console.log(`Server is running on ${port}`); // eslint-disable-line no-console
 });

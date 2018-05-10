@@ -20,6 +20,11 @@ const PlanSchema = new mongoose.Schema({
     default : "",
     required: true
   },
+  category: {
+    type: String,
+    default: "",
+    required: true
+  },
   desc : {
     type: String,
     default : ""

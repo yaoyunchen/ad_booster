@@ -17,6 +17,8 @@ class AuthHelper {
     this.authUser = this.authUser.bind(this);
     this.decryptId = this.decryptId.bind(this);
     this.decryptRequesterUserId = this.decryptRequesterUserId.bind(this);
+    this.parseImages = this.parseImages.bind(this);
+    this.moveImages = this.moveImages.bind(this);
   }
 
   //AUTHENTICATE
@@ -117,7 +119,7 @@ class AuthHelper {
 
     CollectionIndex.findOneAndUpdate({ name : indexName }, { $inc : { index : 1 } },(err, index) => {
       if (err) return helper.retError(res,'500',false,err,'getAndIncIndex().findOne Error','');
-      if (!index) return helper.retError(res,'401',true,err,'no index found','');
+      if (!index) return helper.retError(res, '401', true, err,'no index found getAndIncIndex','');
 
       req.body.data = (req.body.data) ? req.body.data : {};
       req.body.data.collectionIndex = index.index;
@@ -204,25 +206,50 @@ class AuthHelper {
   }
 
   //handle files
-  parseImages(req, res, next) {
+  async parseImages(req, res, next) {
+    const { requesterId } = req.body;
+    const { collectionIndex } = req.body.data;
     const { files } = req;
-    console.log(files);
+    const dirId = requesterId.concat(collectionIndex);
 
-    const { file } = files.image[0];
-    const { filename } = files.image[0];
+    if (files){
+      const photos = (req.body.photos) ? req.body.photos : [];
+      req.body.photos = await this.moveImages(files, dirId, photos);
+    }
 
-    var source = fs.createReadStream(file);
-    var dest = fs.createWriteStream('public/assets/images/'+filename);
-    source.pipe(dest);
-    source.on('error', function(err) { console.log('err') });
-    source.on('end', function() {
-      console.log('copied')
-    });
+    next();
+  }
 
-    console.log(file);
-    console.log(filename);
+  moveImages(files, dirId, photos){
+    for (let key in files) {
+      let fileObj = files[key];
+      let fileObjType = typeof fileObj;
+      if (fileObjType === 'object' && fileObjType !== null){
+        const { file } = fileObj;
+        const { filename } = fileObj;
+        const source = fs.createReadStream(file);
 
-    return res.status(200).json({message: 'Image Uploaded Successfully !', path: filename})
+        const dir = 'public/assets/images/adPost/' + dirId;
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+        const dest = fs.createWriteStream(dir + '/' + filename);
+
+        source.pipe(dest);
+        source.on('end', function () {
+          fs.unlinkSync('/tmp/express-busboy/' + fileObj.uuid + '/' + fileObj.field + '/' + fileObj.filename);
+          fs.rmdirSync('/tmp/express-busboy/' + fileObj.uuid + '/' + fileObj.field);
+          fs.rmdirSync('/tmp/express-busboy/' + fileObj.uuid);
+        });
+        source.on('error', function (err) {
+          photos.push('err');
+        });
+
+        const photo = 'assets/images/adPost/' + dirId + '/' + fileObj.filename;
+        photos.push(photo);
+      } else if (fileObjType === 'string') {
+        photos.push(fileObj);
+      }
+    }
+    return photos;
   }
 
 }

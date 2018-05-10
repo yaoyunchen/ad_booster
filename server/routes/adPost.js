@@ -36,7 +36,7 @@ router.get('/user',
 
 // //test photo
 // router.post('/',
-//   AuthHelper.parseImages)
+//   AuthHelper.parseImages);
 
 //create ad post (auth/plan/index/pays)
 router.post('/',
@@ -44,11 +44,13 @@ router.post('/',
   AuthHelper.getPlan,
   AuthHelper.getAndIncIndex,
   AuthHelper.userPays,
+  AuthHelper.parseImages,
   AdPostController.post);
 
 //update ad post by adpostId (auth)
 router.put('/',
   AuthHelper.authUser,
+  AuthHelper.parseImages,
   AdPostController.put);
 
 //pin adpost by adpostId (auth/plan/pin/maxquantity/pay)

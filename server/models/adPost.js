@@ -53,9 +53,12 @@ const AdPostSchema = new mongoose.Schema({
     type: ObjectId,
     // required: true
   },
-  expiryDated: {
+  expiryDate: {
     type: Date,
     // required: true
+  },
+  boostedDate: {
+    type: Date
   },
   notifiy: {
     type: Boolean,

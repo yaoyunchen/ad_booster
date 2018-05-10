@@ -34,7 +34,7 @@ class AdPostController {
 
   get(req, res) {
     return AdPost.find(req.query).sort({ priority: -1 }).then(adPost => {
-      if(!adPost.length) return helper.retError(res,'400',true,'','No matching results',adPost);
+      if(!adPost.length) return helper.retError(res,'400',true,'','No matching results get',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
       return helper.retError(res,'500',false,err,'Error get','');
@@ -45,7 +45,7 @@ class AdPostController {
     const { adPostId } = req.query;
 
     return AdPost.findById(adPostId).then(adPost => {
-      if(!adPost) return helper.retError(res,'400',true,'','No matching results',adPost);
+      if (!adPost) return helper.retError(res, '400', true, '','No matching results getAdPost',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
       return helper.retError(res,'500',false,err,'Error getAdPost','');
@@ -55,8 +55,8 @@ class AdPostController {
   getUserAdPost(req, res) {
     const createdBy = (req.query.createdById) ? req.query.createdById : req.query.requesterId;
 
-    return AdPost.find({ createdBy : createdBy }).sort({ priority: -1 }).then(adPost => {
-      if(!adPost) return helper.retError(res,'400',true,'','No matching results',adPost);
+    return AdPost.find({ createdBy }).sort({ priority: -1 }).then(adPost => {
+      if (!adPost) return helper.retError(res, '400', true, '','No matching results getUserAdPost',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
       return helper.retError(res,'500',false,err,'Error getUserAdPost','');
@@ -74,14 +74,14 @@ class AdPostController {
       const searchArr = req.query.search.split(" ");
       //loop all words in search and push to queryRgex
       searchArr.forEach(function(word) {
-        (req.query.title) ? query['title'] = req.query.title : queryRgex.push({ title : { "$regex":word,"$options":"i"} });
+        (req.query.title) ? query['title'] = req.query.title : queryRgex.push({ title : { "$regex":word,"$options":"i" } });
         (req.query.subtitle) ? query['subtitle'] = req.query.subtitle : queryRgex.push({ subtitle : { "$regex":word,"$options":"i"} });
-        (req.query.desc) ? query['desc'] = req.query.desc : queryRgex.push({ desc : { "$regex":word,"$options":"i"} });
-        (req.query.gender) ? query['gender'] = req.query.gender : queryRgex.push({ gender : { "$regex":word,"$options":"i"} });
+        (req.query.desc) ? query['desc'] = req.query.desc : queryRgex.push({ desc : { "$regex":word,"$options":"i" } });
+        (req.query.gender) ? query['gender'] = req.query.gender : queryRgex.push({ gender : { "$regex":word,"$options":"i" } });
         (req.query.province) ? query['province'] = req.query.province : queryRgex.push({ province : { "$regex":word,"$options":"i"} });
-        (req.query.age) ? query['age'] = req.query.age : queryRgex.push({ age : { "$regex":word,"$options":"i"} });
+        (req.query.age) ? query['age'] = req.query.age : queryRgex.push({ age : { "$regex":word,"$options":"i" } });
         (req.query.ethnicity) ? query['ethnicity'] = req.query.ethnicity : queryRgex.push({ ethnicity : { "$regex":word,"$options":"i"} });
-        (req.query.region) ? query['region'] = req.query.region : queryRgex.push({ region : { "$regex":word,"$options":"i"} });
+        (req.query.region) ? query['region'] = req.query.region : queryRgex.push({ region : { "$regex":word,"$options":"i" } });
         (req.query.availability == 'both') ? query = Object.assign(query, { $or : [{ availability : 'in' }, { availability : 'out' }] }) : query['availability'] = req.query.availability;
       });
       query = Object.assign(query, { $or : queryRgex});
@@ -101,7 +101,7 @@ class AdPostController {
 
     if(query == {status : 'active'}) return helper.retError(res,'404',false,err,'Error: Invalid Search','');
     return AdPost.find(query).sort({ priority: -1 }).then(adPost => {
-      if(!adPost.length) return helper.retError(res,'400',true,'','No matching results',adPost);
+      if (!adPost.length) return helper.retError(res, '400', true, '','No matching results getSearch',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
       return helper.retError(res,'500',false,err,'Error getSearch','');
@@ -117,7 +117,7 @@ class AdPostController {
     const projection = field + " -_id";
 
     return AdPost.findById(adPostId, projection).then(adPost => {
-      if(!adPost.length) return helper.retError(res,'400',true,'','No matching results',adPost);
+      if (!adPost.length) return helper.retError(res, '400', true, '','No matching results getField',adPost);
       return helper.retSuccess(res,'200',true,'','Sucess',adPost);
     }).catch(err => {
       return helper.retError(res,'500',false,err,'Error getField','');
@@ -182,6 +182,7 @@ class AdPostController {
     const updatePriority = {
       priority : req.body.data.collectionIndex,
       editedBy : req.body.requesterId,
+      boostedDate: new Date(),
       lastEdited : new Date()
     };
 

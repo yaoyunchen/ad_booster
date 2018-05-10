@@ -66,12 +66,13 @@
     "nodemon": "^1.17.3",
     "sass-loader": "^7.0.1"
   },
-  "proxy": "http://localhost:8080",
+  "proxy": "http://localhost:50100",
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "server": "nodemon server/index.js"
+    "dev:server": "nodemon server/index.js",
+    "server": "NODE_ENV=production PORT=50100 node server/index.js"
   },
   "jest": {
     "collectCoverageFrom": [

@@ -18,7 +18,7 @@ class PlanController {
   //get all plan
   get(req, res) {
     Plan.find().then(plan => {
-      if(!plan.length) return helper.retError(res,'400',true,'','No matching results',plan);
+      if (!plan.length) return helper.retError(res, '400', true, '','No matching results get(planscontroller)',plan);
       return helper.retSuccess(res,'200',true,'','Sucess',plan);
     }).catch(err => {
       return helper.retError(res,'500',false,err,'Error get','');
@@ -30,7 +30,7 @@ class PlanController {
     const planId = req.query.planId;
 
     Plan.findById(planId).then(plan => {
-      if(!plan.length) return helper.retError(res,'400',true,'','No matching results',plan);
+      if (!plan.length) return helper.retError(res, '400', true, '','No matching results getPlan',plan);
       return helper.retSuccess(res,'200',true,'','Sucess',plan);
     }).catch(err => {
       return helper.retError(res,'500',false,err,'Error getPlan','');

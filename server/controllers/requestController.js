@@ -16,7 +16,7 @@ class RequestController {
 
   //get all pending requests sorted by createdDate
   get(req, res) {
-    return Request.find({ status : pending }).sort({ dateCreated : 1 }).then(request => {
+    return Request.find({ status : "pending" }).sort({ dateCreated : 1 }).then(request => {
       if(!request.length) return helper.retError(res,'400',true,'','No matching results',request);
       return helper.retSuccess(res,'200',true,'','Sucess',request);
     }).catch(err => {
